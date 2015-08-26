@@ -1,0 +1,9 @@
+.gems
+.bundle
+
+_site
+_gh_pages
+.ruby-version
+.sass-cache
+
+.DS_Store

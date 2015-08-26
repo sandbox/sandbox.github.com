@@ -1,0 +1,29 @@
+# Permalinks
+#
+# Use of `relative_permalinks` ensures post links from the index work properly.
+permalink:           pretty
+relative_permalinks: true
+
+# Setup
+title:               sandbox
+tagline:             sandbox's sandbox
+description:         sandbox's sandbox
+url:                 https://sandbox.github.io
+paginate:            1
+baseurl:             "/"
+
+# Assets
+#
+# We specify the directory for Jekyll so we can use @imports.
+sass:
+  sass_dir:          _sass
+  style:            :compressed
+
+# About/contact
+author:
+  name:              John Le
+  url:               https://twitter.com/moonpiesandbox
+  email:             moonpiesandbox@gmail.com
+
+github:
+  url:         http://github.com/sandbox
