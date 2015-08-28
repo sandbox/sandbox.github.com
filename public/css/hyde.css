@@ -105,9 +105,21 @@ a.sidebar-nav-item:focus {
  * contents to the bottom of the sidebar in tablets and up.
  */
 
+.sidebar-sticky-bottom img{
+  margin-left: auto;
+  margin-right: auto;
+}
+
 @media (min-width: 48em) {
   .sidebar-sticky {
     position: absolute;
+    right:  1rem;
+    left:   1rem;
+  }
+
+  .sidebar-sticky-bottom {
+    position: absolute;
+    bottom: 1rem;
     right:  1rem;
     left:   1rem;
   }
