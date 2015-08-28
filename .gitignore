@@ -1,9 +1,14 @@
 .gems
 .bundle
+.venv
+.nodeenv
 
 _site
 _gh_pages
 .ruby-version
 .sass-cache
+node_modules
+
+*.js.map
 
 .DS_Store

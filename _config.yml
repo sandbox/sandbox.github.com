@@ -11,6 +11,7 @@ description:         sandbox's sandbox
 url:                 https://sandbox.github.io
 paginate:            1
 baseurl:             "/"
+disqusid:            "moonpiesandbox"
 
 # Assets
 #
@@ -27,3 +28,7 @@ author:
 
 github:
   url:         http://github.com/sandbox
+
+exclude: [ "Gruntfile.js", "package.json", "webpack.config.js", "node_modules/*", "src/*", ".*"]
+
+include: ["demos"]
