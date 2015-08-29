@@ -3,7 +3,8 @@ var path = require("path");
 module.exports = {
   context: __dirname + "/src",
   entry: {
-    "react-in-jekyll": "./react-in-jekyll.js"
+    "react-in-jekyll": "./react-in-jekyll.js",
+    "react-histogram": "./react-histogram.js"
   },
   output: {
     path: path.join(__dirname, "public", "js"),
@@ -16,6 +17,7 @@ module.exports = {
     ]
   },
   externals: {
+    "d3": "d3",
     "react": "React"
   },
   plugins: [],

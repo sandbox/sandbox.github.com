@@ -177,7 +177,12 @@ a.sidebar-nav-item:focus {
   }
 }
 
-
+.demo {
+  margin: 1em auto 4em auto;
+  position: relative;
+  tab-size: 2;
+  width: 960px;
+}
 
 /*
  * Themes

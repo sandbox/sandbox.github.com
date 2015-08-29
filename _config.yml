@@ -31,4 +31,7 @@ github:
 
 exclude: [ "Gruntfile.js", "package.json", "webpack.config.js", "node_modules/*", "src/*", ".*"]
 
-include: ["demos"]
+collections:
+  demos:
+    output: true
+    permalink: /demos/:path/
