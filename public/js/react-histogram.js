@@ -139,15 +139,7 @@
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	function d3_scaleExtent(domain) {
-	  var start = domain[0],
-	      stop = domain[domain.length - 1];
-	  return start < stop ? [start, stop] : [stop, start];
-	}
-	
-	function d3_scaleRange(scale) {
-	  return scale.rangeExtent ? scale.rangeExtent() : d3_scaleExtent(scale.range());
-	}
+	var _d3_scale = __webpack_require__(5);
 	
 	var Axis = (function (_React$Component) {
 	  _inherits(Axis, _React$Component);
@@ -171,7 +163,7 @@
 	        return x;
 	      },
 	          tickSpacing = Math.max(this.props.innerTickSize, 0) + this.props.tickPadding,
-	          range = d3_scaleRange(scale),
+	          range = (0, _d3_scale.d3_scaleRange)(scale),
 	          sign = orient === "top" || orient === "left" ? -1 : 1;
 	
 	      var tickDirection = orient === 'bottom' || orient === 'top' ? {
@@ -290,6 +282,28 @@
 			window.classNames = classNames;
 		}
 	})();
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	function d3_scaleExtent(domain) {
+	  var start = domain[0],
+	      stop = domain[domain.length - 1];
+	  return start < stop ? [start, stop] : [stop, start];
+	}
+	
+	function d3_scaleRange(scale) {
+	  return scale.rangeExtent ? scale.rangeExtent() : d3_scaleExtent(scale.range());
+	}
+	
+	exports.d3_scaleExtent = d3_scaleExtent;
+	exports.d3_scaleRange = d3_scaleRange;
 
 /***/ }
 /******/ ]);
