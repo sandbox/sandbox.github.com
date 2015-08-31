@@ -139,7 +139,15 @@
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	__webpack_require__(5);
+	function d3_scaleExtent(domain) {
+	  var start = domain[0],
+	      stop = domain[domain.length - 1];
+	  return start < stop ? [start, stop] : [stop, start];
+	}
+	
+	function d3_scaleRange(scale) {
+	  return scale.rangeExtent ? scale.rangeExtent() : d3_scaleExtent(scale.range());
+	}
 	
 	var Axis = (function (_React$Component) {
 	  _inherits(Axis, _React$Component);
@@ -282,24 +290,6 @@
 			window.classNames = classNames;
 		}
 	})();
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	d3.scale = {};
-	
-	function d3_scaleExtent(domain) {
-	  var start = domain[0],
-	      stop = domain[domain.length - 1];
-	  return start < stop ? [start, stop] : [stop, start];
-	}
-	
-	function d3_scaleRange(scale) {
-	  return scale.rangeExtent ? scale.rangeExtent() : d3_scaleExtent(scale.range());
-	}
 
 /***/ }
 /******/ ]);
