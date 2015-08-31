@@ -36,8 +36,10 @@ bodyclass: demo
 <div id="react-transition" style="border: 1px solid #ccc;"></div>
 <p></p>
 
-Using React addons transition groups to get a feel for animating
-elements with react. This animates the histogram bars height starting
-from 0 height.
+Using
+[React Tween State](https://github.com/chenglou/react-tween-state) to
+get a feel for animating elements with react. This animates the
+histogram bars height starting from 0 height and animates the width
+starting from 0 width.
 
 <script src="/public/js/react-histogram-transition.js" type="text/javascript"></script>
