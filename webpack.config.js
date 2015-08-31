@@ -1,19 +1,23 @@
-var path = require("path");
+var path = require('path');
+var grunt = require('grunt');
 
 module.exports = {
   context: __dirname + "/src",
-  entry: {
-    "react-in-jekyll": "./react-in-jekyll.js",
-    "react-histogram": "./react-histogram.js"
-  },
+  entry: grunt.file.expand({cwd: path.resolve('src')}, "*").reduce(
+    function(map, page) {
+      if (page.match(/.js$/)) {
+        map[page] = "./" + page;
+      }
+      return map;
+    }, {}),
   output: {
     path: path.join(__dirname, "public", "js"),
-    filename: '[name].js'
+    filename: '[name]'
   },
   module: {
     loaders: [
       { test: /\.coffee$/, loader: 'coffee-loader' },
-      { test: /\.js$/, loader: 'babel-loader' }
+      { test: /\.js$/, loaders: ['babel-loader'] }
     ]
   },
   externals: {

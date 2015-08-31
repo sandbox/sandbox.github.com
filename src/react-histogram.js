@@ -1,5 +1,6 @@
 import React from 'react'
 import d3 from 'd3'
+import Axis from './components/axis'
 
 var element = document.getElementById("react-histogram")
 var margin = {top: 10, right: 30, bottom: 30, left: 30}
@@ -18,26 +19,11 @@ var bars = data.map(
     <text dy=".75em" y={2} x={xscale(d.dx) / 2} textAnchor="middle">{formatCount(d.y)}</text>
     </g>)
 
-class Axis extends React.Component {
-  render() {
-    let range = this.props.scale.range()
-    let guide = (<path className="domain" d={`M${range[0]},6V0H${range[1]}V6`}></path>)
-
-    let tickValues = this.props.scale.ticks.apply(this.props.scale, [10])
-    let ticks = tickValues.map(
-      (tick) =>
-        <g className="tick" transform={`translate(${this.props.scale(tick)},0)`}>
-        <line x={0} y={0} x2={0} y2={6} />
-        <text y="9" dy=".71em" textAnchor="middle">{tick}</text>
-        </g>)
-    return <g className="x axis" transform={`translate(0,${this.props.y})`}>{ticks}{guide}</g>
-  }
-}
-
 React.render(
     <svg width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}>
     <g transform={`translate(${margin.left}, ${margin.top})`}>
     {bars}
-    <Axis scale={xscale} orient="bottom" y={height}/>
+    <Axis scale={xscale} orient="bottom" x={0} y={height}/>
+    <Axis scale={yscale} orient="left" x={0} y={0}/>
     </g>
     </svg>, element)
