@@ -56,7 +56,7 @@
 	
 	var _d32 = _interopRequireDefault(_d3);
 	
-	var _componentsAxis = __webpack_require__(3);
+	var _componentsAxis = __webpack_require__(6);
 	
 	var _componentsAxis2 = _interopRequireDefault(_componentsAxis);
 	
@@ -110,7 +110,10 @@
 	module.exports = d3;
 
 /***/ },
-/* 3 */
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -135,11 +138,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _classnames = __webpack_require__(4);
+	var _classnames = __webpack_require__(7);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _d3_scale = __webpack_require__(5);
+	var _d3_scale = __webpack_require__(8);
 	
 	var Axis = (function (_React$Component) {
 	  _inherits(Axis, _React$Component);
@@ -231,7 +234,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 4 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -284,7 +287,7 @@
 	})();
 
 /***/ },
-/* 5 */
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
