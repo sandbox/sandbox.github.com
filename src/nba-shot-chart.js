@@ -43,7 +43,7 @@ function renderShotChart(rows, header) {
 }
 
 d3.json(
-  "/public/data/james-harden-shotchartdetail.json",
+  "https://gist.githubusercontent.com/sandbox/7f6065c867a5f355207e/raw/5c74a5dcd7b257faa985f28c932a684ed4cea065/james-harden-shotchartdetail.json",
   function(error, json) {
     if (error) return console.warn(error)
     renderShotChart(json.resultSets[0].rowSet, json.resultSets[0].headers)
