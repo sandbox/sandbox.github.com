@@ -6,8 +6,8 @@ bodyclass: demo
 
 <style>
 .dot {
-  fill: steelblue;
-  stroke: steelblue;
+  fill: #FA8320;
+  stroke: #FA8320;
   opacity: 0.6;
 }
 </style>

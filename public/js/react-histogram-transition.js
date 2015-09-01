@@ -70,7 +70,7 @@
 	
 	var _componentsMark2 = _interopRequireDefault(_componentsMark);
 	
-	var _componentsRect = __webpack_require__(8);
+	var _componentsRect = __webpack_require__(10);
 	
 	var _componentsRect2 = _interopRequireDefault(_componentsRect);
 	
@@ -928,7 +928,9 @@
 	exports.d3_scaleRange = d3_scaleRange;
 
 /***/ },
-/* 8 */
+/* 8 */,
+/* 9 */,
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";

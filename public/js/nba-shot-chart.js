@@ -46,15 +46,7 @@
 
 	'use strict';
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var _react = __webpack_require__(1);
 	
@@ -74,75 +66,35 @@
 	
 	var _reactTweenState = __webpack_require__(4);
 	
+	var _componentsBasketball = __webpack_require__(8);
+	
 	function logData(d) {
-	  console.log(d);
+	  console.log('yes', d);
 	}
-	
-	var CourtBounds = (function (_React$Component) {
-	  _inherits(CourtBounds, _React$Component);
-	
-	  function CourtBounds() {
-	    _classCallCheck(this, CourtBounds);
-	
-	    _get(Object.getPrototypeOf(CourtBounds.prototype), 'constructor', this).apply(this, arguments);
-	  }
-	
-	  _createClass(CourtBounds, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2['default'].createElement('g', null);
-	    }
-	  }]);
-	
-	  return CourtBounds;
-	})(_react2['default'].Component);
 	
 	function renderShotChart(rows, header) {
 	  var element = document.getElementById("shot-chart");
 	  var margin = { top: 30, right: 100, bottom: 30, left: 100 };
+	
 	  var width = element.offsetWidth - margin.left - margin.right;
 	  var height = width - margin.top - margin.bottom;
 	
 	  var values = rows.map(function (row) {
 	    return [row[17], row[18]];
 	  });
-	  var xscale = _d32['default'].scale.linear().domain([_d32['default'].min(rows, function (d) {
-	    return d[17];
-	  }), _d32['default'].max(rows, function (d) {
-	    return d[17];
-	  })]).range([0, width]);
-	  var yscale = _d32['default'].scale.linear().domain([_d32['default'].min(rows, function (d) {
-	    return d[18];
-	  }), _d32['default'].max(rows, function (d) {
-	    return d[18];
-	  })]).range([height, 0]);
+	  var xscale = _d32['default'].scale.linear().domain([-250, 250]).range([0, width]);
+	  var yscale = _d32['default'].scale.linear().domain([-47.5, 450]).range([height, 0]);
 	
-	  var Circle = (function (_React$Component2) {
-	    _inherits(Circle, _React$Component2);
+	  var xballr = xscale(3.85) - xscale(0);
+	  var yballr = yscale(0) - yscale(3.85);
 	
-	    function Circle() {
-	      _classCallCheck(this, Circle);
-	
-	      _get(Object.getPrototypeOf(Circle.prototype), 'constructor', this).apply(this, arguments);
-	    }
-	
-	    _createClass(Circle, [{
-	      key: 'render',
-	      value: function render() {
-	        return _react2['default'].createElement('circle', this.props);
-	      }
-	    }]);
-	
-	    return Circle;
-	  })(_react2['default'].Component);
-	
-	  var TransitionCircle = (0, _componentsMark2['default'])(Circle, [{ prop: 'cx', duration: 2000, easing: _reactTweenState.easingTypes.linear }, { prop: 'cy', duration: 2000, easing: _reactTweenState.easingTypes.linear }]);
+	  var TransitionBall = (0, _componentsMark2['default'])(_componentsBasketball.BasketBall, [{ prop: 'cx', duration: 2000, easing: _reactTweenState.easingTypes.linear, start: xscale(0) }, { prop: 'cy', duration: 2000, easing: _reactTweenState.easingTypes.linear, start: yscale(0) }]);
 	
 	  var points = rows.map(function (d, i) {
 	    var x = d[17];
 	    var y = d[18];
 	
-	    return _react2['default'].createElement(TransitionCircle, { className: 'dot', cx: xscale(x), cy: yscale(y), r: 3, onMouseOver: logData.bind(null, d) });
+	    return _react2['default'].createElement(TransitionBall, { key: i, className: 'dot', cx: xscale(x), cy: yscale(y), rx: xballr, ry: yballr, onMouseOver: logData.bind(null, d) });
 	  });
 	
 	  _react2['default'].render(_react2['default'].createElement(
@@ -152,7 +104,7 @@
 	      'g',
 	      { transform: 'translate(' + margin.left + ', ' + margin.top + ')' },
 	      points,
-	      _react2['default'].createElement(CourtBounds, { width: width, height: height })
+	      _react2['default'].createElement(_componentsBasketball.CourtBounds, { xscale: xscale, yscale: yscale, width: width, height: height })
 	    )
 	  ), element);
 	}
@@ -948,6 +900,131 @@
 	
 	exports.d3_scaleExtent = d3_scaleExtent;
 	exports.d3_scaleRange = d3_scaleRange;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var _arc = __webpack_require__(9);
+	
+	var CourtBounds = (function (_React$Component) {
+	  _inherits(CourtBounds, _React$Component);
+	
+	  function CourtBounds() {
+	    _classCallCheck(this, CourtBounds);
+	
+	    _get(Object.getPrototypeOf(CourtBounds.prototype), "constructor", this).apply(this, arguments);
+	  }
+	
+	  _createClass(CourtBounds, [{
+	    key: "render",
+	    value: function render() {
+	      var hoopcenterx = this.props.xscale(0);
+	      var hoopcentery = this.props.yscale(0);
+	
+	      var xstart = this.props.xscale(-250);
+	      var xend = this.props.xscale(250);
+	      var ystart = this.props.yscale(422.5);
+	      var yend = this.props.yscale(-47.5);
+	      var courtheight = yend - ystart;
+	      var courtwidth = xend - xstart;
+	      var threeradiusx = this.props.xscale(237.5) - hoopcenterx;
+	      var threeradiusy = hoopcentery - this.props.yscale(237.5);
+	      var threearc = (0, _arc.describeArc)(hoopcenterx, hoopcentery, threeradiusx, threeradiusy, -158, -22);
+	      var centerarc = (0, _arc.describeArc)(hoopcenterx, ystart, this.props.xscale(60) - hoopcenterx, hoopcentery - this.props.yscale(60), 0, 180);
+	      var innercenterarc = (0, _arc.describeArc)(hoopcenterx, ystart, this.props.xscale(20) - hoopcenterx, hoopcentery - this.props.yscale(20), 0, 180);
+	      var freethrowwidth = this.props.xscale(160) - this.props.xscale(0);
+	      var freethrowheight = Math.abs(this.props.yscale(-47.5 + 190) - yend);
+	      var freethrowinnerarc = (0, _arc.describeArc)(hoopcenterx, this.props.yscale(-47.5 + 190), this.props.xscale(60) - hoopcenterx, hoopcentery - this.props.yscale(60), 0, 180);
+	      var freethrowouterarc = (0, _arc.describeArc)(hoopcenterx, this.props.yscale(-47.5 + 190), this.props.xscale(60) - hoopcenterx, hoopcentery - this.props.yscale(60), -180, 0);
+	      var restrictedArc = (0, _arc.describeArc)(hoopcenterx, hoopcentery, this.props.xscale(40) - hoopcenterx, hoopcentery - this.props.yscale(40), -180, 0);
+	
+	      return React.createElement(
+	        "g",
+	        null,
+	        React.createElement("ellipse", { stroke: "#000", fill: "none", cx: this.props.xscale(0), cy: this.props.yscale(0), rx: this.props.xscale(7.5) - this.props.xscale(0), ry: this.props.yscale(0) - this.props.yscale(7.5) }),
+	        React.createElement("line", { strokeWidth: 2, stroke: "#000", x1: this.props.xscale(-30), x2: this.props.xscale(30), y1: this.props.yscale(-7.5), y2: this.props.yscale(-7.5) }),
+	        React.createElement("rect", { fill: "none", stroke: "#000", x: xstart, y: ystart, width: courtwidth, height: courtheight }),
+	        React.createElement("path", { d: centerarc, fill: "none", stroke: "#000" }),
+	        React.createElement("path", { d: innercenterarc, fill: "none", stroke: "#000" }),
+	        React.createElement("rect", { fill: "none", stroke: "#000", x: this.props.xscale(-80), y: this.props.yscale(-47.5 + 190), width: freethrowwidth, height: freethrowheight }),
+	        React.createElement("rect", { fill: "none", stroke: "#000", x: this.props.xscale(-60), y: this.props.yscale(-47.5 + 190), width: this.props.xscale(120) - this.props.xscale(0), height: freethrowheight }),
+	        React.createElement("path", { d: freethrowouterarc, fill: "none", stroke: "#000" }),
+	        React.createElement("path", { d: freethrowinnerarc, fill: "none", stroke: "#000", strokeDasharray: "5,5" }),
+	        React.createElement("path", { d: restrictedArc, fill: "none", stroke: "#000" }),
+	        React.createElement("path", { d: threearc, fill: "none", stroke: "#000" }),
+	        React.createElement("line", { stroke: "#000", x1: this.props.xscale(-220), y1: yend, x2: this.props.xscale(-220), y2: this.props.yscale(90) }),
+	        React.createElement("line", { stroke: "#000", x1: this.props.xscale(220), y1: yend, x2: this.props.xscale(220), y2: this.props.yscale(90) })
+	      );
+	    }
+	  }]);
+	
+	  return CourtBounds;
+	})(React.Component);
+	
+	var BasketBall = (function (_React$Component2) {
+	  _inherits(BasketBall, _React$Component2);
+	
+	  function BasketBall() {
+	    _classCallCheck(this, BasketBall);
+	
+	    _get(Object.getPrototypeOf(BasketBall.prototype), "constructor", this).apply(this, arguments);
+	  }
+	
+	  _createClass(BasketBall, [{
+	    key: "render",
+	    value: function render() {
+	      return React.createElement("ellipse", this.props);
+	    }
+	  }]);
+	
+	  return BasketBall;
+	})(React.Component);
+	
+	exports.CourtBounds = CourtBounds;
+	exports.BasketBall = BasketBall;
+	/* hoop */ /* court boundary */ /* center arc */ /* free throw area */ /* restricted area arc */ /* three point arc */
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	function polarToCartesian(centerX, centerY, radiusX, radiusY, angleInDegrees) {
+	  var angleInRadians = angleInDegrees * Math.PI / 180.0;
+	
+	  return {
+	    x: centerX + radiusX * Math.cos(angleInRadians),
+	    y: centerY + radiusY * Math.sin(angleInRadians)
+	  };
+	}
+	
+	function describeArc(x, y, radiusX, radiusY, startAngle, endAngle) {
+	  var start = polarToCartesian(x, y, radiusX, radiusY, endAngle);
+	  var end = polarToCartesian(x, y, radiusX, radiusY, startAngle);
+	  var arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
+	  return ["M", start.x, start.y, "A", radiusX, radiusY, 0, arcSweep, 0, end.x, end.y].join(" ");
+	}
+	
+	exports.describeArc = describeArc;
 
 /***/ }
 /******/ ]);
