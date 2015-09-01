@@ -52,7 +52,7 @@
 	
 	var _d32 = _interopRequireDefault(_d3);
 	
-	_d32["default"].json("/public/data/james-harden-shotchartdetail.json.gz", function (error, json) {
+	_d32["default"].json("/public/data/james-harden-shotchartdetail.json", function (error, json) {
 	  if (error) return console.warn(error);
 	  console.log(json);
 	});
