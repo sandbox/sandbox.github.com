@@ -56,15 +56,19 @@
 	
 	var _d32 = _interopRequireDefault(_d3);
 	
-	var _componentsMark = __webpack_require__(3);
+	var _classnames = __webpack_require__(3);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _componentsMark = __webpack_require__(4);
 	
 	var _componentsMark2 = _interopRequireDefault(_componentsMark);
 	
-	var _componentsAxis = __webpack_require__(5);
+	var _componentsAxis = __webpack_require__(6);
 	
 	var _componentsAxis2 = _interopRequireDefault(_componentsAxis);
 	
-	var _reactTweenState = __webpack_require__(4);
+	var _reactTweenState = __webpack_require__(5);
 	
 	var _componentsBasketball = __webpack_require__(8);
 	
@@ -82,11 +86,11 @@
 	  var values = rows.map(function (row) {
 	    return [row[17], row[18]];
 	  });
-	  var xscale = _d32['default'].scale.linear().domain([-250, 250]).range([0, width]);
+	  var xscale = _d32['default'].scale.linear().domain([250, -250]).range([0, width]);
 	  var yscale = _d32['default'].scale.linear().domain([-47.5, 450]).range([height, 0]);
 	
-	  var xballr = xscale(3.85) - xscale(0);
-	  var yballr = yscale(0) - yscale(3.85);
+	  var xballr = Math.abs(xscale(3.85) - xscale(0));
+	  var yballr = Math.abs(yscale(0) - yscale(3.85));
 	
 	  var TransitionBall = (0, _componentsMark2['default'])(_componentsBasketball.BasketBall, [{ prop: 'cx', duration: 2000, easing: _reactTweenState.easingTypes.linear, start: xscale(0) }, { prop: 'cy', duration: 2000, easing: _reactTweenState.easingTypes.linear, start: yscale(0) }]);
 	
@@ -94,7 +98,11 @@
 	    var x = d[17];
 	    var y = d[18];
 	
-	    return _react2['default'].createElement(TransitionBall, { key: i, className: 'dot', cx: xscale(x), cy: yscale(y), rx: xballr, ry: yballr, onMouseOver: logData.bind(null, d) });
+	    return _react2['default'].createElement(TransitionBall, { key: d[1] + '_' + d[2],
+	      className: (0, _classnames2['default'])("dot", { "made": d[10] === "Made Shot" }),
+	      cx: xscale(x), cy: yscale(y),
+	      rx: xballr, ry: yballr,
+	      onMouseOver: logData.bind(null, d) });
 	  });
 	
 	  _react2['default'].render(_react2['default'].createElement(
@@ -130,6 +138,59 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2015 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	
+	'use strict';
+	
+	(function () {
+		'use strict';
+	
+		function classNames() {
+	
+			var classes = '';
+	
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+	
+				var argType = typeof arg;
+	
+				if ('string' === argType || 'number' === argType) {
+					classes += ' ' + arg;
+				} else if (Array.isArray(arg)) {
+					classes += ' ' + classNames.apply(null, arg);
+				} else if ('object' === argType) {
+					for (var key in arg) {
+						if (arg.hasOwnProperty(key) && arg[key]) {
+							classes += ' ' + key;
+						}
+					}
+				}
+			}
+	
+			return classes.substr(1);
+		}
+	
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// AMD. Register as an anonymous module.
+			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	})();
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
@@ -138,7 +199,7 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _reactTweenState = __webpack_require__(4);
+	var _reactTweenState = __webpack_require__(5);
 	
 	function animateMark(Component, transitionAttributes) {
 	  var VisualMark = React.createClass({
@@ -181,7 +242,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -706,7 +767,7 @@
 	/***/ /***/ /***/
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -731,7 +792,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _classnames = __webpack_require__(6);
+	var _classnames = __webpack_require__(3);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
@@ -827,59 +888,6 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2015 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-	
-	'use strict';
-	
-	(function () {
-		'use strict';
-	
-		function classNames() {
-	
-			var classes = '';
-	
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
-	
-				var argType = typeof arg;
-	
-				if ('string' === argType || 'number' === argType) {
-					classes += ' ' + arg;
-				} else if (Array.isArray(arg)) {
-					classes += ' ' + classNames.apply(null, arg);
-				} else if ('object' === argType) {
-					for (var key in arg) {
-						if (arg.hasOwnProperty(key) && arg[key]) {
-							classes += ' ' + key;
-						}
-					}
-				}
-			}
-	
-			return classes.substr(1);
-		}
-	
-		if (typeof module !== 'undefined' && module.exports) {
-			module.exports = classNames;
-		} else if (true) {
-			// AMD. Register as an anonymous module.
-			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return classNames;
-			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else {
-			window.classNames = classNames;
-		}
-	})();
-
-/***/ },
 /* 7 */
 /***/ function(module, exports) {
 
@@ -936,33 +944,34 @@
 	      var hoopcenterx = this.props.xscale(0);
 	      var hoopcentery = this.props.yscale(0);
 	
-	      var xstart = this.props.xscale(-250);
-	      var xend = this.props.xscale(250);
+	      var xstart = this.props.xscale(250);
+	      var xend = this.props.xscale(-250);
 	      var ystart = this.props.yscale(422.5);
 	      var yend = this.props.yscale(-47.5);
 	      var courtheight = yend - ystart;
-	      var courtwidth = xend - xstart;
-	      var threeradiusx = this.props.xscale(237.5) - hoopcenterx;
+	      var courtwidth = Math.abs(xend - xstart);
+	      var threeradiusx = Math.abs(this.props.xscale(237.5) - hoopcenterx);
 	      var threeradiusy = hoopcentery - this.props.yscale(237.5);
 	      var threearc = (0, _arc.describeArc)(hoopcenterx, hoopcentery, threeradiusx, threeradiusy, -158, -22);
-	      var centerarc = (0, _arc.describeArc)(hoopcenterx, ystart, this.props.xscale(60) - hoopcenterx, hoopcentery - this.props.yscale(60), 0, 180);
-	      var innercenterarc = (0, _arc.describeArc)(hoopcenterx, ystart, this.props.xscale(20) - hoopcenterx, hoopcentery - this.props.yscale(20), 0, 180);
-	      var freethrowwidth = this.props.xscale(160) - this.props.xscale(0);
+	      var centerarc = (0, _arc.describeArc)(hoopcenterx, ystart, Math.abs(this.props.xscale(60) - hoopcenterx), hoopcentery - this.props.yscale(60), 0, 180);
+	      var innercenterarc = (0, _arc.describeArc)(hoopcenterx, ystart, Math.abs(this.props.xscale(20) - hoopcenterx), hoopcentery - this.props.yscale(20), 0, 180);
+	      var freethrowwidth = Math.abs(this.props.xscale(160) - this.props.xscale(0));
 	      var freethrowheight = Math.abs(this.props.yscale(-47.5 + 190) - yend);
-	      var freethrowinnerarc = (0, _arc.describeArc)(hoopcenterx, this.props.yscale(-47.5 + 190), this.props.xscale(60) - hoopcenterx, hoopcentery - this.props.yscale(60), 0, 180);
-	      var freethrowouterarc = (0, _arc.describeArc)(hoopcenterx, this.props.yscale(-47.5 + 190), this.props.xscale(60) - hoopcenterx, hoopcentery - this.props.yscale(60), -180, 0);
-	      var restrictedArc = (0, _arc.describeArc)(hoopcenterx, hoopcentery, this.props.xscale(40) - hoopcenterx, hoopcentery - this.props.yscale(40), -180, 0);
+	      var freethrowarcR = Math.abs(this.props.xscale(60) - hoopcenterx);
+	      var freethrowinnerarc = (0, _arc.describeArc)(hoopcenterx, this.props.yscale(-47.5 + 190), freethrowarcR, hoopcentery - this.props.yscale(60), 0, 180);
+	      var freethrowouterarc = (0, _arc.describeArc)(hoopcenterx, this.props.yscale(-47.5 + 190), freethrowarcR, hoopcentery - this.props.yscale(60), -180, 0);
+	      var restrictedArc = (0, _arc.describeArc)(hoopcenterx, hoopcentery, Math.abs(this.props.xscale(40) - hoopcenterx), hoopcentery - this.props.yscale(40), -180, 0);
 	
 	      return React.createElement(
 	        "g",
 	        null,
-	        React.createElement("ellipse", { stroke: "#000", fill: "none", cx: this.props.xscale(0), cy: this.props.yscale(0), rx: this.props.xscale(7.5) - this.props.xscale(0), ry: this.props.yscale(0) - this.props.yscale(7.5) }),
+	        React.createElement("ellipse", { stroke: "#000", fill: "none", cx: this.props.xscale(0), cy: this.props.yscale(0), rx: Math.abs(this.props.xscale(7.5) - this.props.xscale(0)), ry: this.props.yscale(0) - this.props.yscale(7.5) }),
 	        React.createElement("line", { strokeWidth: 2, stroke: "#000", x1: this.props.xscale(-30), x2: this.props.xscale(30), y1: this.props.yscale(-7.5), y2: this.props.yscale(-7.5) }),
 	        React.createElement("rect", { fill: "none", stroke: "#000", x: xstart, y: ystart, width: courtwidth, height: courtheight }),
 	        React.createElement("path", { d: centerarc, fill: "none", stroke: "#000" }),
 	        React.createElement("path", { d: innercenterarc, fill: "none", stroke: "#000" }),
-	        React.createElement("rect", { fill: "none", stroke: "#000", x: this.props.xscale(-80), y: this.props.yscale(-47.5 + 190), width: freethrowwidth, height: freethrowheight }),
-	        React.createElement("rect", { fill: "none", stroke: "#000", x: this.props.xscale(-60), y: this.props.yscale(-47.5 + 190), width: this.props.xscale(120) - this.props.xscale(0), height: freethrowheight }),
+	        React.createElement("rect", { fill: "none", stroke: "#000", x: this.props.xscale(80), y: this.props.yscale(-47.5 + 190), width: freethrowwidth, height: freethrowheight }),
+	        React.createElement("rect", { fill: "none", stroke: "#000", x: this.props.xscale(60), y: this.props.yscale(-47.5 + 190), width: Math.abs(this.props.xscale(120) - this.props.xscale(0)), height: freethrowheight }),
 	        React.createElement("path", { d: freethrowouterarc, fill: "none", stroke: "#000" }),
 	        React.createElement("path", { d: freethrowinnerarc, fill: "none", stroke: "#000", strokeDasharray: "5,5" }),
 	        React.createElement("path", { d: restrictedArc, fill: "none", stroke: "#000" }),

@@ -1,5 +1,6 @@
 import React from 'react'
 import d3 from 'd3'
+import classNames from 'classnames'
 import animateMark from './components/mark'
 import Axis from './components/axis'
 import {easingTypes} from 'react-tween-state'
@@ -17,11 +18,11 @@ function renderShotChart(rows, header) {
   var height = width - margin.top - margin.bottom
 
   var values = rows.map((row) => [row[17], row[18]])
-  var xscale = d3.scale.linear().domain([-250, 250]).range([0, width])
+  var xscale = d3.scale.linear().domain([250, -250]).range([0, width])
   var yscale = d3.scale.linear().domain([-47.5, 450]).range([height, 0])
 
-  var xballr = xscale(3.85) - xscale(0)
-  var yballr = yscale(0) - yscale(3.85)
+  var xballr = Math.abs(xscale(3.85) - xscale(0))
+  var yballr = Math.abs(yscale(0) - yscale(3.85))
 
   let TransitionBall = animateMark(BasketBall, [
     { prop: 'cx', duration: 2000, easing: easingTypes.linear, start: xscale(0)},
@@ -30,7 +31,11 @@ function renderShotChart(rows, header) {
 
   var points = rows.map(function (d, i) {
     var [x, y] = [d[17], d[18]]
-    return <TransitionBall key={i} className="dot" cx={xscale(x)} cy={yscale(y)} rx={xballr} ry={yballr} onMouseOver={logData.bind(null, d)}/>
+    return <TransitionBall key={`${d[1]}_${d[2]}`}
+    className={classNames("dot", {"made": d[10] === "Made Shot"})}
+    cx={xscale(x)} cy={yscale(y)}
+    rx={xballr} ry={yballr}
+    onMouseOver={logData.bind(null, d)}/>
   })
 
   React.render(
