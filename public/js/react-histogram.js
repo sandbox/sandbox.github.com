@@ -48,15 +48,15 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _react = __webpack_require__(2);
+	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _d3 = __webpack_require__(1);
+	var _d3 = __webpack_require__(2);
 	
 	var _d32 = _interopRequireDefault(_d3);
 	
-	var _componentsAxis = __webpack_require__(6);
+	var _componentsAxis = __webpack_require__(5);
 	
 	var _componentsAxis2 = _interopRequireDefault(_componentsAxis);
 	
@@ -101,19 +101,18 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = d3;
+	module.exports = React;
 
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = React;
+	module.exports = d3;
 
 /***/ },
 /* 3 */,
 /* 4 */,
-/* 5 */,
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -134,15 +133,15 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _react = __webpack_require__(2);
+	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _classnames = __webpack_require__(7);
+	var _classnames = __webpack_require__(6);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _d3_scale = __webpack_require__(8);
+	var _d3_scale = __webpack_require__(7);
 	
 	var Axis = (function (_React$Component) {
 	  _inherits(Axis, _React$Component);
@@ -234,7 +233,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -287,7 +286,7 @@
 	})();
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";

@@ -17,6 +17,7 @@
     "grunt-webpack": "^1.0.11"
   },
   "scripts": {
+    "start": "webpack-dev-server --hot --content-base src/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -4,6 +4,14 @@ title: NBA Shot Chart - James Harden
 bodyclass: demo
 ---
 
+<style>
+.dot {
+  fill: steelblue;
+  stroke: steelblue;
+  opacity: 0.6;
+}
+</style>
+
 <div id="shot-chart" style="border: 1px solid #ccc;"></div>
 <p></p>
 

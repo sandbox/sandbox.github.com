@@ -58,11 +58,11 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _react = __webpack_require__(2);
+	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _d3 = __webpack_require__(1);
+	var _d3 = __webpack_require__(2);
 	
 	var _d32 = _interopRequireDefault(_d3);
 	
@@ -70,11 +70,11 @@
 	
 	var _componentsMark2 = _interopRequireDefault(_componentsMark);
 	
-	var _componentsRect = __webpack_require__(5);
+	var _componentsRect = __webpack_require__(8);
 	
 	var _componentsRect2 = _interopRequireDefault(_componentsRect);
 	
-	var _componentsAxis = __webpack_require__(6);
+	var _componentsAxis = __webpack_require__(5);
 	
 	var _componentsAxis2 = _interopRequireDefault(_componentsAxis);
 	
@@ -144,13 +144,13 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = d3;
+	module.exports = React;
 
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = React;
+	module.exports = d3;
 
 /***/ },
 /* 3 */
@@ -733,46 +733,6 @@
 
 /***/ },
 /* 5 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Rect = (function (_React$Component) {
-	  _inherits(Rect, _React$Component);
-	
-	  function Rect() {
-	    _classCallCheck(this, Rect);
-	
-	    _get(Object.getPrototypeOf(Rect.prototype), "constructor", this).apply(this, arguments);
-	  }
-	
-	  _createClass(Rect, [{
-	    key: "render",
-	    value: function render() {
-	      return React.createElement("rect", this.props);
-	    }
-	  }]);
-	
-	  return Rect;
-	})(React.Component);
-	
-	exports["default"] = Rect;
-	module.exports = exports["default"];
-
-/***/ },
-/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -793,15 +753,15 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _react = __webpack_require__(2);
+	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _classnames = __webpack_require__(7);
+	var _classnames = __webpack_require__(6);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _d3_scale = __webpack_require__(8);
+	var _d3_scale = __webpack_require__(7);
 	
 	var Axis = (function (_React$Component) {
 	  _inherits(Axis, _React$Component);
@@ -893,7 +853,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -946,7 +906,7 @@
 	})();
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -966,6 +926,46 @@
 	
 	exports.d3_scaleExtent = d3_scaleExtent;
 	exports.d3_scaleRange = d3_scaleRange;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Rect = (function (_React$Component) {
+	  _inherits(Rect, _React$Component);
+	
+	  function Rect() {
+	    _classCallCheck(this, Rect);
+	
+	    _get(Object.getPrototypeOf(Rect.prototype), "constructor", this).apply(this, arguments);
+	  }
+	
+	  _createClass(Rect, [{
+	    key: "render",
+	    value: function render() {
+	      return React.createElement("rect", this.props);
+	    }
+	  }]);
+	
+	  return Rect;
+	})(React.Component);
+	
+	exports["default"] = Rect;
+	module.exports = exports["default"];
 
 /***/ }
 /******/ ]);
