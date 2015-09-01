@@ -1,5 +1,6 @@
 var path = require('path');
 var grunt = require('grunt');
+var webpack = require('webpack');
 
 module.exports = {
   context: __dirname + "/src",
@@ -24,7 +25,9 @@ module.exports = {
     "d3": "d3",
     "react": "React"
   },
-  plugins: [],
+  plugins: [
+    // new webpack.optimize.UglifyJsPlugin({minimize: true})
+  ],
   resolve: {
     extensions: ['', '.js', '.json', '.coffee']
   },
