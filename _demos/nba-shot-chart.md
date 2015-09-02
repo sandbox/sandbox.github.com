@@ -6,9 +6,9 @@ bodyclass: demo
 
 <style>
 .dot {
-  fill: #FA8320;
-  stroke: #FA8320;
-  opacity: 0.6;
+  fill: #EA4929;
+  stroke: #EA4929;
+  opacity: 0.4;
 }
 .dot.made {
   fill: #9FBC91;

@@ -60,13 +60,13 @@ var ShotChartSpec = {
     { "name": "courtBounds", "values": [{"x": -250, "x2": -250 + 500, "y": -47.5, "y2": -47.5 + 470}] },
     { "name": "arcs",
       "values": [
-        {"style": "solid", "x": 0, "y": -47.5 + 470, "radius": 60, "startAngle": Math.PI/2, "endAngle": 3/2 * Math.PI},
-        {"style": "solid", "x": 0, "y": -47.5 + 470, "radius": 20, "startAngle": Math.PI/2, "endAngle": 3/2 * Math.PI},
-        {"style": "solid", "x": 0, "y": 0, "radius": 40, "startAngle": -Math.PI/2, "endAngle": Math.PI/2},
-        {"style": "solid", "x": 0, "y": 0, "radius": 237.5, "startAngle": -68 / 180 * Math.PI, "endAngle": 68 / 180 * Math.PI},
-        {"style": "solid", "x": 0, "y": 0, "radius": 7.5, "startAngle": 0, "endAngle": 2 * Math.PI},
-        {"style": "solid", "x": 0, "y": 142.5, "radius": 60, "startAngle": -Math.PI/2, "endAngle": Math.PI/2},
-        {"style": "dashed", "x": 0, "y": 142.5, "radius": 60, "startAngle": -Math.PI/2, "endAngle": -3/2 * Math.PI}
+        {"x": 0, "y": -47.5 + 470, "radius": 60, "startAngle": Math.PI/2, "endAngle": 3/2 * Math.PI},
+        {"x": 0, "y": -47.5 + 470, "radius": 20, "startAngle": Math.PI/2, "endAngle": 3/2 * Math.PI},
+        {"x": 0, "y": 0, "radius": 40, "startAngle": -Math.PI/2, "endAngle": Math.PI/2},
+        {"x": 0, "y": 0, "radius": 237.5, "startAngle": -68 / 180 * Math.PI, "endAngle": 68 / 180 * Math.PI},
+        {"x": 0, "y": 0, "radius": 7.5, "startAngle": 0, "endAngle": 2 * Math.PI},
+        {"x": 0, "y": 142.5, "radius": 60, "startAngle": -Math.PI/2, "endAngle": Math.PI/2},
+        {"strokeDash": [5, 14], "x": 0, "y": 142.5, "radius": 60, "startAngle": -Math.PI/2, "endAngle": -3/2 * Math.PI}
       ]},
     { "name": "courtLines",
       "values": [
@@ -114,12 +114,6 @@ var ShotChartSpec = {
       "type": "ordinal",
       "domain": ["Missed Shot", "Made Shot"],
       "range": ["#EA4929", "#9FBC91"]
-    },
-    {
-      "name": "arcStyle",
-      "type": "ordinal",
-      "domain": ["solid", "dashed"],
-      "range": [null, "10,10"]
     }
   ],
   "legends": [
@@ -139,7 +133,7 @@ var ShotChartSpec = {
           "y": {"scale": "y", "value": 0},
           "fillOpacity" : { "scale": "makeOpacity", "field": "SHOT_MADE_FLAG" },
           "fill": { "scale": "makeColor", "field": "EVENT_TYPE" },
-          "size": { "scale": "width", "value": 100 }
+          "size": { "scale": "width", "value": 70 }
         },
         "update": {
           "x": {"scale": "x", "field": "LOC_X"},
@@ -157,7 +151,7 @@ var ShotChartSpec = {
       "properties": {
         "enter": {
           "stroke": {"value": "#000000"},
-          "strokeDash": {"scale": "arcStyle", "field": "style"},
+          "strokeDash": {"field": "strokeDash"},
           "x": {"scale": "x", "field": "x"},
           "y": {"scale": "y", "field": "y"},
           "outerRadius": {"scale": "width", "field": "radius"},

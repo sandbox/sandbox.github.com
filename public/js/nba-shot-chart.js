@@ -78,16 +78,16 @@
 	
 	function renderShotChart(rows, header) {
 	  var element = document.getElementById("shot-chart");
-	  var margin = { top: 30, right: 100, bottom: 30, left: 100 };
+	  var margin = { top: 30, right: 179, bottom: 30, left: 179 };
 	
-	  var width = element.offsetWidth - margin.left - margin.right;
-	  var height = width - margin.top - margin.bottom;
+	  var width = 600;
+	  var height = 660;
 	
 	  var values = rows.map(function (row) {
 	    return [row[17], row[18]];
 	  });
 	  var xscale = _d32['default'].scale.linear().domain([250, -250]).range([0, width]);
-	  var yscale = _d32['default'].scale.linear().domain([-47.5, 450]).range([height, 0]);
+	  var yscale = _d32['default'].scale.linear().domain([-47.5, 500]).range([height, 0]);
 	
 	  var xballr = Math.abs(xscale(3.85) - xscale(0));
 	  var yballr = Math.abs(yscale(0) - yscale(3.85));
@@ -229,7 +229,7 @@
 	  "height": 1.1 * 600,
 	  "padding": { "top": 30, "left": 179, "bottom": 30, "right": 179 },
 	  "data": [{ "name": "table" }, { "name": "courtBounds", "values": [{ "x": -250, "x2": -250 + 500, "y": -47.5, "y2": -47.5 + 470 }] }, { "name": "arcs",
-	    "values": [{ "style": "solid", "x": 0, "y": -47.5 + 470, "radius": 60, "startAngle": Math.PI / 2, "endAngle": 3 / 2 * Math.PI }, { "style": "solid", "x": 0, "y": -47.5 + 470, "radius": 20, "startAngle": Math.PI / 2, "endAngle": 3 / 2 * Math.PI }, { "style": "solid", "x": 0, "y": 0, "radius": 40, "startAngle": -Math.PI / 2, "endAngle": Math.PI / 2 }, { "style": "solid", "x": 0, "y": 0, "radius": 237.5, "startAngle": -68 / 180 * Math.PI, "endAngle": 68 / 180 * Math.PI }, { "style": "solid", "x": 0, "y": 0, "radius": 7.5, "startAngle": 0, "endAngle": 2 * Math.PI }, { "style": "solid", "x": 0, "y": 142.5, "radius": 60, "startAngle": -Math.PI / 2, "endAngle": Math.PI / 2 }, { "style": "dashed", "x": 0, "y": 142.5, "radius": 60, "startAngle": -Math.PI / 2, "endAngle": -3 / 2 * Math.PI }] }, { "name": "courtLines",
+	    "values": [{ "x": 0, "y": -47.5 + 470, "radius": 60, "startAngle": Math.PI / 2, "endAngle": 3 / 2 * Math.PI }, { "x": 0, "y": -47.5 + 470, "radius": 20, "startAngle": Math.PI / 2, "endAngle": 3 / 2 * Math.PI }, { "x": 0, "y": 0, "radius": 40, "startAngle": -Math.PI / 2, "endAngle": Math.PI / 2 }, { "x": 0, "y": 0, "radius": 237.5, "startAngle": -68 / 180 * Math.PI, "endAngle": 68 / 180 * Math.PI }, { "x": 0, "y": 0, "radius": 7.5, "startAngle": 0, "endAngle": 2 * Math.PI }, { "x": 0, "y": 142.5, "radius": 60, "startAngle": -Math.PI / 2, "endAngle": Math.PI / 2 }, { "strokeDash": [5, 14], "x": 0, "y": 142.5, "radius": 60, "startAngle": -Math.PI / 2, "endAngle": -3 / 2 * Math.PI }] }, { "name": "courtLines",
 	    "values": [{ "x": 22, "y": -7.5, "x2": -22, "y2": -8.5 }, { "x": 60, "y": 150 - 7.5, "x2": -60, "y2": -47.5 }, { "x": 80, "y": 150 - 7.5, "x2": -80, "y2": -47.5 }, { "x": -220, "y": 90, "x2": -220.2, "y2": -47.5 }, { "x": 220.2, "y": 90, "x2": 220, "y2": -47.5 }] }],
 	  "scales": [{
 	    "name": "width",
@@ -262,11 +262,6 @@
 	    "type": "ordinal",
 	    "domain": ["Missed Shot", "Made Shot"],
 	    "range": ["#EA4929", "#9FBC91"]
-	  }, {
-	    "name": "arcStyle",
-	    "type": "ordinal",
-	    "domain": ["solid", "dashed"],
-	    "range": [null, "10,10"]
 	  }],
 	  "legends": [{
 	    "fill": "makeColor"
@@ -282,7 +277,7 @@
 	        "y": { "scale": "y", "value": 0 },
 	        "fillOpacity": { "scale": "makeOpacity", "field": "SHOT_MADE_FLAG" },
 	        "fill": { "scale": "makeColor", "field": "EVENT_TYPE" },
-	        "size": { "scale": "width", "value": 100 }
+	        "size": { "scale": "width", "value": 70 }
 	      },
 	      "update": {
 	        "x": { "scale": "x", "field": "LOC_X" },
@@ -299,7 +294,7 @@
 	    "properties": {
 	      "enter": {
 	        "stroke": { "value": "#000000" },
-	        "strokeDash": { "scale": "arcStyle", "field": "style" },
+	        "strokeDash": { "field": "strokeDash" },
 	        "x": { "scale": "x", "field": "x" },
 	        "y": { "scale": "y", "field": "y" },
 	        "outerRadius": { "scale": "width", "field": "radius" },

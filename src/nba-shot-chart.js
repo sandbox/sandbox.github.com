@@ -12,14 +12,14 @@ function logData(d) {
 
 function renderShotChart(rows, header) {
   var element = document.getElementById("shot-chart")
-  var margin = {top: 30, right: 100, bottom: 30, left: 100}
+  var margin = {top: 30, right: 179, bottom: 30, left: 179}
 
-  var width = element.offsetWidth - margin.left - margin.right
-  var height = width - margin.top - margin.bottom
+  var width = 600
+  var height = 660
 
   var values = rows.map((row) => [row[17], row[18]])
   var xscale = d3.scale.linear().domain([250, -250]).range([0, width])
-  var yscale = d3.scale.linear().domain([-47.5, 450]).range([height, 0])
+  var yscale = d3.scale.linear().domain([-47.5, 500]).range([height, 0])
 
   var xballr = Math.abs(xscale(3.85) - xscale(0))
   var yballr = Math.abs(yscale(0) - yscale(3.85))
