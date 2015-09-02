@@ -10,5 +10,6 @@ _gh_pages
 node_modules
 
 *.js.map
+*.hot.js
 
 .DS_Store

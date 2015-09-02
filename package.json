@@ -17,8 +17,7 @@
     "grunt-webpack": "^1.0.11"
   },
   "scripts": {
-    "start": "webpack-dev-server --hot --content-base src/",
-    "dev": "webpack --progress --colors --watch --devtool source-map",
+    "start": "foreman start --formation=\"webpack_watch=1,webpack_server=1,jekyll=1\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
