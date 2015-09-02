@@ -25,8 +25,8 @@ function renderShotChart(rows, header) {
   var yballr = Math.abs(yscale(0) - yscale(3.85))
 
   let TransitionBall = animateMark(BasketBall, [
-    { prop: 'cx', duration: 2000, easing: easingTypes.linear, start: xscale(0)},
-    { prop: 'cy', duration: 2000, easing: easingTypes.linear, start: yscale(0)}
+    { prop: 'cx', duration: 1000, easing: easingTypes.linear, start: xscale(0)},
+    { prop: 'cy', duration: 1000, easing: easingTypes.linear, start: yscale(0)}
   ])
 
   var points = rows.map(function (d, i) {

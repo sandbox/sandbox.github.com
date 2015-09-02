@@ -15,7 +15,7 @@ module.exports = {
   entry: entries,
   output: {
     path: path.join(__dirname, "public", "js"),
-    filename: '[name].js'
+    filename: '[name].min.js'
   },
   module: {
     loaders: [
@@ -33,7 +33,7 @@ module.exports = {
     "react": "React"
   },
   plugins: [
-    // new webpack.optimize.UglifyJsPlugin({minimize: true})
+    new webpack.optimize.UglifyJsPlugin({minimize: true})
   ],
   resolve: {
     extensions: ['', '.js', '.json', '.coffee']

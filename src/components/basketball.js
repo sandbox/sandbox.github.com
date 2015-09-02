@@ -57,7 +57,6 @@ var ShotChartSpec = {
   "padding": {"top": 30, "left": 179, "bottom": 30, "right": 179},
   "data": [
     { "name": "table" },
-    { "name": "courtBounds", "values": [{"x": -250, "x2": -250 + 500, "y": -47.5, "y2": -47.5 + 470}] },
     { "name": "arcs",
       "values": [
         {"x": 0, "y": -47.5 + 470, "radius": 60, "startAngle": Math.PI/2, "endAngle": 3/2 * Math.PI},
@@ -70,7 +69,8 @@ var ShotChartSpec = {
       ]},
     { "name": "courtLines",
       "values": [
-        { "x": 22, "y": -7.5, "x2": -22, "y2": -8.5 },
+        { "x": -250, "x2": -250 + 500, "y": -47.5, "y2": -47.5 + 470},
+        { "x": 30, "y": -7.5, "x2": -30, "y2": -8.5 },
         { "x": 60, "y": 150-7.5, "x2": -60, "y2": -47.5 },
         { "x": 80, "y": 150-7.5, "x2": -80, "y2": -47.5 },
         { "x": -220, "y": 90, "x2": -220.2, "y2": -47.5 },
@@ -169,19 +169,6 @@ var ShotChartSpec = {
           "fill": {"value": null},
           "stroke": {"value": "#000000"},
           "strokeWidth": {"value": 1},
-          "x":  {"scale": "x", "field": "x"},
-          "y":  {"scale": "y", "field": "y"},
-          "x2": {"scale": "x", "field": "x2"},
-          "y2": {"scale": "y", "field": "y2"}
-        }
-      }
-    },
-    {
-      "type": "rect",
-      "from": {"data": "courtBounds"},
-      "properties": {
-        "enter": {
-          "stroke": {"value": "#000000"},
           "x": {"scale": "x", "field": "x"},
           "y": {"scale": "y", "field": "y"},
           "x2": {"scale": "x", "field": "x2"},

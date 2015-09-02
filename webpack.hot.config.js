@@ -37,6 +37,7 @@ module.exports = {
     contentBase: "./src",
     hot: true,
     inline: true,
+    devtool: 'eval',
     headers: { 'Access-Control-Allow-Origin': '*' }
   },
   plugins: [
