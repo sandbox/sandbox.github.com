@@ -48,15 +48,15 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _d3 = __webpack_require__(1);
+	var _d3 = __webpack_require__(2);
 	
 	var _d32 = _interopRequireDefault(_d3);
 	
-	var _vega = __webpack_require__(2);
+	var _vega = __webpack_require__(10);
 	
 	var _vega2 = _interopRequireDefault(_vega);
 	
-	var _componentsBasketball = __webpack_require__(3);
+	var _componentsBasketball = __webpack_require__(8);
 	
 	_d32['default'].json("https://gist.githubusercontent.com/sandbox/7f6065c867a5f355207e/raw/5c74a5dcd7b257faa985f28c932a684ed4cea065/james-harden-shotchartdetail.json", function (error, json) {
 	  if (error) return console.warn(error);
@@ -72,24 +72,24 @@
 	  _vega2['default'].parse.spec(_componentsBasketball.ShotChartSpec, function (chart) {
 	    var view = chart({ el: "#shot-chart" });
 	    view.data('table').insert(data);
-	    view.renderer("svg").update({ duration: 1000, ease: "linear" });
+	    view.update({ duration: 1000, ease: "linear" });
 	  });
 	});
 
 /***/ },
-/* 1 */
+/* 1 */,
+/* 2 */
 /***/ function(module, exports) {
 
 	module.exports = d3;
 
 /***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	module.exports = vg;
-
-/***/ },
-/* 3 */
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -106,7 +106,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _arc = __webpack_require__(4);
+	var _arc = __webpack_require__(9);
 	
 	var CourtBounds = (function (_React$Component) {
 	  _inherits(CourtBounds, _React$Component);
@@ -297,7 +297,7 @@
 	/* hoop */ /* court boundary */ /* center arc */ /* free throw area */ /* restricted area arc */ /* three point arc */
 
 /***/ },
-/* 4 */
+/* 9 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -322,6 +322,12 @@
 	}
 	
 	exports.describeArc = describeArc;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	module.exports = vg;
 
 /***/ }
 /******/ ]);

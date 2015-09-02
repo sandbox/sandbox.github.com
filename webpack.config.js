@@ -2,18 +2,20 @@ var path = require('path');
 var grunt = require('grunt');
 var webpack = require('webpack');
 
+var entries = grunt.file.expand({cwd: path.resolve('src')}, "*").reduce(
+  function(map, page) {
+    if (page.match(/.js$/)) {
+      map[page.slice(0, page.length - 3)] = "./" + page;
+    }
+    return map;
+  }, {});
+
 module.exports = {
   context: __dirname + "/src",
-  entry: grunt.file.expand({cwd: path.resolve('src')}, "*").reduce(
-    function(map, page) {
-      if (page.match(/.js$/)) {
-        map[page] = "./" + page;
-      }
-      return map;
-    }, {}),
+  entry: entries,
   output: {
     path: path.join(__dirname, "public", "js"),
-    filename: '[name]'
+    filename: '[name].js'
   },
   module: {
     loaders: [

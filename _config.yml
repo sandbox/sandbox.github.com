@@ -29,7 +29,7 @@ author:
 github:
   url:         http://github.com/sandbox
 
-exclude: [ "Gruntfile.js", "package.json", "webpack.config.js", "node_modules/*", "src/*", ".*"]
+exclude: [ Gruntfile.js, package.json, webpack.config.js, node_modules, src, .nodeenv, .*, .**/*]
 
 collections:
   demos:
