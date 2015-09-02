@@ -27,7 +27,7 @@ let TransitionCircle = animateMark(Circle, [
 
 var points = values.map(function (d, i) {
   var [x, y] = d
-  return <TransitionCircle className="dot" cx={xscale(x)} cy={yscale(y)} r={3} />
+  return <TransitionCircle key={i} className="dot" cx={xscale(x)} cy={yscale(y)} r={3} />
 })
 
 React.render(

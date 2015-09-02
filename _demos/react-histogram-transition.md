@@ -42,4 +42,4 @@ get a feel for animating elements with react. This animates the
 histogram bars height starting from 0 height and animates the width
 starting from 0 width.
 
-<script src="/public/js/react-histogram-transition.js" type="text/javascript"></script>
+{% include javascript.html js_file="react-histogram-transition" %}

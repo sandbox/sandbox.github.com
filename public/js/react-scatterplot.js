@@ -115,7 +115,7 @@
 	  var x = _d[0];
 	  var y = _d[1];
 	
-	  return _react2['default'].createElement(TransitionCircle, { className: 'dot', cx: xscale(x), cy: yscale(y), r: 3 });
+	  return _react2['default'].createElement(TransitionCircle, { key: i, className: 'dot', cx: xscale(x), cy: yscale(y), r: 3 });
 	});
 	
 	_react2['default'].render(_react2['default'].createElement(

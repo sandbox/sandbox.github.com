@@ -26,7 +26,7 @@ bodyclass: demo
 }
 </style>
 <div id="react-histogram" style="border: 1px solid #ccc;"></div>
-<script src="/public/js/react-histogram.js" type="text/javascript"></script>
+{% include javascript.html js_file="react-histogram" %}
 <p></p>
 
 A basic histogram rendered with React using scale and data functions

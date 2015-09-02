@@ -35,4 +35,4 @@ There are 500 points rendered, at which it starts to feel a little
 choppy. At 1,000 points choppiness is very noticeable and at 10,000
 points it might as well be static.
 
-<script src="/public/js/react-scatterplot.js" type="text/javascript"></script>
+{% include javascript.html js_file="react-scatterplot" %}

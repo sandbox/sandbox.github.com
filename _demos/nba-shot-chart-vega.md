@@ -21,4 +21,4 @@ update thousands of component's state incurs a lot of overhead.
 In terms of Vega's canvas vs SVG rendering, canvas may be smoother but
 I cannot tell on my machine with a small dataset of this size.
 
-<script src="/public/js/nba-shot-chart-vega.js" type="text/javascript"></script>
+{% include javascript.html js_file="nba-shot-chart-vega" %}
