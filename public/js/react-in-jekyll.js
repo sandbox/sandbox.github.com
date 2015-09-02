@@ -40,8 +40,9 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -56,7 +57,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _react = __webpack_require__(1);
+	var _react = __webpack_require__(5);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
@@ -100,11 +101,13 @@
 	_react2["default"].render(_react2["default"].createElement(HelloWorld, null), document.getElementById("react-body"));
 
 /***/ },
-/* 1 */
+
+/***/ 5:
 /***/ function(module, exports) {
 
 	module.exports = React;
 
 /***/ }
-/******/ ]);
+
+/******/ });
 //# sourceMappingURL=react-in-jekyll.js.map

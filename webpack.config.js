@@ -22,6 +22,7 @@ module.exports = {
     ]
   },
   externals: {
+    "vega": "vg",
     "d3": "d3",
     "react": "React"
   },

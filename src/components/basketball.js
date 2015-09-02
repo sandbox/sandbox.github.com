@@ -51,4 +51,151 @@ class BasketBall extends React.Component {
   }
 }
 
-export {CourtBounds, BasketBall}
+var ShotChartSpec = {
+  "width":  600,
+  "height": 1.1 * 600,
+  "padding": {"top": 30, "left": 179, "bottom": 30, "right": 179},
+  "data": [
+    { "name": "table" },
+    { "name": "courtBounds", "values": [{"x": -250, "x2": -250 + 500, "y": -47.5, "y2": -47.5 + 470}] },
+    { "name": "arcs",
+      "values": [
+        {"style": "solid", "x": 0, "y": -47.5 + 470, "radius": 60, "startAngle": Math.PI/2, "endAngle": 3/2 * Math.PI},
+        {"style": "solid", "x": 0, "y": -47.5 + 470, "radius": 20, "startAngle": Math.PI/2, "endAngle": 3/2 * Math.PI},
+        {"style": "solid", "x": 0, "y": 0, "radius": 40, "startAngle": -Math.PI/2, "endAngle": Math.PI/2},
+        {"style": "solid", "x": 0, "y": 0, "radius": 237.5, "startAngle": -68 / 180 * Math.PI, "endAngle": 68 / 180 * Math.PI},
+        {"style": "solid", "x": 0, "y": 0, "radius": 7.5, "startAngle": 0, "endAngle": 2 * Math.PI},
+        {"style": "solid", "x": 0, "y": 142.5, "radius": 60, "startAngle": -Math.PI/2, "endAngle": Math.PI/2},
+        {"style": "dashed", "x": 0, "y": 142.5, "radius": 60, "startAngle": -Math.PI/2, "endAngle": -3/2 * Math.PI}
+      ]},
+    { "name": "courtLines",
+      "values": [
+        { "x": 22, "y": -7.5, "x2": -22, "y2": -8.5 },
+        { "x": 60, "y": 150-7.5, "x2": -60, "y2": -47.5 },
+        { "x": 80, "y": 150-7.5, "x2": -80, "y2": -47.5 },
+        { "x": -220, "y": 90, "x2": -220.2, "y2": -47.5 },
+        { "x": 220.2, "y": 90, "x2": 220, "y2": -47.5 }
+      ]},
+  ],
+  "scales": [
+    {
+      "name": "width",
+      "type": "linear",
+      "range": "width",
+      "domain": [0, 500]
+    },
+    {
+      "name": "height",
+      "type": "linear",
+      "range": "height",
+      "domain": [0, 550]
+    },
+    {
+      "name": "x",
+      "type": "linear",
+      "range": "width",
+      "domain": [-250, 250],
+      "reverse": true
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "range": "height",
+      "domain": [-50, 500]
+    },
+    {
+      "name": "makeOpacity",
+      "type": "linear",
+      "domain": [0, 1],
+      "range": [0.4, 0.8]
+    },
+    {
+      "name": "makeColor",
+      "type": "ordinal",
+      "domain": ["Missed Shot", "Made Shot"],
+      "range": ["#EA4929", "#9FBC91"]
+    },
+    {
+      "name": "arcStyle",
+      "type": "ordinal",
+      "domain": ["solid", "dashed"],
+      "range": ["solid", "10,10"]
+    }
+  ],
+  "legends": [
+    {
+      "fill": "makeColor"
+    }
+  ],
+  "marks": [
+    {
+      "type": "symbol",
+      "from": {"data": "table"},
+      "key": "__id",
+      "properties": {
+        "enter": {
+          "shape": "circle",
+          "x": {"scale": "x", "value": 0},
+          "y": {"scale": "y", "value": 0},
+          "fillOpacity" : { "scale": "makeOpacity", "field": "SHOT_MADE_FLAG" },
+          "fill": { "scale": "makeColor", "field": "EVENT_TYPE" },
+          "size": { "scale": "width", "value": 100 }
+        },
+        "update": {
+          "x": {"scale": "x", "field": "LOC_X"},
+          "y": {"scale": "y", "field": "LOC_Y"}
+        },
+        "exit": {
+          "x": {"scale": "x", "value": 0},
+          "y": {"scale": "y", "value": 0}
+        }
+      }
+    },
+    {
+      "type": "arc",
+      "from": {"data": "arcs"},
+      "properties": {
+        "enter": {
+          "stroke": {"value": "#000000"},
+          "strokeDash": {"scale": "arcStyle", "field": "style"},
+          "x": {"scale": "x", "field": "x"},
+          "y": {"scale": "y", "field": "y"},
+          "outerRadius": {"scale": "width", "field": "radius"},
+          "innerRadius": {"scale": "width", "field": "radius"},
+          "startAngle": {"field": "startAngle"},
+          "endAngle": {"field": "endAngle"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "courtLines"},
+      "properties": {
+        "enter": {
+          "fill": {"value": "none"},
+          "stroke": {"value": "#000000"},
+          "strokeWidth": {"value": 1},
+          "x":  {"scale": "x", "field": "x"},
+          "y":  {"scale": "y", "field": "y"},
+          "x2": {"scale": "x", "field": "x2"},
+          "y2": {"scale": "y", "field": "y2"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "courtBounds"},
+      "properties": {
+        "enter": {
+          "stroke": {"value": "#000000"},
+          "x": {"scale": "x", "field": "x"},
+          "y": {"scale": "y", "field": "y"},
+          "x2": {"scale": "x", "field": "x2"},
+          "y2": {"scale": "y", "field": "y2"}
+        }
+      }
+    }
+  ]
+}
+
+export {CourtBounds, BasketBall, ShotChartSpec}

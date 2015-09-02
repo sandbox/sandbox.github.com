@@ -58,27 +58,27 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _react = __webpack_require__(1);
+	var _react = __webpack_require__(5);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _d3 = __webpack_require__(2);
+	var _d3 = __webpack_require__(1);
 	
 	var _d32 = _interopRequireDefault(_d3);
 	
-	var _componentsMark = __webpack_require__(4);
+	var _componentsMark = __webpack_require__(7);
 	
 	var _componentsMark2 = _interopRequireDefault(_componentsMark);
 	
-	var _componentsRect = __webpack_require__(10);
+	var _componentsRect = __webpack_require__(11);
 	
 	var _componentsRect2 = _interopRequireDefault(_componentsRect);
 	
-	var _componentsAxis = __webpack_require__(6);
+	var _componentsAxis = __webpack_require__(9);
 	
 	var _componentsAxis2 = _interopRequireDefault(_componentsAxis);
 	
-	var _reactTweenState = __webpack_require__(5);
+	var _reactTweenState = __webpack_require__(8);
 	
 	var element = document.getElementById("react-transition");
 	var margin = { top: 10, right: 30, bottom: 30, left: 30 };
@@ -144,16 +144,19 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = React;
-
-/***/ },
-/* 2 */
-/***/ function(module, exports) {
-
 	module.exports = d3;
 
 /***/ },
-/* 3 */
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */
+/***/ function(module, exports) {
+
+	module.exports = React;
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -206,7 +209,7 @@
 	})();
 
 /***/ },
-/* 4 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -217,7 +220,7 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _reactTweenState = __webpack_require__(5);
+	var _reactTweenState = __webpack_require__(8);
 	
 	function animateMark(Component, transitionAttributes) {
 	  var VisualMark = React.createClass({
@@ -260,7 +263,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 5 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -785,7 +788,7 @@
 	/***/ /***/ /***/
 
 /***/ },
-/* 6 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -806,15 +809,15 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _react = __webpack_require__(1);
+	var _react = __webpack_require__(5);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _classnames = __webpack_require__(3);
+	var _classnames = __webpack_require__(6);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _d3_scale = __webpack_require__(7);
+	var _d3_scale = __webpack_require__(10);
 	
 	var Axis = (function (_React$Component) {
 	  _inherits(Axis, _React$Component);
@@ -906,7 +909,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 7 */
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -928,9 +931,7 @@
 	exports.d3_scaleRange = d3_scaleRange;
 
 /***/ },
-/* 8 */,
-/* 9 */,
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	"use strict";
