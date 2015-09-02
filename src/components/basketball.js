@@ -119,7 +119,7 @@ var ShotChartSpec = {
       "name": "arcStyle",
       "type": "ordinal",
       "domain": ["solid", "dashed"],
-      "range": ["solid", "10,10"]
+      "range": [null, "10,10"]
     }
   ],
   "legends": [
@@ -172,7 +172,7 @@ var ShotChartSpec = {
       "from": {"data": "courtLines"},
       "properties": {
         "enter": {
-          "fill": {"value": "none"},
+          "fill": {"value": null},
           "stroke": {"value": "#000000"},
           "strokeWidth": {"value": 1},
           "x":  {"scale": "x", "field": "x"},

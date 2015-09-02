@@ -19,6 +19,6 @@ d3.json(
       function(chart) {
         let view = chart({el: "#shot-chart"})
         view.data('table').insert(data)
-        view.renderer("svg").update({duration: 1000, ease: "linear"})
+        view.update({duration: 1000, ease: "linear"})
       })
   })
