@@ -18,6 +18,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server --hot --content-base src/",
+    "dev": "webpack --progress --colors --watch --devtool source-map",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
