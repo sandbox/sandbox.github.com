@@ -13,3 +13,4 @@ node_modules
 *.hot.js
 
 .DS_Store
+.emacs.desktop

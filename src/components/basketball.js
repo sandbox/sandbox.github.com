@@ -52,20 +52,70 @@ class BasketBall extends React.Component {
 }
 
 var ShotChartSpec = {
-  "width":  600,
-  "height": 1.1 * 600,
-  "padding": {"top": 30, "left": 179, "bottom": 30, "right": 179},
+  "width":  960,
+  "height": 800,
   "data": [
-    { "name": "table" },
+    {
+      "name": "table",
+      "transform": [
+        {"type": "formula", "field": "hoopdistance", "expr": "sqrt(pow(datum.LOC_X, 2) + pow(datum.LOC_Y, 2))/10"}
+      ]
+    },
+    {
+      "name": "bins",
+      "source": "table",
+      "transform": [
+        {"type": "bin", "field": "hoopdistance", "min": 0, "max": 90, "step": 1, "output": { "bin": "bin_hoopdistance" }},
+        {"type": "bin", "field": "LOC_X", "min": -260, "max": 260, "step": 5, "output": { "bin": "bin_LOC_X" }},
+        {"type": "bin", "field": "LOC_Y", "min": -50,  "max": 470, "step": 5, "output": { "bin": "bin_LOC_Y" }}
+      ]
+    },
+    {
+      "name": "distance",
+      "source": "bins",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby" : { "field": "bin_hoopdistance" },
+          "summarize": {"hoopdistance": ["count"]}
+        }
+      ]
+    },
+    {
+      "name": "xdistance",
+      "source": "bins",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby" : { "field": "bin_LOC_X" },
+          "summarize": {"LOC_X": ["count"]}
+        }
+      ]
+    },
+    {
+      "name": "ydistance",
+      "source": "bins",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby" : { "field": "bin_LOC_Y" },
+          "summarize": {"LOC_Y": ["count"]}
+        }
+      ]
+    },
     { "name": "arcs",
       "values": [
-        {"x": 0, "y": -47.5 + 470, "radius": 60, "startAngle": Math.PI/2, "endAngle": 3/2 * Math.PI},
-        {"x": 0, "y": -47.5 + 470, "radius": 20, "startAngle": Math.PI/2, "endAngle": 3/2 * Math.PI},
-        {"x": 0, "y": 0, "radius": 40, "startAngle": -Math.PI/2, "endAngle": Math.PI/2},
-        {"x": 0, "y": 0, "radius": 237.5, "startAngle": -68 / 180 * Math.PI, "endAngle": 68 / 180 * Math.PI},
-        {"x": 0, "y": 0, "radius": 7.5, "startAngle": 0, "endAngle": 2 * Math.PI},
-        {"x": 0, "y": 142.5, "radius": 60, "startAngle": -Math.PI/2, "endAngle": Math.PI/2},
-        {"strokeDash": [5, 14], "x": 0, "y": 142.5, "radius": 60, "startAngle": -Math.PI/2, "endAngle": -3/2 * Math.PI}
+        // center court arc
+        { "x": 0           , "y": -47.5 + 470 , "radius": 60    , "startAngle": 90  , "endAngle": 270                          } ,
+        { "x": 0           , "y": -47.5 + 470 , "radius": 20    , "startAngle": 90  , "endAngle": 270                          } ,
+        // restricted area
+        { "x": 0           , "y": 0           , "radius": 40    , "startAngle": -90 , "endAngle": 90                           } ,
+        // three point
+        { "x": 0           , "y": 0           , "radius": 237.5 , "startAngle": -68 , "endAngle": 68                           } ,
+        { "x": 0           , "y": 0           , "radius": 7.5   , "startAngle": 0   , "endAngle": 360                          } ,
+        // free throw arc
+        { "x": 0           , "y": 142.5       , "radius": 60    , "startAngle": -90 , "endAngle": 90                           } ,
+        { "x": 0           , "y": 142.5       , "radius": 60    , "startAngle": -90 , "endAngle": -270, "strokeDash": [5 , 14] }
       ]},
     { "name": "courtLines",
       "values": [
@@ -79,29 +129,11 @@ var ShotChartSpec = {
   ],
   "scales": [
     {
-      "name": "width",
+      "name": "degreeRadians",
       "type": "linear",
-      "range": "width",
-      "domain": [0, 500]
-    },
-    {
-      "name": "height",
-      "type": "linear",
-      "range": "height",
-      "domain": [0, 550]
-    },
-    {
-      "name": "x",
-      "type": "linear",
-      "range": "width",
-      "domain": [-250, 250],
-      "reverse": true
-    },
-    {
-      "name": "y",
-      "type": "linear",
-      "range": "height",
-      "domain": [-50, 500]
+      "domain": [0, 360],
+      // "range" : [0, 2 * Math.PI]
+      "range" : [Math.PI , 3 * Math.PI]
     },
     {
       "name": "makeOpacity",
@@ -114,67 +146,282 @@ var ShotChartSpec = {
       "type": "ordinal",
       "domain": ["Missed Shot", "Made Shot"],
       "range": ["#EA4929", "#9FBC91"]
+    },
+    {
+      "name": "playerSymbol",
+      "type": "ordinal",
+      "domain": { "data": "table", "field": "PLAYER_NAME" },
+      "range": ["circle", "square", "cross", "diamond", "triangle-up", "triangle-down"]
     }
   ],
   "legends": [
     {
+      "orient": "left",
+      "shape": "playerSymbol",
+      "properties": {
+        "symbols": {
+          "fillOpacity": {"value": 0.5}
+        }
+      }
+    },
+    {
+      "orient": "left",
       "fill": "makeColor"
     }
   ],
   "marks": [
     {
-      "type": "symbol",
-      "from": {"data": "table"},
-      "key": "__id",
+      "type": "group",
       "properties": {
-        "enter": {
-          "shape": "circle",
-          "x": {"scale": "x", "value": 0},
-          "y": {"scale": "y", "value": 0},
-          "fillOpacity" : { "scale": "makeOpacity", "field": "SHOT_MADE_FLAG" },
-          "fill": { "scale": "makeColor", "field": "EVENT_TYPE" },
-          "size": { "scale": "width", "value": 70 }
-        },
         "update": {
-          "x": {"scale": "x", "field": "LOC_X"},
-          "y": {"scale": "y", "field": "LOC_Y"}
+          "x": { "value": 620 },
+          "y": { "value": 2.5 },
+          "width": {"value": 200 },
+          "height": {"value": 100 }
+        }
+      },
+      "scales": [
+        {
+          "name": "x",
+          "type": "linear",
+          "range": "width",
+          // "reverse" : true, // hoop on bottom view
+          "domain": [0, 50]
         },
-        "exit": {
-          "x": {"scale": "x", "value": 0},
-          "y": {"scale": "y", "value": 0}
+        {
+          "name": "y",
+          "type": "linear",
+          "range": "height",
+          "domain": { "data": "distance", "field": "count_hoopdistance" }
+        },
+      ],
+      "axes": [{
+        "type": "x", "scale": "x", "tickFormat": "0d"
+      }],
+      "marks": [
+        {
+          "type": "rect",
+          "from": {"data": "distance"},
+          "properties": {
+            "update": {
+              "stroke": {"value": "steelblue"},
+              "fillOpacity": {"value": 0.6},
+              "x": {"scale": "x", "field": "bin_hoopdistance"},
+              "width": {"scale": "x", "value": 1},
+              "y": {"scale": "y", "field": "count_hoopdistance"},
+              "y2": {"scale": "y", "value": 0},
+              "fill": {"value": "steelblue"}
+            }
+          }
+        },
+        {
+          "type": "text",
+          "properties": {
+            "enter": {
+              "x": {"value": 0},
+              "y": {"value": -10},
+              "text": {"value": "Shot Distance from Hoop (in feet)"},
+              "fill": {"value": "black"},
+              "fontSize": {"value": 14},
+              "fontWeight": {"value": "bold"}
+            }
+          }
         }
-      }
+      ]
     },
     {
-      "type": "arc",
-      "from": {"data": "arcs"},
+      "type": "group",
       "properties": {
-        "enter": {
-          "stroke": {"value": "#000000"},
-          "strokeDash": {"field": "strokeDash"},
-          "x": {"scale": "x", "field": "x"},
-          "y": {"scale": "y", "field": "y"},
-          "outerRadius": {"scale": "width", "field": "radius"},
-          "innerRadius": {"scale": "width", "field": "radius"},
-          "startAngle": {"field": "startAngle"},
-          "endAngle": {"field": "endAngle"}
+        "update": {
+          "x": { "value": 0 },
+          "y": { "value": 2.5 },
+          "width": {"value": 600 },
+          "height": {"value": 100 }
         }
-      }
+      },
+      "scales": [
+        {
+          "name": "x",
+          "type": "linear",
+          "range": "width",
+          // "reverse" : true, // hoop on bottom view
+          "domain": [-250, 250]
+        },
+        {
+          "name": "thickness",
+          "type": "linear",
+          "range": "width",
+          "domain": [0, 500]
+        },
+        {
+          "name": "y",
+          "type": "linear",
+          "range": "height",
+          "domain": { "data": "xdistance", "field": "count_LOC_X" }
+        },
+      ],
+      "marks": [
+        {
+          "type": "rect",
+          "from": {"data": "xdistance"},
+          "properties": {
+            "update": {
+              "stroke": {"value": "steelblue"},
+              "fillOpacity": {"value": 0.6},
+              "x": {"scale": "x", "field": "bin_LOC_X"},
+              "width": {"scale": "thickness", "value": 5},
+              "y": {"scale": "y", "field": "count_LOC_X"},
+              "y2": {"scale": "y", "value": 0},
+              "fill": {"value": "steelblue"}
+            }
+          }
+        }
+      ]
     },
     {
-      "type": "rect",
-      "from": {"data": "courtLines"},
+      "type": "group",
       "properties": {
-        "enter": {
-          "fill": {"value": null},
-          "stroke": {"value": "#000000"},
-          "strokeWidth": {"value": 1},
-          "x": {"scale": "x", "field": "x"},
-          "y": {"scale": "y", "field": "y"},
-          "x2": {"scale": "x", "field": "x2"},
-          "y2": {"scale": "y", "field": "y2"}
+        "update": {
+          "x": { "value": 600 },
+          "y": { "value": 100 },
+          "width": {"value": 100 },
+          "height": {"value": 660 }
         }
-      }
+      },
+      "scales": [
+        {
+          "name": "thickness",
+          "type": "linear",
+          "range": "height",
+          "reverse": true,
+          "domain": [0, 550]
+        },
+        {
+          "name": "x",
+          "type": "linear",
+          "range": "width",
+          "domain": { "data": "ydistance", "field": "count_LOC_Y" }
+        },
+        {
+          "name": "y",
+          "type": "linear",
+          "range": "height",
+          "reverse": true,
+          "domain": [-50, 500]
+        },
+      ],
+      "marks": [
+        {
+          "type": "rect",
+          "from": {"data": "ydistance"},
+          "properties": {
+            "update": {
+              "stroke": {"value": "steelblue"},
+              "fillOpacity": {"value": 0.6},
+              "y": {"scale": "y", "field": "bin_LOC_Y"},
+              "x": {"value": 0},
+              "x2": {"scale": "x", "field": "count_LOC_Y"},
+              "height": {"scale": "thickness", "value": 5},
+              "fill": {"value": "steelblue"}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "properties": {
+        "update": {
+          "x": { "value": 0 },
+          "y": { "value": 100 },
+          "width": {"value": 600 },
+          "height": {"value": 1.1 * 600 }
+        }
+      },
+      "scales": [
+        {
+          "name": "width",
+          "type": "linear",
+          "range": "width",
+          "domain": [0, 500]
+        },
+        {
+          "name": "height",
+          "type": "linear",
+          "range": "height",
+          "domain": [0, 550]
+        },
+        {
+          "name": "x",
+          "type": "linear",
+          "range": "width",
+          // "reverse" : true, // hoop on bottom view
+          "domain": [-250, 250]
+        },
+        {
+          "name": "y",
+          "type": "linear",
+          "range": "height",
+          "reverse": true, // hoop on top view
+          "domain": [-50, 500]
+        },
+      ],
+      "marks": [
+        {
+          "type": "symbol",
+          "from": {"data": "table"},
+          "key": "shot_id",
+          "properties": {
+            "enter": {
+              "shape": { "scale": "playerSymbol", "field": "PLAYER_NAME" },
+              "x": {"scale": "x", "value": 0},
+              "y": {"scale": "y", "value": 0},
+              "fillOpacity" : { "scale": "makeOpacity", "field": "SHOT_MADE_FLAG" },
+              "fill": { "scale": "makeColor", "field": "EVENT_TYPE" },
+              "size": { "scale": "width", "value": 70 }
+            },
+            "update": {
+              "x": {"scale": "x", "field": "LOC_X"},
+              "y": {"scale": "y", "field": "LOC_Y"}
+            },
+            "exit": {
+              "x": {"scale": "x", "value": 0},
+              "y": {"scale": "y", "value": 0}
+            }
+          }
+        },
+        {
+          "type": "arc",
+          "from": {"data": "arcs"},
+          "properties": {
+            "enter": {
+              "stroke": {"value": "#000000"},
+              "strokeDash": {"field": "strokeDash"},
+              "x": {"scale": "x", "field": "x"},
+              "y": {"scale": "y", "field": "y"},
+              "outerRadius": {"scale": "width", "field": "radius"},
+              "innerRadius": {"scale": "width", "field": "radius"},
+              "startAngle": {"scale": "degreeRadians", "field": "startAngle"},
+              "endAngle": {"scale": "degreeRadians", "field": "endAngle"}
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "from": {"data": "courtLines"},
+          "properties": {
+            "enter": {
+              "fill": {"value": null},
+              "stroke": {"value": "#000000"},
+              "strokeWidth": {"value": 1},
+              "x": {"scale": "x", "field": "x"},
+              "y": {"scale": "y", "field": "y"},
+              "x2": {"scale": "x", "field": "x2"},
+              "y2": {"scale": "y", "field": "y2"}
+            }
+          }
+        }
+      ]
     }
   ]
 }

@@ -1,9 +1,10 @@
 ---
 layout: demo
-title: NBA Shot Chart (Vega) - James Harden
+title: NBA Shot Chart (Vega)
 bodyclass: demo
 ---
 
+<div id="shot-chart-player-select"></div>
 <div id="shot-chart" style="border: 1px solid #ccc;"></div>
 <p></p>
 
