@@ -260,6 +260,7 @@ var ShotChartSpec = {
       ]
     },
     {
+      "name": "xLocGroup",
       "type": "group",
       "properties": {
         "update": {
@@ -297,6 +298,10 @@ var ShotChartSpec = {
             "data": "table",
             "transform": [
               {
+                "type": "filter",
+                "test": "(minDist == maxDist || (datum.hoopdistance >= minDist && datum.hoopdistance <= maxDist))"
+              },
+              {
                 "type": "aggregate",
                 "groupby" : ["bin_LOC_X", "EVENT_TYPE"],
                 "summarize": {"*": ["count"]}
@@ -324,6 +329,7 @@ var ShotChartSpec = {
       ]
     },
     {
+      "name": "yLocGroup",
       "type": "group",
       "properties": {
         "update": {
@@ -361,6 +367,10 @@ var ShotChartSpec = {
           "from": {
             "data": "table",
             "transform": [
+              {
+                "type": "filter",
+                "test": "(minDist == maxDist || (datum.hoopdistance >= minDist && datum.hoopdistance <= maxDist))"
+              },
               {
                 "type": "aggregate",
                 "groupby" : ["bin_LOC_Y", "EVENT_TYPE"],
