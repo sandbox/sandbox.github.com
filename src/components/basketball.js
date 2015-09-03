@@ -1,4 +1,5 @@
 import { describeArc } from './arc'
+import { ShotChartInteractionSignals, ShotChartInteractionPredicates } from './basketball/interactions'
 
 class CourtBounds extends React.Component {
   render() {
@@ -121,6 +122,9 @@ var ShotChartSpec = {
         { "x": 220.2, "y": 90, "x2": 220, "y2": -47.5 }
       ]},
   ],
+  "signals": ShotChartInteractionSignals,
+  "predicates": ShotChartInteractionPredicates,
+
   "scales": [
     {
       "name": "degreeRadians",
@@ -151,27 +155,20 @@ var ShotChartSpec = {
   "legends": [
     {
       "orient": "left",
-      "shape": "playerSymbol",
-      "properties": {
-        "symbols": {
-          "fillOpacity": {"value": 0.5}
-        }
-      }
-    },
-    {
-      "orient": "left",
       "fill": "makeColor"
     }
   ],
   "marks": [
     {
+      "name": "distGroup",
       "type": "group",
       "properties": {
         "update": {
           "x": { "value": 620 },
           "y": { "value": 2.5 },
           "width": {"value": 200 },
-          "height": {"value": 100 }
+          "height": {"value": 100 },
+          "fill": {"value": "#fff"}
         }
       },
       "scales": [
@@ -210,7 +207,15 @@ var ShotChartSpec = {
           "properties": {
             "update": {
               "stroke": {"scale": "makeColor", "field": "EVENT_TYPE"},
-              "fillOpacity": {"value": 0.6},
+              "fillOpacity": {
+                "rule": [
+                  {
+                    "predicate": {"name": "distBrush", "x": {"field": "bin_hoopdistance"}},
+                    "value": 0.8
+                  },
+                  {"value": 0.2}
+                ]
+              },
               "x": {"scale": "x", "field": "bin_hoopdistance"},
               "width": {"scale": "x", "value": 1},
               "y":  {"scale": "y", "field": "layout_start"},
@@ -234,6 +239,21 @@ var ShotChartSpec = {
               "fill": {"value": "black"},
               "fontSize": {"value": 14},
               "fontWeight": {"value": "bold"}
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "properties": {
+            "enter": {
+              "fill": {"value": "grey"},
+              "fillOpacity": {"value": 0.2}
+            },
+            "update": {
+              "x": {"scale": "x", "signal": "distStart"},
+              "x2": {"scale": "x", "signal": "distEnd"},
+              "y": {"value": 0},
+              "y2": {"field": {"group": "height"}}
             }
           }
         }
@@ -287,7 +307,7 @@ var ShotChartSpec = {
           "properties": {
             "update": {
               "stroke": {"scale": "makeColor", "field": "EVENT_TYPE"},
-              "fillOpacity": {"value": 0.6},
+              "fillOpacity": {"value": 0.8},
               "x": {"scale": "x", "field": "bin_LOC_X"},
               "width": {"scale": "thickness", "value": 5},
               "y": {"scale": "y", "field": "layout_start"},
@@ -352,7 +372,7 @@ var ShotChartSpec = {
           "properties": {
             "update": {
               "stroke": {"scale": "makeColor", "field": "EVENT_TYPE"},
-              "fillOpacity": {"value": 0.6},
+              "fillOpacity": {"value": 0.8},
               "y": {"scale": "y", "field": "bin_LOC_Y"},
               "x": {"scale": "x", "field": "layout_start"},
               "x2": {"scale": "x", "field": "layout_end"},
@@ -409,7 +429,15 @@ var ShotChartSpec = {
       "marks": [
         {
           "type": "symbol",
-          "from": {"data": "table"},
+          "from": {
+            "data": "table",
+            "transform": [
+              {
+                "type": "filter",
+                "test": "(minDist == maxDist || (datum.hoopdistance >= minDist && datum.hoopdistance <= maxDist))"
+              },
+            ]
+          },
           "key": "shot_id",
           "properties": {
             "enter": {
