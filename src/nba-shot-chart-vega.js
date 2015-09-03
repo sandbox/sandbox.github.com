@@ -16,7 +16,7 @@ vg.parse.spec(ShotChartSpec, function(chart) {
 
 function setChartData(data) {
   ShotChartView.data('table').remove(() => true).insert(data)
-  ShotChartView.update({duration: 1000, ease: "linear"})
+  ShotChartView.update({duration: 300, ease: "quad-in-out"})
 }
 
 function renderShotChart(evt) {

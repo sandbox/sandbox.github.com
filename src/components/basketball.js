@@ -58,13 +58,7 @@ var ShotChartSpec = {
     {
       "name": "table",
       "transform": [
-        {"type": "formula", "field": "hoopdistance", "expr": "sqrt(pow(datum.LOC_X, 2) + pow(datum.LOC_Y, 2))/10"}
-      ]
-    },
-    {
-      "name": "bins",
-      "source": "table",
-      "transform": [
+        {"type": "formula", "field": "hoopdistance", "expr": "sqrt(pow(datum.LOC_X, 2) + pow(datum.LOC_Y, 2))/10"},
         {"type": "bin", "field": "hoopdistance", "min": 0, "max": 90, "step": 1, "output": { "bin": "bin_hoopdistance" }},
         {"type": "bin", "field": "LOC_X", "min": -260, "max": 260, "step": 5, "output": { "bin": "bin_LOC_X" }},
         {"type": "bin", "field": "LOC_Y", "min": -50,  "max": 470, "step": 5, "output": { "bin": "bin_LOC_Y" }}
@@ -72,7 +66,7 @@ var ShotChartSpec = {
     },
     {
       "name": "distance",
-      "source": "bins",
+      "source": "table",
       "transform": [
         {
           "type": "aggregate",
@@ -83,7 +77,7 @@ var ShotChartSpec = {
     },
     {
       "name": "xdistance",
-      "source": "bins",
+      "source": "table",
       "transform": [
         {
           "type": "aggregate",
@@ -94,7 +88,7 @@ var ShotChartSpec = {
     },
     {
       "name": "ydistance",
-      "source": "bins",
+      "source": "table",
       "transform": [
         {
           "type": "aggregate",
@@ -145,7 +139,7 @@ var ShotChartSpec = {
       "name": "makeColor",
       "type": "ordinal",
       "domain": ["Missed Shot", "Made Shot"],
-      "range": ["#EA4929", "#9FBC91"]
+      "range": ["#e6550d", "#31a354"]
     },
     {
       "name": "playerSymbol",
@@ -192,7 +186,8 @@ var ShotChartSpec = {
           "name": "y",
           "type": "linear",
           "range": "height",
-          "domain": { "data": "distance", "field": "count_hoopdistance" }
+          "domain": { "data": "distance", "field": "count_hoopdistance" },
+          "domainMin": 0
         },
       ],
       "axes": [{
@@ -201,16 +196,31 @@ var ShotChartSpec = {
       "marks": [
         {
           "type": "rect",
-          "from": {"data": "distance"},
+          "from": {
+            "data": "table",
+            "transform": [
+              {
+                "type": "aggregate",
+                "groupby" : [ "bin_hoopdistance", "EVENT_TYPE" ],
+                "summarize": {"*": ["count"]}
+              },
+              { "type": "stack", "groupby": ["bin_hoopdistance"], "field": "count", "sortby": "EVENT_TYPE" }
+            ]
+          },
           "properties": {
             "update": {
-              "stroke": {"value": "steelblue"},
+              "stroke": {"scale": "makeColor", "field": "EVENT_TYPE"},
               "fillOpacity": {"value": 0.6},
               "x": {"scale": "x", "field": "bin_hoopdistance"},
               "width": {"scale": "x", "value": 1},
-              "y": {"scale": "y", "field": "count_hoopdistance"},
-              "y2": {"scale": "y", "value": 0},
-              "fill": {"value": "steelblue"}
+              "y":  {"scale": "y", "field": "layout_start"},
+              "y2": {"scale": "y", "field": "layout_end"},
+              "fill": {"scale": "makeColor", "field": "EVENT_TYPE"}
+            },
+            "exit": {
+              "x": {"scale": "x", "value": 0},
+              "y": {"scale": "y", "value": 0},
+              "y2": {"scale": "y", "value": 0}
             }
           }
         },
@@ -218,7 +228,7 @@ var ShotChartSpec = {
           "type": "text",
           "properties": {
             "enter": {
-              "x": {"value": 0},
+              "x": {"value": -10},
               "y": {"value": -10},
               "text": {"value": "Shot Distance from Hoop (in feet)"},
               "fill": {"value": "black"},
@@ -263,16 +273,31 @@ var ShotChartSpec = {
       "marks": [
         {
           "type": "rect",
-          "from": {"data": "xdistance"},
+          "from": {
+            "data": "table",
+            "transform": [
+              {
+                "type": "aggregate",
+                "groupby" : ["bin_LOC_X", "EVENT_TYPE"],
+                "summarize": {"*": ["count"]}
+              },
+              { "type": "stack", "groupby": ["bin_LOC_X"], "field": "count", "sortby": "EVENT_TYPE"}
+            ]
+          },
           "properties": {
             "update": {
-              "stroke": {"value": "steelblue"},
+              "stroke": {"scale": "makeColor", "field": "EVENT_TYPE"},
               "fillOpacity": {"value": 0.6},
               "x": {"scale": "x", "field": "bin_LOC_X"},
               "width": {"scale": "thickness", "value": 5},
-              "y": {"scale": "y", "field": "count_LOC_X"},
-              "y2": {"scale": "y", "value": 0},
-              "fill": {"value": "steelblue"}
+              "y": {"scale": "y", "field": "layout_start"},
+              "y2": {"scale": "y", "field": "layout_end"},
+              "fill": {"scale": "makeColor", "field": "EVENT_TYPE"}
+            },
+            "exit": {
+              "x": {"scale": "x", "value": 0},
+              "y": {"scale": "y", "value": 0},
+              "y2": {"scale": "y", "value": 0}
             }
           }
         }
@@ -313,16 +338,31 @@ var ShotChartSpec = {
       "marks": [
         {
           "type": "rect",
-          "from": {"data": "ydistance"},
+          "from": {
+            "data": "table",
+            "transform": [
+              {
+                "type": "aggregate",
+                "groupby" : ["bin_LOC_Y", "EVENT_TYPE"],
+                "summarize": {"*": ["count"]}
+              },
+              { "type": "stack", "groupby": ["bin_LOC_Y"], "field": "count", "sortby": "EVENT_TYPE"}
+            ]
+          },
           "properties": {
             "update": {
-              "stroke": {"value": "steelblue"},
+              "stroke": {"scale": "makeColor", "field": "EVENT_TYPE"},
               "fillOpacity": {"value": 0.6},
               "y": {"scale": "y", "field": "bin_LOC_Y"},
-              "x": {"value": 0},
-              "x2": {"scale": "x", "field": "count_LOC_Y"},
+              "x": {"scale": "x", "field": "layout_start"},
+              "x2": {"scale": "x", "field": "layout_end"},
               "height": {"scale": "thickness", "value": 5},
-              "fill": {"value": "steelblue"}
+              "fill": {"scale": "makeColor", "field": "EVENT_TYPE"}
+            },
+            "exit": {
+              "x": {"scale": "x", "value": 0},
+              "y": {"scale": "y", "value": 0},
+              "y2": {"scale": "y", "value": 0}
             }
           }
         }
