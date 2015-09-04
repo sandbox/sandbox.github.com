@@ -1,5 +1,5 @@
 import { describeArc } from './arc'
-import { ShotChartInteractionSignals, ShotChartInteractionPredicates } from './basketball/interactions'
+import { ShotChartInteractionSignals, ShotChartInteractionPredicates, ShotChartInteractionFilters } from './basketball/interactions'
 
 class CourtBounds extends React.Component {
   render() {
@@ -197,6 +197,10 @@ var ShotChartSpec = {
             "data": "table",
             "transform": [
               {
+                "type": "filter",
+                "test": `${ShotChartInteractionFilters.LOC_X} && ${ShotChartInteractionFilters.LOC_Y}`
+              },
+              {
                 "type": "aggregate",
                 "groupby" : [ "bin_hoopdistance", "EVENT_TYPE" ],
                 "summarize": {"*": ["count"]}
@@ -223,7 +227,6 @@ var ShotChartSpec = {
               "fill": {"scale": "makeColor", "field": "EVENT_TYPE"}
             },
             "exit": {
-              "x": {"scale": "x", "value": 0},
               "y": {"scale": "y", "value": 0},
               "y2": {"scale": "y", "value": 0}
             }
@@ -265,9 +268,10 @@ var ShotChartSpec = {
       "properties": {
         "update": {
           "x": { "value": 0 },
-          "y": { "value": 2.5 },
+          "y": { "value": 52.5 },
           "width": {"value": 600 },
-          "height": {"value": 100 }
+          "height": {"value": 100 },
+          "fill" : {"value": "#fff"}
         }
       },
       "scales": [
@@ -299,7 +303,7 @@ var ShotChartSpec = {
             "transform": [
               {
                 "type": "filter",
-                "test": "(minDist == maxDist || (datum.hoopdistance >= minDist && datum.hoopdistance <= maxDist))"
+                "test": `${ShotChartInteractionFilters.distance} && ${ShotChartInteractionFilters.LOC_Y}`
               },
               {
                 "type": "aggregate",
@@ -312,7 +316,15 @@ var ShotChartSpec = {
           "properties": {
             "update": {
               "stroke": {"scale": "makeColor", "field": "EVENT_TYPE"},
-              "fillOpacity": {"value": 0.8},
+              "fillOpacity": {
+                "rule": [
+                  {
+                    "predicate": {"name": "xLocBrush", "x": {"field": "bin_LOC_X"}},
+                    "value": 0.8
+                  },
+                  {"value": 0.2}
+                ]
+              },
               "x": {"scale": "x", "field": "bin_LOC_X"},
               "width": {"scale": "thickness", "value": 5},
               "y": {"scale": "y", "field": "layout_start"},
@@ -325,6 +337,21 @@ var ShotChartSpec = {
               "y2": {"scale": "y", "value": 0}
             }
           }
+        },
+        {
+          "type": "rect",
+          "properties": {
+            "enter": {
+              "fill": {"value": "grey"},
+              "fillOpacity": {"value": 0.2}
+            },
+            "update": {
+              "x": {"scale": "x",  "signal": "xLocStart"},
+              "x2": {"scale": "x", "signal": "xLocEnd"},
+              "y": {"value": 0},
+              "y2": {"field": {"group": "height"}}
+            }
+          }
         }
       ]
     },
@@ -334,9 +361,10 @@ var ShotChartSpec = {
       "properties": {
         "update": {
           "x": { "value": 600 },
-          "y": { "value": 100 },
+          "y": { "value": 150 },
           "width": {"value": 100 },
-          "height": {"value": 660 }
+          "height": {"value": 660 },
+          "fill": {"value": "#fff"}
         }
       },
       "scales": [
@@ -369,7 +397,7 @@ var ShotChartSpec = {
             "transform": [
               {
                 "type": "filter",
-                "test": "(minDist == maxDist || (datum.hoopdistance >= minDist && datum.hoopdistance <= maxDist))"
+                "test": `${ShotChartInteractionFilters.distance} && ${ShotChartInteractionFilters.LOC_X}`
               },
               {
                 "type": "aggregate",
@@ -382,7 +410,15 @@ var ShotChartSpec = {
           "properties": {
             "update": {
               "stroke": {"scale": "makeColor", "field": "EVENT_TYPE"},
-              "fillOpacity": {"value": 0.8},
+              "fillOpacity": {
+                "rule": [
+                  {
+                    "predicate": {"name": "yLocBrush", "y": {"field": "bin_LOC_Y"}},
+                    "value": 0.8
+                  },
+                  {"value": 0.2}
+                ]
+              },
               "y": {"scale": "y", "field": "bin_LOC_Y"},
               "x": {"scale": "x", "field": "layout_start"},
               "x2": {"scale": "x", "field": "layout_end"},
@@ -395,6 +431,21 @@ var ShotChartSpec = {
               "y2": {"scale": "y", "value": 0}
             }
           }
+        },
+        {
+          "type": "rect",
+          "properties": {
+            "enter": {
+              "fill": {"value": "grey"},
+              "fillOpacity": {"value": 0.2}
+            },
+            "update": {
+              "y": {"scale": "y",  "signal": "yLocStart"},
+              "y2": {"scale": "y", "signal": "yLocEnd"},
+              "x": {"value": 0},
+              "x2": {"field": {"group": "width"}}
+            }
+          }
         }
       ]
     },
@@ -403,7 +454,7 @@ var ShotChartSpec = {
       "properties": {
         "update": {
           "x": { "value": 0 },
-          "y": { "value": 100 },
+          "y": { "value": 150 },
           "width": {"value": 600 },
           "height": {"value": 1.1 * 600 }
         }
@@ -444,7 +495,7 @@ var ShotChartSpec = {
             "transform": [
               {
                 "type": "filter",
-                "test": "(minDist == maxDist || (datum.hoopdistance >= minDist && datum.hoopdistance <= maxDist))"
+                "test": `${ShotChartInteractionFilters.distance} && ${ShotChartInteractionFilters.LOC_X} && ${ShotChartInteractionFilters.LOC_Y}`
               },
             ]
           },
