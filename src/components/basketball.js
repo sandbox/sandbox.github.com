@@ -59,6 +59,8 @@ var ShotChartSpec = {
     {
       "name": "table",
       "transform": [
+        {"type": "formula", "field": "POINTS", "expr": "parseInt(datum.SHOT_TYPE)"},
+        {"type": "formula", "field": "MADE_POINTS", "expr": "datum.POINTS * datum.SHOT_MADE_FLAG"},
         {"type": "formula", "field": "hoopdistance", "expr": "sqrt(pow(datum.LOC_X, 2) + pow(datum.LOC_Y, 2))/10"},
         {"type": "bin", "field": "hoopdistance", "min": 0, "max": 90, "step": 1, "output": { "bin": "bin_hoopdistance" }},
         {"type": "bin", "field": "LOC_X", "min": -260, "max": 260, "step": 5, "output": { "bin": "bin_LOC_X" }},
@@ -96,6 +98,37 @@ var ShotChartSpec = {
           "groupby" : { "field": "bin_LOC_Y" },
           "summarize": {"LOC_Y": ["count"]}
         }
+      ]
+    },
+    {
+      "name": "percentages",
+      "source": "table",
+      "transform": [
+        {
+          "type": "filter",
+          "test":  `${ShotChartInteractionFilters.distance} && ${ShotChartInteractionFilters.LOC_X} && ${ShotChartInteractionFilters.LOC_Y} && ${ShotChartInteractionFilters.brush}`
+        },
+        {
+          "type": "aggregate",
+          "summarize": {"*": ["count"], "MADE_POINTS": ["sum"], "SHOT_MADE_FLAG": ["sum"]}
+        },
+        {
+          "type": "formula",
+          "field": "FGP",
+          "expr": "datum.sum_SHOT_MADE_FLAG / datum.count"
+        },
+        {
+          "type": "formula",
+          "field": "PPA",
+          "expr": "datum.sum_MADE_POINTS / datum.count"
+        }
+      ]
+    },
+    {
+      "name": "rects",
+      "values": [
+        {"index": 0, "text": "FG%", "x": 0, "width": 100, "height": 10, "average": 92279 / 205550},
+        {"index": 0, "text": "Points per Attempt", "x": 125, "width": 100, "height": 10, "average": 203841 / 205550 / 3}
       ]
     },
     { "name": "arcs",
@@ -160,6 +193,132 @@ var ShotChartSpec = {
   ],
   "marks": [
     {
+      "type": "group",
+      "properties": {
+        "update": {
+          "x": { "value": 0 },
+          "y": { "value": 2.5 },
+          "width": { "value": 500 },
+          "height": { "value": 50 }
+        }
+      },
+      "scales": [
+        {
+          "name": "xfgp",
+          "type": "linear",
+          "range": [0, 100],
+          // "reverse" : true, // hoop on bottom view
+          "domain": [0, 1]
+        },
+        {
+          "name": "xppa",
+          "type": "linear",
+          "range": [125, 225],
+          // "reverse" : true, // hoop on bottom view
+          "domain": [0, 3]
+        }
+      ],
+      "marks": [
+        {
+          "type": "rect",
+          "from": {"data": "rects"},
+          "properties": {
+            "update": {
+              "width":  { "field": "width" },
+              "height": { "field": "height" },
+              "x":      { "field": "x"},
+              "fill": {
+                "value": {
+                  "id": "rgb",
+                  "x1": 0.0,
+                  "y1": 0.0,
+                  "x2": 1.0,
+                  "y2": 0.0,
+                  "stops": [
+                    {"color": "#e6550d", "offset": 0.0},
+                    {"color": "#31a354", "offset": 0.5},
+                    {"color": "#31a354", "offset": 1},
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "from": {"data": "rects"},
+          "type": "text",
+          "properties": {
+            "enter": {
+              "x": {"field": "x"},
+              "y": {"value": -5},
+              "text": {"field": "text"},
+              "fill": {"value": "black"},
+              "fontSize": {"value": 14},
+              "fontWeight": {"value": "bold"}
+            }
+          }
+        },
+        {
+          "from": {"data": "percentages"},
+          "type": "text",
+          "properties": {
+            "update": {
+              "x": {"value": 0},
+              "dx": {"value": 10},
+              "y": {"value": 45},
+              "text": {
+                "template": "{{datum.FGP | number:'.1%'}}"
+              },
+              "fill": {"value": "black"},
+              "fontSize": {"value": 30}
+            }
+          }
+        },
+        {
+          "from": {"data": "percentages"},
+          "type": "text",
+          "properties": {
+            "update": {
+              "x": {"value": 125},
+              "dx": {"value": 10},
+              "y": {"value": 45},
+              "text": {
+                "template": "{{datum.PPA | number:'.2f'}}"
+              },
+              "fill": {"value": "black"},
+              "fontSize": {"value": 30}
+            }
+          }
+        },
+        {
+          "from": {"data": "percentages"},
+          "type": "symbol",
+          "properties": {
+            "update": {
+              "shape": { "value": "triangle-up" },
+              "x": {"scale": "xfgp", "field": "FGP"},
+              "y": {"value": 15},
+              "size": {"value": 40},
+              "fill": {"value": "black"}
+            }
+          }
+        },
+        {
+          "from": {"data": "percentages"},
+          "type": "symbol",
+          "properties": {
+            "update": {
+              "shape": { "value": "triangle-up" },
+              "x": {"scale": "xppa", "field": "PPA"},
+              "y": {"value": 15},
+              "size": {"value": 40},
+              "fill": {"value": "black"}
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "distGroup",
       "type": "group",
       "properties": {
@@ -198,7 +357,7 @@ var ShotChartSpec = {
             "transform": [
               {
                 "type": "filter",
-                "test": `${ShotChartInteractionFilters.LOC_X} && ${ShotChartInteractionFilters.LOC_Y}`
+                "test": `${ShotChartInteractionFilters.LOC_X} && ${ShotChartInteractionFilters.LOC_Y} && ${ShotChartInteractionFilters.brush}`
               },
               {
                 "type": "aggregate",
@@ -236,7 +395,7 @@ var ShotChartSpec = {
           "type": "text",
           "properties": {
             "enter": {
-              "x": {"value": -10},
+              "x": {"value": -5},
               "y": {"value": -10},
               "text": {"value": "Shot Distance from Hoop (in feet)"},
               "fill": {"value": "black"},
@@ -303,7 +462,7 @@ var ShotChartSpec = {
             "transform": [
               {
                 "type": "filter",
-                "test": `${ShotChartInteractionFilters.distance} && ${ShotChartInteractionFilters.LOC_Y}`
+                "test": `${ShotChartInteractionFilters.distance} && ${ShotChartInteractionFilters.LOC_Y} && ${ShotChartInteractionFilters.brush}`
               },
               {
                 "type": "aggregate",
@@ -332,7 +491,6 @@ var ShotChartSpec = {
               "fill": {"scale": "makeColor", "field": "EVENT_TYPE"}
             },
             "exit": {
-              "x": {"scale": "x", "value": 0},
               "y": {"scale": "y", "value": 0},
               "y2": {"scale": "y", "value": 0}
             }
@@ -397,7 +555,7 @@ var ShotChartSpec = {
             "transform": [
               {
                 "type": "filter",
-                "test": `${ShotChartInteractionFilters.distance} && ${ShotChartInteractionFilters.LOC_X}`
+                "test": `${ShotChartInteractionFilters.distance} && ${ShotChartInteractionFilters.LOC_X} && ${ShotChartInteractionFilters.brush}`
               },
               {
                 "type": "aggregate",
@@ -427,8 +585,7 @@ var ShotChartSpec = {
             },
             "exit": {
               "x": {"scale": "x", "value": 0},
-              "y": {"scale": "y", "value": 0},
-              "y2": {"scale": "y", "value": 0}
+              "x2": {"scale": "x", "value": 0}
             }
           }
         },
@@ -450,6 +607,7 @@ var ShotChartSpec = {
       ]
     },
     {
+      "name": "shotChart",
       "type": "group",
       "properties": {
         "update": {
@@ -496,7 +654,7 @@ var ShotChartSpec = {
               {
                 "type": "filter",
                 "test": `${ShotChartInteractionFilters.distance} && ${ShotChartInteractionFilters.LOC_X} && ${ShotChartInteractionFilters.LOC_Y}`
-              },
+              }
             ]
           },
           "key": "shot_id",
@@ -505,13 +663,21 @@ var ShotChartSpec = {
               "shape": { "scale": "playerSymbol", "field": "PLAYER_NAME" },
               "x": {"scale": "x", "value": 0},
               "y": {"scale": "y", "value": 0},
-              "fillOpacity" : { "scale": "makeOpacity", "field": "SHOT_MADE_FLAG" },
               "fill": { "scale": "makeColor", "field": "EVENT_TYPE" },
               "size": { "scale": "width", "value": 70 }
             },
             "update": {
               "x": {"scale": "x", "field": "LOC_X"},
-              "y": {"scale": "y", "field": "LOC_Y"}
+              "y": {"scale": "y", "field": "LOC_Y"},
+              "fillOpacity" : {
+                "rule": [
+                  {
+                    "predicate": {"name": "chartBrush", "x": {"field": "LOC_X"}, "y": {"field": "LOC_Y"}},
+                    "value": 0.8
+                  },
+                  { "value": 0.2 }
+                ]
+              }
             },
             "exit": {
               "x": {"scale": "x", "value": 0},
@@ -547,6 +713,21 @@ var ShotChartSpec = {
               "y": {"scale": "y", "field": "y"},
               "x2": {"scale": "x", "field": "x2"},
               "y2": {"scale": "y", "field": "y2"}
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "properties": {
+            "enter": {
+              "fill": {"value": "grey"},
+              "fillOpacity": {"value": 0.2}
+            },
+            "update": {
+              "x": {"scale": "x", "signal": "minXChart"},
+              "x2": {"scale": "x", "signal": "maxXChart"},
+              "y": {"scale": "y", "signal": "minYChart"},
+              "y2": {"scale": "y", "signal": "maxYChart"}
             }
           }
         }

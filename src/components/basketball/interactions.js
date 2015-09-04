@@ -6,6 +6,8 @@ var ShotChartInteractionSignals = [
       {"type": "mousedown", "expr": "eventGroup()"}
     ]
   },
+
+  // distance histogram signal
   {
     "name": "distStart",
     "init": -1,
@@ -27,6 +29,7 @@ var ShotChartInteractionSignals = [
   {"name": "minDist", "expr": "max(min(distStart, distEnd), 0)"},
   {"name": "maxDist", "expr": "min(max(distStart, distEnd), 50)"},
 
+  // x histogram signal
   {
     "name": "xLocStart",
     "init": -1,
@@ -48,6 +51,7 @@ var ShotChartInteractionSignals = [
   {"name": "minXLoc", "expr": "max(min(xLocStart, xLocEnd), -250)"},
   {"name": "maxXLoc", "expr": "min(max(xLocStart, xLocEnd), 250)"},
 
+  // y histogram signal
   {
     "name": "yLocStart",
     "init": -1,
@@ -66,8 +70,50 @@ var ShotChartInteractionSignals = [
       "scale": {"scope": "scope", "name": "y", "invert": true}
     }]
   },
-  {"name": "minYLoc", "expr": "max(min(yLocStart, yLocEnd), -50)"},
-  {"name": "maxYLoc", "expr": "min(max(yLocStart, yLocEnd), 500)"}
+  {"name": "minYLoc", "expr": "max(min(yLocStart, yLocEnd), -47.5)"},
+  {"name": "maxYLoc", "expr": "min(max(yLocStart, yLocEnd), 500)"},
+
+  // shot chart body signal
+  {
+    "name": "chartStartX",
+    "init": -1,
+    "streams": [{
+      "type": "@shotChart:mousedown",
+      "expr": "clamp(eventX(scope), 0, scope.width)",
+      "scale": {"scope": "scope", "name": "x", "invert": true}
+    }]
+  },
+  {
+    "name": "chartEndX",
+    "init": -1,
+    "streams": [{
+      "type": "@shotChart:mousedown, [@shotChart:mousedown, window:mouseup] > window:mousemove",
+      "expr": "clamp(eventX(scope), 0, scope.width)",
+      "scale": {"scope": "scope", "name": "x", "invert": true}
+    }]
+  },
+  {
+    "name": "chartStartY",
+    "init": -1,
+    "streams": [{
+      "type": "@shotChart:mousedown",
+      "expr": "clamp(eventY(scope), 0, scope.height)",
+      "scale": {"scope": "scope", "name": "y", "invert": true}
+    }]
+  },
+  {
+    "name": "chartEndY",
+    "init": -1,
+    "streams": [{
+      "type": "@shotChart:mousedown, [@shotChart:mousedown, window:mouseup] > window:mousemove",
+      "expr": "clamp(eventY(scope), 0, scope.height)",
+      "scale": {"scope": "scope", "name": "y", "invert": true}
+    }]
+  },
+  {"name": "minXChart", "expr": "max(min(chartStartX, chartEndX), -250)"},
+  {"name": "maxXChart", "expr": "min(max(chartStartX, chartEndX), 250)"},
+  {"name": "minYChart", "expr": "max(min(chartStartY, chartEndY), -47.5)"},
+  {"name": "maxYChart", "expr": "min(max(chartStartY, chartEndY), 500)"}
 ]
 
 var ShotChartInteractionPredicates = [
@@ -120,13 +166,56 @@ var ShotChartInteractionPredicates = [
     "name": "yLocBrush",
     "type": "or",
     "operands": [{"predicate": "yLocEqual"}, {"predicate": "yLocRange"}]
+  },
+
+  // chart brushing in two directions
+  {
+    "name": "chartEqualX",
+    "type": "==",
+    "operands": [{"signal": "chartStartX"}, {"signal": "chartEndX"}]
+  },
+  {
+    "name": "chartEqualY",
+    "type": "==",
+    "operands": [{"signal": "chartStartY"}, {"signal": "chartEndY"}]
+  },
+  {
+    "name": "chartEqual",
+    "type": "&&",
+    "operands": [{"predicate": "chartEqualX"}, {"predicate": "chartEqualY"}]
+  },
+  {
+    "name": "chartXRange",
+    "type": "in",
+    "item": {"arg": "x"},
+    "range": [{"signal": "chartStartX"}, {"signal": "chartEndX"}]
+  },
+  {
+    "name": "chartYRange",
+    "type": "in",
+    "item": {"arg": "y"},
+    "range": [{"signal": "chartStartY"}, {"signal": "chartEndY"}]
+  },
+  {
+    "name": "chartInRange",
+    "type": "&&",
+    "operands": [
+      {"predicate": "chartXRange"},
+      {"predicate": "chartYRange"}
+    ]
+  },
+  {
+    "name": "chartBrush",
+    "type": "or",
+    "operands": [{"predicate": "chartEqual"}, {"predicate": "chartInRange"}]
   }
 ]
 
 var ShotChartInteractionFilters = {
   "distance": "(minDist == maxDist || (datum.hoopdistance >= minDist && datum.hoopdistance <= maxDist))",
   "LOC_X":    "(minXLoc == maxXLoc || (datum.LOC_X >= minXLoc && datum.LOC_X <= maxXLoc))",
-  "LOC_Y":    "(minYLoc == maxYLoc || (datum.LOC_Y >= minYLoc && datum.LOC_Y <= maxYLoc))"
+  "LOC_Y":    "(minYLoc == maxYLoc || (datum.LOC_Y >= minYLoc && datum.LOC_Y <= maxYLoc))",
+  "brush":    "(minXChart == maxXChart || (datum.LOC_X >= minXChart && datum.LOC_X <= maxXChart)) && (minYChart == maxYChart || (datum.LOC_Y >= minYChart && datum.LOC_Y <= maxYChart))",
 }
 
 export {ShotChartInteractionSignals, ShotChartInteractionPredicates, ShotChartInteractionFilters}
