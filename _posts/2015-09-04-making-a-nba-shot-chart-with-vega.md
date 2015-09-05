@@ -20,7 +20,7 @@ I used vega, because I hadn't really used it much
 before and the grammar of graphics model for producing visualizations
 is super cool and powerful. Also, a recent release of vega added a
 system for [declarative interaction design](https://idl.cs.washington.edu/papers/reactive-vega/),
-which I thought would make this particularly fun.
+which sounded particularly fun.
 
 #### The Data
 
