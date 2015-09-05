@@ -127,8 +127,10 @@ var ShotChartSpec = {
     {
       "name": "rects",
       "values": [
-        {"index": 0, "text": "FG%", "x": 0, "width": 100, "height": 10, "average": 92279 / 205550},
-        {"index": 0, "text": "Points per Attempt", "x": 125, "width": 100, "height": 10, "average": 203841 / 205550 / 3}
+        {"index": 0, "text": "Shot Attempts", "x": 0, "width": 0, "height": 0, "average": 0.5},
+        {"index": 0, "text": "Points Scored", "x": 125, "width": 0, "height": 0, "average": 0.5},
+        {"index": 0, "text": "FG%", "x": 250, "width": 100, "height": 10, "average": 92279 / 205550},
+        {"index": 0, "text": "Points per Attempt", "x": 375, "width": 100, "height": 10, "average": 203841 / 205550 / 3}
       ]
     },
     { "name": "arcs",
@@ -206,14 +208,14 @@ var ShotChartSpec = {
         {
           "name": "xfgp",
           "type": "linear",
-          "range": [0, 100],
+          "range": [250, 350],
           // "reverse" : true, // hoop on bottom view
           "domain": [0, 1]
         },
         {
           "name": "xppa",
           "type": "linear",
-          "range": [125, 225],
+          "range": [375, 475],
           // "reverse" : true, // hoop on bottom view
           "domain": [0, 3]
         }
@@ -264,6 +266,38 @@ var ShotChartSpec = {
           "properties": {
             "update": {
               "x": {"value": 0},
+              "dx": {"value": 0},
+              "y": {"value": 25},
+              "text": {
+                "template": "{{datum.count | number:','}}"
+              },
+              "fill": {"value": "black"},
+              "fontSize": {"value": 30}
+            }
+          }
+        },
+        {
+          "from": {"data": "percentages"},
+          "type": "text",
+          "properties": {
+            "update": {
+              "x": {"value": 125},
+              "dx": {"value": 0},
+              "y": {"value": 25},
+              "text": {
+                "template": "{{datum.sum_MADE_POINTS | number:','}}"
+              },
+              "fill": {"value": "black"},
+              "fontSize": {"value": 30}
+            }
+          }
+        },
+        {
+          "from": {"data": "percentages"},
+          "type": "text",
+          "properties": {
+            "update": {
+              "x": {"value": 250},
               "dx": {"value": 10},
               "y": {"value": 45},
               "text": {
@@ -279,7 +313,7 @@ var ShotChartSpec = {
           "type": "text",
           "properties": {
             "update": {
-              "x": {"value": 125},
+              "x": {"value": 375},
               "dx": {"value": 10},
               "y": {"value": 45},
               "text": {
