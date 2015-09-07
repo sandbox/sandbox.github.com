@@ -3,7 +3,7 @@ var ShotChartInteractionSignals = [
     "name": "scope",
     "init": {"width": 0},
     "streams": [
-      {"type": "mousedown", "expr": "eventGroup()"}
+      {"type": "mousedown, touchstart", "expr": "eventGroup()"}
     ]
   },
 
@@ -12,7 +12,7 @@ var ShotChartInteractionSignals = [
     "name": "distStart",
     "init": -1,
     "streams": [{
-      "type": "@distGroup:mousedown",
+      "type": "@distGroup:mousedown, @distGroup:touchstart",
       "expr": "eventX(scope)",
       "scale": {"scope": "scope", "name": "x", "invert": true}
     }]
@@ -21,7 +21,7 @@ var ShotChartInteractionSignals = [
     "name": "distEnd",
     "init": -1,
     "streams": [{
-      "type": "@distGroup:mousedown, [@distGroup:mousedown, window:mouseup] > window:mousemove",
+      "type": "@distGroup:mousedown, @distGroup:touchstart, [@distGroup:mousedown, window:mouseup] > window:mousemove, [@distGroup:touchstart, window:touchend] > window:touchmove",
       "expr": "clamp(eventX(scope), 0, scope.width)",
       "scale": {"scope": "scope", "name": "x", "invert": true}
     }]
@@ -34,7 +34,7 @@ var ShotChartInteractionSignals = [
     "name": "xLocStart",
     "init": -1,
     "streams": [{
-      "type": "@xLocGroup:mousedown",
+      "type": "@xLocGroup:mousedown, @xLocGroup:touchstart",
       "expr": "eventX(scope)",
       "scale": {"scope": "scope", "name": "x", "invert": true}
     }]
@@ -43,7 +43,7 @@ var ShotChartInteractionSignals = [
     "name": "xLocEnd",
     "init": -1,
     "streams": [{
-      "type": "@xLocGroup:mousedown, [@xLocGroup:mousedown, window:mouseup] > window:mousemove",
+      "type": "@xLocGroup:mousedown, @xLocGroup:touchstart, [@xLocGroup:mousedown, window:mouseup] > window:mousemove, [@xLocGroup:touchstart, window:touchend] > window:touchmove",
       "expr": "clamp(eventX(scope), 0, scope.width)",
       "scale": {"scope": "scope", "name": "x", "invert": true}
     }]
@@ -56,7 +56,7 @@ var ShotChartInteractionSignals = [
     "name": "yLocStart",
     "init": -1,
     "streams": [{
-      "type": "@yLocGroup:mousedown",
+      "type": "@yLocGroup:mousedown, @yLocGroup:touchstart",
       "expr": "eventY(scope)",
       "scale": {"scope": "scope", "name": "y", "invert": true}
     }]
@@ -65,7 +65,7 @@ var ShotChartInteractionSignals = [
     "name": "yLocEnd",
     "init": -1,
     "streams": [{
-      "type": "@yLocGroup:mousedown, [@yLocGroup:mousedown, window:mouseup] > window:mousemove",
+      "type": "@yLocGroup:mousedown, @yLocGroup:touchstart, [@yLocGroup:mousedown, window:mouseup] > window:mousemove, [@yLocGroup:touchstart, window:touchend] > window:touchmove",
       "expr": "clamp(eventY(scope), 0, scope.height)",
       "scale": {"scope": "scope", "name": "y", "invert": true}
     }]
@@ -78,7 +78,7 @@ var ShotChartInteractionSignals = [
     "name": "chartStartX",
     "init": -1,
     "streams": [{
-      "type": "@shotChart:mousedown",
+      "type": "@shotChart:mousedown, @shotChart:touchstart",
       "expr": "clamp(eventX(scope), 0, scope.width)",
       "scale": {"scope": "scope", "name": "x", "invert": true}
     }]
@@ -87,7 +87,7 @@ var ShotChartInteractionSignals = [
     "name": "chartEndX",
     "init": -1,
     "streams": [{
-      "type": "@shotChart:mousedown, [@shotChart:mousedown, window:mouseup] > window:mousemove",
+      "type": "@shotChart:mousedown, @shotChart:touchstart, [@shotChart:mousedown, window:mouseup] > window:mousemove, [@shotChart:touchstart, window:touchend] > window:touchmove",
       "expr": "clamp(eventX(scope), 0, scope.width)",
       "scale": {"scope": "scope", "name": "x", "invert": true}
     }]
@@ -96,7 +96,7 @@ var ShotChartInteractionSignals = [
     "name": "chartStartY",
     "init": -1,
     "streams": [{
-      "type": "@shotChart:mousedown",
+      "type": "@shotChart:mousedown, @shotChart:touchstart",
       "expr": "clamp(eventY(scope), 0, scope.height)",
       "scale": {"scope": "scope", "name": "y", "invert": true}
     }]
@@ -105,7 +105,7 @@ var ShotChartInteractionSignals = [
     "name": "chartEndY",
     "init": -1,
     "streams": [{
-      "type": "@shotChart:mousedown, [@shotChart:mousedown, window:mouseup] > window:mousemove",
+      "type": "@shotChart:mousedown, @shotChart:touchstart, [@shotChart:mousedown, window:mouseup] > window:mousemove, [@shotChart:touchstart, window:touchend] > window:touchmove",
       "expr": "clamp(eventY(scope), 0, scope.height)",
       "scale": {"scope": "scope", "name": "y", "invert": true}
     }]
