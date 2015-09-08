@@ -181,7 +181,41 @@ a.sidebar-nav-item:focus {
   margin: 1em auto 4em auto;
   position: relative;
   tab-size: 2;
-  width: 960px;
+}
+
+.demo-title {
+  overflow: auto;
+}
+
+@media (min-width: 48em) {
+  .demo-title h1 {
+    float: left;
+  }
+}
+
+.demo-title a {
+  margin-top: 1rem;
+  padding-left: 1rem;
+  float: right;
+}
+
+@media (max-width: 48em) {
+  .demo-title {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .demo {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 960px) {
+  .demo {
+    width: 960px;
+  }
 }
 
 .demo h1 {

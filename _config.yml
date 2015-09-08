@@ -9,8 +9,7 @@ title:               sandbox
 tagline:             sandbox's sandbox
 description:         sandbox's sandbox
 url:                 https://sandbox.github.io
-paginate:            1
-baseurl:             "/"
+paginate:            2
 disqusid:            "moonpiesandbox"
 
 # Assets
