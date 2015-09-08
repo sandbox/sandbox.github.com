@@ -19,25 +19,12 @@ This is an interactive version built with a
 for James Harden. Points from free throws do not appear included.
 
 You can use the select input in the upper left corner to switch to a
-shot chart of Stephen Curry as well. His numbers are ridiculous.
+shot chart of Stephen Curry and others as well. Steph's numbers are
+ridiculous.
 
 You can select a set of shots directly on the chart or on any of the
 histograms. Just click and move the mouse to outline a rectangular box
 over the shots. The FG% and Points per Attempt numbers update
 automatically based on the selection.
-
-### Implementation Notes
-
-Notably much more performant than a simpler
-[React version](/demos/nba-shot-chart) I played with, even when using
-Vega's SVG rendering as opposed to canvas. It looks like React having to
-update thousands of component's state incurs a lot of overhead.
-
-In terms of vega's canvas vs SVG rendering, canvas may be smoother but
-I cannot tell on my machine with a small dataset of this size.  With
-SVG, I had some issues getting selections to register and sometimes
-the selection box would disappear on updates to other selections. I
-think it is due to vega marking the `rect` as dirty when a different
-selection filtered out all of the data.
 
 {% include javascript.html js_file="nba-shot-chart-vega" %}

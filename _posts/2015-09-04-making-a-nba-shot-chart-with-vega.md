@@ -16,11 +16,11 @@ on creating NBA shot charts in python, as well as
 [Kirk Goldsberry's articles on Grantland](https://grantland.com/the-triangle/golden-state-warriors-illustrated/),
 I wanted to prototype an interactive shot chart using [vega](http://vega.github.io/vega/).
 
-I used vega, because I hadn't really used it much
-before and the grammar of graphics model for producing visualizations
-is super cool and powerful. Also, a recent release of vega added a
-system for [declarative interaction design](https://idl.cs.washington.edu/papers/reactive-vega/),
-which sounded particularly fun.
+I used vega, because I hadn't really used it much before and the
+grammar of graphics model for producing visualizations is super cool
+and powerful. Also, a recent release of vega added a system for
+[declarative interaction design](https://idl.cs.washington.edu/papers/reactive-vega/),
+which looked like it would make adding interactions easier.
 
 #### The Data
 
@@ -28,7 +28,7 @@ which sounded particularly fun.
 does a great job detailing the data format, so I'll just explain what
 I did with vega to work with the data.
 
-Particularly, I needed to add data for distance from hoop, points
+Particularly, I added data for distance from hoop, points
 scored, the bins to be used in the histograms, brushed field goal
 percentage, and brushed points per attempt.
 
@@ -135,9 +135,9 @@ following sections:
 * The distance and location histograms
 * The field goal percentage and points per attempt indicators
 
-In particular, the shot scatterplot is made by stating each shot
-should be drawn as a circle that is positioned based on the `LOC_X`
-and `LOC_Y` table fields. This is done in vega like:
+The shot scatterplot is made by stating each shot should be drawn as a
+circle that is positioned based on the `LOC_X` and `LOC_Y` table
+fields. This is done in vega like:
 
 {% highlight javascript %}
 {
@@ -157,18 +157,22 @@ and `LOC_Y` table fields. This is done in vega like:
 }
 {% endhighlight %}
 
-Each component has statements that map data to a visual mark and base
-visual properties (e.g. position, size, color, shape) on the data.
+Each component has statements similar to the above. You declare the
+data and a mark type that represents how the data will be seen
+visually.  The visual properties like position, size, color, shape are
+then based on the data or set manually.
 
 #### Adding Interactions
 
-In vega, interactions are specified as `signals` that listen to events
-like `mousedown`, `mouseup`. From these events we extract information
-like mouse position and then lift that data from the visual space to
-the data space.
+In vega, interactions are specified as `signals` that listen to a
+stream of events like `mousedown`, `mouseup`.  They are defined with vega's
+[Event Stream Selector](https://github.com/vega/vega/wiki/Signals#event-stream-selectors)
+syntax that is similar to DOM selectors.
 
-So to add the brush+linking interaction to each histogram component,
-we first define signals like:
+From these events we extract information like mouse position and then
+transform that in terms of the data's values. For example, to add the
+brush+linking interaction to the histogram component, we first define
+signals like:
 
 {% highlight javascript %}
 [
@@ -195,13 +199,12 @@ we first define signals like:
 ]
 {% endhighlight %}
 
-This defines 4 signals to be used as data in the visual components.
-For example, the signal called `distStart`, listens to a stream of
-`mousedown` events on the `distGroup` visual component.  From the
-events it calculates the horizontal position with an expression
-`eventX(scope)`. This horizontal position is then mapped to a data
-value by inverting the scale that positions a data value to a
-horizontal position.
+This defines 4 signals to be used as data.  The signal called
+`distStart`, listens to a stream of `mousedown` events on the
+`distGroup` visual component.  From the events it calculates the
+horizontal position with an expression `eventX(scope)`. This
+horizontal position is then mapped to a data value by inverting the
+scale that positions a data value to a horizontal position.
 
 Now we can use `distStart` as a value in formulas, because it has a
 value in the data space lifted from the visual space.  For example,
@@ -210,9 +213,12 @@ the signals from above are used in a filter like:
 {% highlight javascript %}
 {
   "type": "filter",
-  "test": "(minDist == maxDist || (datum.hoopdistance >= minDist && datum.hoopdistance <= maxDist))"
+  "test": "datum.hoopdistance >= minDist && datum.hoopdistance <= maxDist"
 }
 {% endhighlight %}
+
+This filters the data for shots that had a distance from the hoop in
+between `minDist` and `maxDist`.
 
 The shot scatterplot signal is similar, except it listens on events in
 both the horizontal and vertical direction.
@@ -236,6 +242,9 @@ otherwise.
 
 Last thoughts on using vega:
 
+* Vega is great as a tool for building a tool to visualize data or
+  prototyping what's needed in a larger system.
+
 * It is very verbose, and a composable module for common interactions
   or visual components would be extremely helpful.
 
@@ -249,12 +258,25 @@ Last thoughts on using vega:
   because the property was calculated on `enter` instead of on
   `update`.
 
-* How to draw an individual line segment from a data point instead of
-  one path connecting each data point with a line segment
+* Notably much more performant than a simpler
+  [React version](/demos/nba-shot-chart) I played with, even when
+  using Vega's SVG rendering as opposed to canvas. It looks like React
+  having to update thousands of component's state incurs a lot of
+  overhead. There may be a better way to perform transitions with React though.
 
-* How to draw ellipses for the court arcs, this caused the chart to
-  need a specific width/height ratio otherwise the arcs get deformed
-  if the court space gets stretch or contracted
+* vega's canvas vs SVG rendering, canvas may be smoother
+  but I cannot tell on my machine with a small dataset of this size
 
-* It is great as a tool for building a tool to visualize data or
-  prototyping what's needed in a larger system.
+* Using vega's rendering with SVG, I had some issues getting
+  selections to register and sometimes the selection box would
+  disappear on updates to other selections. I think it is due to vega
+  marking the `rect` as dirty when a different selection filtered out
+  all of the data
+
+* Questions:
+  * How to draw an individual line segment from a data point instead of
+    one path connecting each data point with a line segment.
+  * How to draw ellipses for the court arcs. Using circles caused the chart to
+    need a specific width/height ratio otherwise the arcs get deformed
+    if the court space gets stretch or contracted from its normal
+    dimensions.
