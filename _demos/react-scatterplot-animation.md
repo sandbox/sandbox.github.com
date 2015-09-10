@@ -1,6 +1,6 @@
 ---
 layout: demo
-title: Scatterplot
+title: React Scatterplot Animation
 bodyclass: demo
 ---
 

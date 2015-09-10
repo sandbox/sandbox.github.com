@@ -10,7 +10,7 @@ var width = element.offsetWidth - margin.left - margin.right
 var height = 550 - margin.top - margin.bottom
 
 let normalDistribution = d3.random.normal(0, 1)
-var values = d3.range(500).map(() => [normalDistribution(), normalDistribution()])
+var values = d3.range(1000).map(() => [normalDistribution(), normalDistribution()])
 var xscale = d3.scale.linear().domain([-3, 3]).range([0, width])
 var yscale = d3.scale.linear().domain([-3, 3]).range([height, 0])
 
