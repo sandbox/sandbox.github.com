@@ -10,7 +10,7 @@ the histograms. The FG% and Points per Attempt numbers update
 automatically. Select from available shot charts in the upper left corner.
 
 <div id="shot-chart-player-select"></div>
-<div id="shot-chart" style="border: 1px solid #ccc;"></div>
+<div id="shot-chart"></div>
 <p></p>
 
 This was inspired by [@savvas_tj](https://twitter.com/savvas_tj)'s
