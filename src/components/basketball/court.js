@@ -1,4 +1,4 @@
-import { ShotChartInteractionSignals, ShotChartInteractionPredicates, shotFilter } from './interactions'
+import { ShotChartInteractionSignals, ShotChartInteractionPredicates, filterExclude } from './interactions'
 
 var ShotChart = {
   "name": "shotChart",
@@ -47,7 +47,7 @@ var ShotChart = {
         "transform": [
           {
             "type": "filter",
-            "test": `${shotFilter(['hoopdistance', 'dist'], ['LOC_X', 'xLoc'], ['LOC_Y', 'yLoc'])}`
+            "test": `${filterExclude()}`
           }
         ]
       },

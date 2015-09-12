@@ -1,8 +1,8 @@
 import { describeArc } from './arc'
-import { ShotChartInteractionSignals, ShotChartInteractionPredicates, ShotChartInteractionFilters, shotFilter } from './basketball/interactions'
+import { ShotChartInteractionSignals, ShotChartInteractionPredicates, ShotChartInteractionFilters, filterExclude } from './basketball/interactions'
 import { ShotAggregates } from './basketball/aggregates'
 import { ShotChart } from './basketball/court'
-import { DistanceHistogram, CourtXHistogram, CourtYHistogram } from './basketball/histograms'
+import { fieldHistogram, CourtXHistogram, CourtYHistogram } from './basketball/histograms'
 
 class CourtBounds extends React.Component {
   render() {
@@ -54,6 +54,20 @@ class BasketBall extends React.Component {
   }
 }
 
+function aggregateCountData(name, field) {
+  return {
+    "name": name,
+    "source": "table",
+    "transform": [
+      {
+        "type": "aggregate",
+        "groupby" : { "field": `bin_${field}` },
+        "summarize": {[field]: ["count"]}
+      }
+    ]
+  }
+}
+
 var ShotChartSpec = {
   "width":  960,
   "height": 800,
@@ -64,51 +78,24 @@ var ShotChartSpec = {
         {"type": "formula", "field": "POINTS", "expr": "parseInt(datum.SHOT_TYPE)"},
         {"type": "formula", "field": "MADE_POINTS", "expr": "datum.POINTS * datum.SHOT_MADE_FLAG"},
         {"type": "formula", "field": "hoopdistance", "expr": "sqrt(pow(datum.LOC_X, 2) + pow(datum.LOC_Y, 2))/10"},
+        {"type": "formula", "field": "timepassed", "expr": "(datum.PERIOD * 12 * 60 - (datum.MINUTES_REMAINING * 60 + datum.SECONDS_REMAINING))/60"},
         {"type": "bin", "field": "hoopdistance", "min": 0, "max": 90, "step": 1, "output": { "bin": "bin_hoopdistance" }},
+        {"type": "bin", "field": "timepassed", "min": 0, "max": 64, "step": 1, "output": { "bin": "bin_timepassed" }},
         {"type": "bin", "field": "LOC_X", "min": -260, "max": 260, "step": 5, "output": { "bin": "bin_LOC_X" }},
         {"type": "bin", "field": "LOC_Y", "min": -50,  "max": 470, "step": 5, "output": { "bin": "bin_LOC_Y" }}
       ]
     },
-    {
-      "name": "distance",
-      "source": "table",
-      "transform": [
-        {
-          "type": "aggregate",
-          "groupby" : { "field": "bin_hoopdistance" },
-          "summarize": {"hoopdistance": ["count"]}
-        }
-      ]
-    },
-    {
-      "name": "xdistance",
-      "source": "table",
-      "transform": [
-        {
-          "type": "aggregate",
-          "groupby" : { "field": "bin_LOC_X" },
-          "summarize": {"LOC_X": ["count"]}
-        }
-      ]
-    },
-    {
-      "name": "ydistance",
-      "source": "table",
-      "transform": [
-        {
-          "type": "aggregate",
-          "groupby" : { "field": "bin_LOC_Y" },
-          "summarize": {"LOC_Y": ["count"]}
-        }
-      ]
-    },
+    aggregateCountData('distance', 'hoopdistance'),
+    aggregateCountData('time', 'timepassed'),
+    aggregateCountData('xdistance', 'LOC_X'),
+    aggregateCountData('ydistance', 'LOC_Y'),
     {
       "name": "percentages",
       "source": "table",
       "transform": [
         {
           "type": "filter",
-          "test": `${shotFilter(['hoopdistance', 'dist'], ['LOC_X', 'xLoc'], ['LOC_Y', 'yLoc'])} && ${ShotChartInteractionFilters.brush}`
+          "test": `${filterExclude()} && ${ShotChartInteractionFilters.brush}`
         },
         {
           "type": "aggregate",
@@ -197,7 +184,12 @@ var ShotChartSpec = {
   ],
   "marks": [
     ShotAggregates,
-    DistanceHistogram,
+    fieldHistogram('distance',
+                   `${filterExclude('hoopdistance')} && ${ShotChartInteractionFilters.brush}`,
+                   'dist', 'hoopdistance', [0, 50], 2.5, "Shot Distance from Hoop (in feet)"),
+    fieldHistogram('time',
+                   `${filterExclude('timepassed')} && ${ShotChartInteractionFilters.brush}`,
+                   'timepassed', 'timepassed', [0, 64], 162.5, "Game Time (in minutes from start)"),
     CourtXHistogram,
     CourtYHistogram,
     ShotChart

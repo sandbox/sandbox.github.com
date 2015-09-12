@@ -54,6 +54,8 @@ var ShotChartInteractionSignals = [
   }].concat(
     brushSignal('distGroup', 'dist', 'eventX', 'width', 'x', 0, 50)
   ).concat(
+    brushSignal('timepassedGroup', 'timepassed', 'eventX', 'width', 'x', 0, 64)
+  ).concat(
     brushSignal('xLocGroup', 'xLoc', 'eventX', 'width', 'x', -250, 250)
   ).concat(
     brushSignal('yLocGroup', 'yLoc', 'eventY', 'height', 'y', -47.5, 500)
@@ -63,6 +65,8 @@ var ShotChartInteractionSignals = [
     brushSignal('shotChart', 'chartY', 'eventY', 'height', 'y', -47.5, 500))
 
 var ShotChartInteractionPredicates = brushPredicate('dist', 'x').concat(
+  brushPredicate('timepassed', 'x')
+).concat(
   brushPredicate('xLoc', 'x')
 ).concat(
   brushPredicate('yLoc', 'y')
@@ -103,4 +107,14 @@ function shotFilter(...variable_signals) {
   }).join(" && ")
 }
 
-export {ShotChartInteractionSignals, ShotChartInteractionPredicates, ShotChartInteractionFilters, shotFilter}
+function crossFilter(crosses) {
+  return function(currentFilter) {
+    return shotFilter.apply(null, crosses.filter((value) => value[0] !== currentFilter))
+  }
+}
+
+var filterExclude = crossFilter([
+  ['LOC_X', 'xLoc'], ['LOC_Y', 'yLoc'], ['hoopdistance', 'dist'], ['timepassed', 'timepassed']
+])
+
+export {ShotChartInteractionSignals, ShotChartInteractionPredicates, ShotChartInteractionFilters, filterExclude}

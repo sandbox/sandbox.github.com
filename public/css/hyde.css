@@ -207,14 +207,16 @@ a.sidebar-nav-item:focus {
 
 @media (max-width: 960px) {
   .demo {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
   }
 }
 
 @media (min-width: 960px) {
   .demo {
     width: 960px;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 

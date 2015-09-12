@@ -1,107 +1,108 @@
-import { ShotChartInteractionSignals, ShotChartInteractionPredicates, ShotChartInteractionFilters, shotFilter } from './interactions'
+import { ShotChartInteractionSignals, ShotChartInteractionPredicates, ShotChartInteractionFilters, filterExclude } from './interactions'
 
-var DistanceHistogram = {
-  "name": "distGroup",
-  "type": "group",
-  "properties": {
-    "update": {
-      "x": { "value": 620 },
-      "y": { "value": 2.5 },
-      "width": {"value": 200 },
-      "height": {"value": 100 },
-      "fill": {"value": "#fff"}
-    }
-  },
-  "scales": [
-    {
-      "name": "x",
-      "type": "linear",
-      "range": "width",
-      // "reverse" : true, // hoop on bottom view
-      "domain": [0, 50]
+function fieldHistogram(data, filter, name, field, xdomain, y, title) {
+  return {
+    "name": `${name}Group`,
+    "type": "group",
+    "properties": {
+      "update": {
+        "x": { "value": 620 },
+        "y": { "value": y },
+        "width": {"value": 200 },
+        "height": {"value": 100 },
+        "fill": {"value": "#fff"}
+      }
     },
-    {
-      "name": "y",
-      "type": "linear",
-      "range": "height",
-      "domain": { "data": "distance", "field": "count_hoopdistance" },
-      "domainMin": 0
-    },
-  ],
-  "axes": [{
-    "type": "x", "scale": "x", "tickFormat": "0d"
-  }],
-  "marks": [
-    {
-      "type": "rect",
-      "from": {
-        "data": "table",
-        "transform": [
-          {
-            "type": "filter",
-            "test": `${shotFilter(['LOC_X', 'xLoc'], ['LOC_Y', 'yLoc'])} && ${ShotChartInteractionFilters.brush}`
-          },
-          {
-            "type": "aggregate",
-            "groupby" : [ "bin_hoopdistance", "EVENT_TYPE" ],
-            "summarize": {"*": ["count"]}
-          },
-          { "type": "stack", "groupby": ["bin_hoopdistance"], "field": "count", "sortby": "EVENT_TYPE" }
-        ]
+    "scales": [
+      {
+        "name": "x",
+        "type": "linear",
+        "range": "width",
+        "domain": xdomain
       },
-      "properties": {
-        "update": {
-          "stroke": {"scale": "makeColor", "field": "EVENT_TYPE"},
-          "fillOpacity": {
-            "rule": [
-              {
-                "predicate": {"name": "distBrush", "x": {"field": "bin_hoopdistance"}},
-                "value": 0.8
-              },
-              {"value": 0.2}
-            ]
+      {
+        "name": "y",
+        "type": "linear",
+        "range": "height",
+        "domain": { "data": data, "field": `count_${field}` },
+        "domainMin": 0
+      },
+    ],
+    "axes": [{
+      "type": "x", "scale": "x", "tickFormat": "0d", "ticks": 5
+    }],
+    "marks": [
+      {
+        "type": "rect",
+        "from": {
+          "data": "table",
+          "transform": [
+            {
+              "type": "filter",
+              "test": filter
+            },
+            {
+              "type": "aggregate",
+              "groupby" : [ `bin_${field}`, "EVENT_TYPE" ],
+              "summarize": {"*": ["count"]}
+            },
+            { "type": "stack", "groupby": [`bin_${field}`], "field": "count", "sortby": "EVENT_TYPE" }
+          ]
+        },
+        "properties": {
+          "update": {
+            "stroke": {"scale": "makeColor", "field": "EVENT_TYPE"},
+            "fillOpacity": {
+              "rule": [
+                {
+                  "predicate": {"name": `${name}Brush`, "x": {"field": `bin_${field}`}},
+                  "value": 0.8
+                },
+                {"value": 0.2}
+              ]
+            },
+            "x": {"scale": "x", "field": `bin_${field}`},
+            "width": {"scale": "x", "value": 1},
+            "y":  {"scale": "y", "field": "layout_start"},
+            "y2": {"scale": "y", "field": "layout_end"},
+            "fill": {"scale": "makeColor", "field": "EVENT_TYPE"}
           },
-          "x": {"scale": "x", "field": "bin_hoopdistance"},
-          "width": {"scale": "x", "value": 1},
-          "y":  {"scale": "y", "field": "layout_start"},
-          "y2": {"scale": "y", "field": "layout_end"},
-          "fill": {"scale": "makeColor", "field": "EVENT_TYPE"}
-        },
-        "exit": {
-          "y": {"scale": "y", "value": 0},
-          "y2": {"scale": "y", "value": 0}
+          "exit": {
+            "y": {"scale": "y", "value": 0},
+            "y2": {"scale": "y", "value": 0}
+          }
+        }
+      },
+      {
+        "type": "text",
+        "properties": {
+          "enter": {
+            "x": {"value": -5},
+            "y": {"value": -10},
+            "text": {"value": title},
+            "fill": {"value": "black"},
+            "fontSize": {"value": 14},
+            "fontWeight": {"value": "bold"}
+          }
+        }
+      },
+      {
+        "type": "rect",
+        "properties": {
+          "enter": {
+            "fill": {"value": "grey"},
+            "fillOpacity": {"value": 0.2}
+          },
+          "update": {
+            "x": {"scale": "x", "signal":  `${name}Start`},
+            "x2": {"scale": "x", "signal": `${name}End`},
+            "y": {"value": 0},
+            "y2": {"field": {"group": "height"}}
+          }
         }
       }
-    },
-    {
-      "type": "text",
-      "properties": {
-        "enter": {
-          "x": {"value": -5},
-          "y": {"value": -10},
-          "text": {"value": "Shot Distance from Hoop (in feet)"},
-          "fill": {"value": "black"},
-          "fontSize": {"value": 14},
-          "fontWeight": {"value": "bold"}
-        }
-      }
-    },
-    {
-      "type": "rect",
-      "properties": {
-        "enter": {
-          "fill": {"value": "grey"},
-          "fillOpacity": {"value": 0.2}
-        },
-        "update": {
-          "x": {"scale": "x", "signal": "distStart"},
-          "x2": {"scale": "x", "signal": "distEnd"},
-          "y": {"value": 0},
-          "y2": {"field": {"group": "height"}}
-        }
-      }
-    }
-  ]
+    ]
+  }
 }
 
 var CourtXHistogram = {
@@ -145,7 +146,7 @@ var CourtXHistogram = {
         "transform": [
           {
             "type": "filter",
-            "test": `${shotFilter(['hoopdistance', 'dist'], ['LOC_Y', 'yLoc'])} && ${ShotChartInteractionFilters.brush}`
+            "test": `${filterExclude('LOC_X')} && ${ShotChartInteractionFilters.brush}`
           },
           {
             "type": "aggregate",
@@ -239,7 +240,7 @@ var CourtYHistogram = {
         "transform": [
           {
             "type": "filter",
-            "test": `${shotFilter(['hoopdistance', 'dist'], ['LOC_X', 'xLoc'])} && ${ShotChartInteractionFilters.brush}`
+            "test": `${filterExclude('LOC_Y')} && ${ShotChartInteractionFilters.brush}`
           },
           {
             "type": "aggregate",
@@ -292,4 +293,4 @@ var CourtYHistogram = {
 }
 
 
-export {DistanceHistogram, CourtYHistogram, CourtXHistogram}
+export {CourtYHistogram, CourtXHistogram, fieldHistogram}

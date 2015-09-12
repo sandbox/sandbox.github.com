@@ -2,6 +2,7 @@
 layout: demo
 title: Interactive NBA Shot Chart (Vega)
 bodyclass: demo
+not_responsive: true
 comments: true
 ---
 
