@@ -6,7 +6,7 @@ not_responsive: true
 comments: true
 ---
 
-Touch or click to outline a rectangular box over the shots or any of
+Click and drag to outline a rectangular box over the shots or any of
 the histograms. The FG% and Points per Attempt numbers update
 automatically. Select from available shot charts in the upper left corner.
 
