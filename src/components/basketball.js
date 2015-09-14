@@ -77,7 +77,7 @@ var ShotChartSpec = {
       "transform": [
         {"type": "formula", "field": "POINTS", "expr": "parseInt(datum.SHOT_TYPE)"},
         {"type": "formula", "field": "MADE_POINTS", "expr": "datum.POINTS * datum.SHOT_MADE_FLAG"},
-        {"type": "formula", "field": "hoopdistance", "expr": "sqrt(pow(datum.LOC_X, 2) + pow(datum.LOC_Y, 2))/10"},
+        {"type": "formula", "field": "hoopdistance", "expr": "datum.SHOT_DISTANCE"},
         {"type": "formula", "field": "timepassed", "expr": "(datum.PERIOD * 12 * 60 - (datum.MINUTES_REMAINING * 60 + datum.SECONDS_REMAINING))/60"},
         {"type": "bin", "field": "hoopdistance", "min": 0, "max": 90, "step": 1, "output": { "bin": "bin_hoopdistance" }},
         {"type": "bin", "field": "timepassed", "min": 0, "max": 64, "step": 1, "output": { "bin": "bin_timepassed" }},
