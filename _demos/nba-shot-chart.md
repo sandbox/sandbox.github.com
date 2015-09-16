@@ -2,6 +2,8 @@
 layout: demo
 title: NBA Shot Chart (React) - James Harden
 bodyclass: demo
+custom_css:
+  - demo
 ---
 
 <style>

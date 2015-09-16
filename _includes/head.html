@@ -21,6 +21,13 @@
   <link rel="stylesheet" href="/public/css/syntax.css">
   <link rel="stylesheet" href="/public/css/hyde.css">
   <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Bitter">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+  {% if page.custom_css %}
+  {% for css in page.custom_css %}
+  <link rel="stylesheet" href="/public/css/{{css}}.css">
+  {% endfor %}
+  {% endif %}
 
   <!-- Icons -->
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
@@ -31,15 +38,17 @@
     <script src="https://fb.me/react-with-addons-0.13.3.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vega/2.2.4/vega.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
   {% else %}
     <script src="https://fb.me/react-with-addons-0.13.3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vega/2.2.4/vega.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
   {% endif %}
 
   {% if page.custom_js %}
   {% for js in page.custom_js %}
-  <script src="/public/js/{{ js }}" type="text/javascript"></script>
+   {% include built_javascript.html js_file=js %}
   {% endfor %}
   {% endif %}
 

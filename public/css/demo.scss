@@ -1,0 +1,50 @@
+---
+# scss file jekkyl
+---
+
+.demo {
+  margin: 1em auto 4em auto;
+  position: relative;
+  tab-size: 2;
+}
+
+.demo-title {
+  overflow: auto;
+}
+
+@media (min-width: 48em) {
+  .demo-title h1 {
+    float: left;
+  }
+}
+
+.demo-title a {
+  margin-top: 1rem;
+  padding-left: 1rem;
+  float: right;
+}
+
+@media (max-width: 48em) {
+  .demo-title {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .demo {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+@media (min-width: 960px) {
+  .demo {
+    width: 960px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.demo h1 {
+  font-weight: 400;
+}

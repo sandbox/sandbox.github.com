@@ -12,11 +12,14 @@ import { ShotChartSpec } from './components/basketball'
 // durant 201142
 // dirk 1717
 // rose 201565
+// anthony davis 203076
+
+// http://stats.nba.com/stats/playerdashptshotlog?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&Period=0&PlayerID=&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=
 
 var ShotChartView
 var Cache = {}
 var shotChartUrls = [
-  {"name": "James Harden (2014-2015)",  "url": "https://gist.githubusercontent.com/sandbox/7f6065c867a5f355207e/raw/5c74a5dcd7b257faa985f28c932a684ed4cea065/james-harden-shotchartdetail.json"},
+  {"name": "James Harden (2014-2015)",  "url": "https://gist.githubusercontent.com/sandbox/7f6065c867a5f355207e/raw/5c74a5dcd7b257faa985f28c932a684ed4cea065/james-harden-shotchartdetail.json", "dash_url": "https://gist.githubusercontent.com/sandbox/7f6065c867a5f355207e/raw/f6d6496474af6dfba0b73f36dbd0e00ce0fc2f42/james-harden-2014-2015-player-dash.json"},
   {"name": "Stephen Curry (2014-2015)", "url": "https://gist.githubusercontent.com/sandbox/7f6065c867a5f355207e/raw/d159840109c00928f515bf0ed496f4f487b326ba/stephen-curry-shotchartdetail.json" },
   {"name": "Kobe Bryant (2007-2008)",   "url": "https://gist.githubusercontent.com/sandbox/7f6065c867a5f355207e/raw/0fbd65f9f795a5fba8c8ccefce060fd3082264fb/kobe-2007-2008-shot-chart.json" },
   {"name": "Kobe Bryant (2009-2010)",   "url": "https://gist.githubusercontent.com/sandbox/7f6065c867a5f355207e/raw/a19ec840d7d67c388fc3f2eea3d51c9b7cdcf4b0/kobe-2009-2010-shot-chart.json" },

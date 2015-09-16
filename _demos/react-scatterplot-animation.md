@@ -2,6 +2,8 @@
 layout: demo
 title: React Scatterplot Animation
 bodyclass: demo
+custom_css:
+  - demo
 ---
 
 <style>

@@ -20,7 +20,10 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.coffee$/, loader: 'coffee-loader' },
+      { test: /\.coffee$/,
+        loaders: ['react-hot', 'coffee-loader', 'cjsx-loader'],
+        include: path.join(__dirname, 'src')
+      },
       {
         test: /\.js$/,
         loaders: ['react-hot', 'babel-loader'],
@@ -30,7 +33,8 @@ module.exports = {
   },
   externals: {
     "vega": "vg",
-    "d3": "d3"
+    "d3": "d3",
+    "datalib": "dl"
   },
   devServer: {
     publicPath: 'http://localhost:8080/',

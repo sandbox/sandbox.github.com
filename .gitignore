@@ -8,9 +8,11 @@ _gh_pages
 .ruby-version
 .sass-cache
 node_modules
+npm-debug.log
 
 *.js.map
 *.hot.js
 
 .DS_Store
 .emacs.desktop
+.emacs.desktop*

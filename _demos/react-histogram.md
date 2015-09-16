@@ -2,6 +2,8 @@
 layout: demo
 title: Histogram rendered with React
 bodyclass: demo
+custom_css:
+  - demo
 ---
 
 <style>

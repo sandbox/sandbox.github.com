@@ -19,7 +19,11 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.coffee$/, loader: 'coffee-loader' },
+      {
+        test: /\.coffee$/,
+        loaders: [ 'coffee-loader', 'cjsx-loader' ],
+        include: path.join(__dirname, 'src')
+      },
       {
         test: /\.js$/,
         loaders: ['babel-loader'],
@@ -30,6 +34,7 @@ module.exports = {
   externals: {
     "vega": "vg",
     "d3": "d3",
+    "datalib": "dl",
     "react": "React"
   },
   plugins: [
