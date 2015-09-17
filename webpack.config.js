@@ -35,7 +35,8 @@ module.exports = {
     "vega": "vg",
     "d3": "d3",
     "datalib": "dl",
-    "react": "React"
+    "react": "React",
+    "lodash": "_"
   },
   plugins: [
     new webpack.optimize.UglifyJsPlugin({minimize: true})

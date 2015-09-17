@@ -34,7 +34,8 @@ module.exports = {
   externals: {
     "vega": "vg",
     "d3": "d3",
-    "datalib": "dl"
+    "datalib": "dl",
+    "lodash": "_"
   },
   devServer: {
     publicPath: 'http://localhost:8080/',
