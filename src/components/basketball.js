@@ -1,3 +1,4 @@
+import React from 'react'
 import { describeArc } from './arc'
 import { ShotChartInteractionSignals, ShotChartInteractionPredicates, ShotChartInteractionFilters, filterExclude } from './basketball/interactions'
 import { ShotAggregates } from './basketball/aggregates'

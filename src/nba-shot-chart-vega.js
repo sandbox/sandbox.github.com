@@ -1,3 +1,4 @@
+import React from 'react'
 import d3 from 'd3'
 import vg from 'vega'
 import { ShotChartSpec } from './components/basketball'
@@ -32,12 +33,15 @@ var shotChartUrls = [
 
 vg.parse.spec(ShotChartSpec, function(chart) {
   ShotChartView = chart({el: "#shot-chart"})
+  ShotChartView.onSignal('minchartX', (signal, value) => console.log(signal, value))
+  ShotChartView.onSignal('maxchartX', (signal, value) => console.log(signal, value))
   renderShotChart({ target: { value: shotChartUrls[0].url }})
 })
 
 function setChartData(data) {
   ShotChartView.data('table').remove(() => true).insert(data)
   ShotChartView.update({duration: 300, ease: "quad-in-out"})
+  console.log(ShotChartView.toImageURL('png'))
 }
 
 function renderShotChart(evt) {
