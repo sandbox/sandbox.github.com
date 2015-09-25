@@ -1,0 +1,132 @@
+@include keyframes(field-fade-in) {
+  0% {
+    top: -20px;
+  }
+
+  100% {
+    top: 0px;
+  }
+}
+
+.datasource-select {
+  position: relative;
+  border-bottom: 1px solid #dfdfdf;
+  cursor: pointer;
+
+  .datasource-title {
+    position: relative;
+    padding: 5px;
+    padding-right: 15px;
+    @include overflow-ellipsis;
+
+    i.fa {
+      padding-right: 5px;
+      color: $link-blue;
+    }
+
+    i.fa.fa-caret-down,
+    i.fa.fa-caret-up {
+      position: absolute;
+      top: 8px;
+      right: 0px;
+      color: #bbb;
+    }
+  }
+
+  .datasource-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: -1px;
+    z-index: 10;
+
+    cursor: default;
+
+    background-color: #fff;
+    border-top: 1px solid #dfdfdf;
+    border-right: 1px solid #dfdfdf;
+    box-shadow: 0 3px 5px #c3c3c3;
+
+    .datasource-list {
+      max-height: 310px;
+      overflow: auto;
+    }
+
+    .datasource-add {
+      position: relative;
+      padding: 5px;
+      text-align: center;
+      border-top: 1px solid #dfdfdf;
+      color: $link-blue;
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        background-color: $link-blue;
+        color: white;
+      }
+
+      i.fa.fa-plus {
+        position: absolute;
+        top: 8px;
+        left: 30px;
+      }
+    }
+
+    .datasource-db-name, .datasource-name {
+      @include overflow-ellipsis;
+    }
+
+    .datasource-db-name, .datasource-name, .datasource-db .datasource-db-tables {
+      padding: 5px;
+
+      i.fa {
+        padding-right: 5px;
+      }
+    }
+
+    .datasource-name {
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        background-color: #3875d7;
+        color: white;
+      }
+    }
+
+    .datasource-db .datasource-db-tables {
+      padding-left: 15px;
+    }
+  }
+}
+
+.datasource-table-container {
+  @include flex(1 0 auto);
+  position: relative;
+}
+
+.datasource-table-fields {
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  padding: 5px 8px;
+  overflow: auto;
+
+  .datasource-table-field.field-wrap {
+    margin-bottom: 5px;
+
+    @include animation(field-fade-in .3s ease);
+
+    .icon-wrap {
+      width: 23px;
+    }
+
+    .name-wrap {
+      @include flex(1 1 auto);
+    }
+
+    span {
+      padding: 3px 0px;
+    }
+  }
+}

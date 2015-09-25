@@ -1,0 +1,209 @@
+.remove-link {
+  color: #999;
+
+  &:hover {
+    color: #f18794;
+    text-decoration: none;
+  }
+}
+
+.querybuilder {
+  @include flexbox;
+  @include flex(0 0 60px);
+  @include flex-flow(row);
+
+  border: 1px solid #dfdfdf;
+  background-color: white;
+  margin-bottom: 10px;
+
+  .querybuilder-type-spec {
+    @include flexbox;
+    @include flex(1 1 auto);
+    position: relative;
+
+    &.row {
+      @include flex-flow(row);
+    }
+
+    &.col {
+      @include flex-flow(column);
+    }
+
+  }
+
+  .querybuilder-vis-table {
+    position: relative;
+    @include flexbox;
+    @include flex(1 1 0px);
+
+    label {
+      position: relative;
+      text-shadow: rgb(255, 255, 255) 0px 1px 0px;
+
+      i.fa.fa-times.remove-link {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 6px 5px 9px;
+        display: none;
+        cursor: pointer;
+      }
+
+      &:hover i.fa.fa-times.remove-link {
+        display: block;
+      }
+    }
+  }
+
+  .querybuilder-type-spec.row .querybuilder-vis-table {
+    @include flex-flow(column);
+
+    &:not(:last-of-type) {
+      border-right: 1px solid #dfdfdf;
+    }
+
+    label {
+      display: block;
+      padding: 1px 3px 0px;
+    }
+  }
+
+  .querybuilder-type-spec.row.key .querybuilder-vis-table {
+    &:first-of-type {
+      @include flex(0 0 auto);
+    }
+
+    label {
+      width: 150px;
+    }
+  }
+
+  .querybuilder-type-spec.col .querybuilder-vis-table {
+    @include flex-flow(row);
+    &:not(:last-of-type) {
+      border-bottom: 1px solid #dfdfdf;
+    }
+
+    label {
+      padding: 1px 3px 0px;
+      border-right: 1px solid #dfdfdf;
+      background-color: #efefef;
+
+      @include flexbox;
+      @include flex(0 0 80px);
+      @include align-items(center);
+    }
+  }
+
+  .querybuilder-field-container-wrap {
+    @include flex(1 0 auto);
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      overflow: auto;
+    }
+
+    &:before {
+      content: "Drop Fields Here";
+      position: absolute;
+      margin: 3px 6px;
+      padding: 0px 6px;
+      border: 1px dotted #dfdfdf;
+    }
+  }
+
+  .querybuilder-field-container {
+    @include flexbox;
+    @include flex-flow(row);
+
+    position: absolute;
+    padding: 3px 6px 3px;
+
+    .field-position-marker {
+      position: absolute;
+      background-color: #58C153;
+      top: 0px; bottom: 0px;
+      margin-left: -4px;
+      width: 2px;
+
+      &:before,
+      &:after {
+        content: " ";
+        position: absolute;
+        left: -2px;
+      }
+
+      &:before {
+        top: 0px;
+        border-top: 3px solid #58C153;
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+      }
+
+      &:after {
+        bottom: 0px;
+        border-bottom: 3px solid #58C153;
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+      }
+    }
+  }
+}
+
+.querybuilder-field-settings {
+  position: absolute;
+  top: 25px; left: 88px;
+  top: 55px;
+  background-color: white;
+  border: 1px solid #dfdfdf;
+  border-radius: 2px;
+  border-top-left-radius: 0px;
+  box-shadow: 0 3px 5px #ccc;
+  padding: 5px;
+  z-index: 10;
+  width: 200px;
+
+  .querybuilder-field-options > label {
+    font-weight: 600;
+
+    a {
+      padding-left: 8px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+  }
+
+  i.fa.fa-times.remove-link {
+    position: absolute;
+    right: 5px;
+  }
+
+  .querybuilder-field-remove {
+    color: #f18794;
+    border-top: 1px solid #dfdfdf;
+    margin: 0 -5px -5px;
+    padding: 5px;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background-color: #f18794;
+      color: white;
+    }
+  }
+
+  .querybuilder-func .querybuilder-field-settings-option-value {
+    width: 50%;
+  }
+
+  .querybuilder-field-settings-options {
+    @include flexbox;
+    @include flex-flow(row wrap);
+    margin-bottom: 0.5rem;
+
+    .querybuilder-field-settings-option-value {
+      @include flex(1 0 auto);
+    }
+  }
+}

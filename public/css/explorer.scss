@@ -1,0 +1,122 @@
+---
+# scss file jekkyl
+---
+
+@import 'flexbox';
+@import 'utilities';
+
+$link-blue: #649AF3;
+
+html,
+body {
+  font-size: 16px;
+  background-color: #F4F8FB;
+
+  height: 100%;
+  min-width: 1024px;
+  margin: 0;
+
+  @include flexbox;
+  @include flex-flow(column);
+}
+
+label {
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+.demo.explorer .demo-title {
+  padding: 0.5rem;
+  border-bottom: 1px solid #dfdfdf;
+  background-color: white;
+  overflow: auto;
+  @include flex(0 0 auto);
+
+  h1.post-title {
+    font-weight: 400;
+    font-size: 1.25rem;
+    margin: 0;
+    float: left;
+  }
+
+  a {
+    float: right;
+    font-size: 1rem;
+    margin: 0;
+    padding-left: 1rem;
+  }
+}
+
+#demo {
+  font-size: 14px;
+  @include flexbox;
+  @include flex(1 1 auto);
+}
+
+.pane-container {
+  @include flex(1 0 auto);
+  @include flexbox;
+  @include flex-flow(row);
+
+  &.field-drop-over {
+    background-color: rgba(241, 135, 148, 0.4);
+  }
+}
+
+.container-flex-fill-wrap {
+  position: relative;
+  @include flex(1 1 auto);
+
+  .container-flex-fill {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    @include flexbox;
+
+    pre {
+      overflow: auto;
+      white-space: pre;
+      word-wrap: normal;
+    }
+  }
+}
+
+.pane-container .pane {
+  background-color: white;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #dfdfdf;
+  border-radius: 1px;
+  margin: 10px 10px;
+  margin-left: 0;
+  @include flexbox;
+  @include flex(1 1 auto);
+  @include flex-just(space-between);
+
+  &.data-pane {
+    @include flex-flow(column);
+    @include flex(0 1 253px);
+    border-left: 0;
+  }
+
+  &.graphic-pane {
+    background-color: transparent;
+    border: none;
+
+    @include flex(1 1 auto);
+    @include flex-flow(column);
+  }
+
+  &.shelf-pane {
+    @include flex(0 1 243px);
+    @include flex-flow(column);
+    background-color: transparent;
+    border: none;
+    position: relative;
+  }
+}
+
+@import 'components/field';
+@import 'components/datasource';
+@import 'components/querybuilder';
+@import 'components/shelf';
+@import 'components/graphic';
