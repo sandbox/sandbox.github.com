@@ -28,34 +28,9 @@
     &.col {
       @include flex-flow(column);
     }
-
   }
 
-  .querybuilder-vis-table {
-    position: relative;
-    @include flexbox;
-    @include flex(1 1 0px);
-
-    label {
-      position: relative;
-      text-shadow: rgb(255, 255, 255) 0px 1px 0px;
-
-      i.fa.fa-times.remove-link {
-        position: absolute;
-        top: 0;
-        right: 0;
-        padding: 6px 5px 9px;
-        display: none;
-        cursor: pointer;
-      }
-
-      &:hover i.fa.fa-times.remove-link {
-        display: block;
-      }
-    }
-  }
-
-  .querybuilder-type-spec.row .querybuilder-vis-table {
+  .querybuilder-type-spec.row .querybuilder-shelf {
     @include flex-flow(column);
 
     &:not(:last-of-type) {
@@ -68,7 +43,7 @@
     }
   }
 
-  .querybuilder-type-spec.row.key .querybuilder-vis-table {
+  .querybuilder-type-spec.row.key .querybuilder-shelf {
     &:first-of-type {
       @include flex(0 0 auto);
     }
@@ -78,7 +53,7 @@
     }
   }
 
-  .querybuilder-type-spec.col .querybuilder-vis-table {
+  .querybuilder-type-spec.col .querybuilder-shelf {
     @include flex-flow(row);
     &:not(:last-of-type) {
       border-bottom: 1px solid #dfdfdf;
@@ -92,61 +67,6 @@
       @include flexbox;
       @include flex(0 0 80px);
       @include align-items(center);
-    }
-  }
-
-  .querybuilder-field-container-wrap {
-    @include flex(1 0 auto);
-    position: relative;
-    overflow: hidden;
-
-    &:hover {
-      overflow: auto;
-    }
-
-    &:before {
-      content: "Drop Fields Here";
-      position: absolute;
-      margin: 3px 6px;
-      padding: 0px 6px;
-      border: 1px dotted #dfdfdf;
-    }
-  }
-
-  .querybuilder-field-container {
-    @include flexbox;
-    @include flex-flow(row);
-
-    position: absolute;
-    padding: 3px 6px 3px;
-
-    .field-position-marker {
-      position: absolute;
-      background-color: #58C153;
-      top: 0px; bottom: 0px;
-      margin-left: -4px;
-      width: 2px;
-
-      &:before,
-      &:after {
-        content: " ";
-        position: absolute;
-        left: -2px;
-      }
-
-      &:before {
-        top: 0px;
-        border-top: 3px solid #58C153;
-        border-left: 3px solid transparent;
-        border-right: 3px solid transparent;
-      }
-
-      &:after {
-        bottom: 0px;
-        border-bottom: 3px solid #58C153;
-        border-left: 3px solid transparent;
-        border-right: 3px solid transparent;
-      }
     }
   }
 }

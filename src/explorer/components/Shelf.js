@@ -9,162 +9,68 @@ import { ShelfField, calculateDropMarkPosition, calculateDropPosition, FieldDrop
 const { div, i: icon, a: link, pre } = React.DOM
 const { findDOMNode } = React
 
-const TABLE_ENCODINGS = [
-  "pivot",
-  "bar",
-  "line",
-  "point",
-  "rect",
-  "area",
-  "box",
-  "pie",
-  "donut"
-]
+class FieldContainer extends React.Component {
+  componentDidUpdate(prevProps, prevState) {
+    if (this.hasDropMarker()) {
+      findDOMNode(this.refs.dropMarker).style.left = `${calculateDropMarkPosition(this, this.state.hoverDropOffset)}px`
+    }
+  }
 
-const ICON_FOR = {
-  pivot: [{className: "fa fa-table"}],
-  bar:   [{className: "fa fa-bar-chart"}],
-  line:  [{className: "fa fa-line-chart"}],
-  point: [{className: "material-icons", style: {position: 'relative', top: 4, fontSize: 22}}, "grain"],
-  rect:  [{className: "material-icons", style: {position: 'relative', top: 4, fontSize: 22}}, "clear_all"],
-  area:  [{className: "fa fa-area-chart"}],
-  box:   [{className: "material-icons", style: {position: 'relative', top: 4, fontSize: 18}}, "tune"],
-  pie:   [{className: "fa fa-pie-chart"}],
-  donut: [{className: "material-icons", style: {position: 'relative', top: 4, fontSize: 18}}, "data_usage"]
-}
+  hasDropMarker() {
+    return _.contains(['row', 'col'], this.props.shelf) && this.props.fields.length > 0 && this.props.isOver && this.props.dropOffset
+  }
 
-const ENCODING_MARK_ATTRIBUTES = {
-  pivot: ['background', 'color'],
-  bar:   ['size', 'color', 'opacity', 'orientation'],
-  line:  ['color', 'opacity'],
-  point: ['size', 'color', 'shape', 'opacity', 'orientation'],
-  rect:  ['x', 'x2', 'y', 'y2', 'size', 'color', 'opacity'],
-  area:  ['color'],
-  box:   ['color'],
-  pie:   ['color'],
-  donut: ['color']
-}
-
-const ATTRIBUTE_DISPLAY = {
-  size:        "Size",
-  shape:       "Shape",
-  color:       "Color",
-  background:  "Background Color",
-  opacity:     "Opacity",
-  orientation: "Orientation",
-  x:           "X Position Start",
-  x2:          "X Position End",
-  y:           "Y Position Start",
-  y2:          "Y Position End",
-  text:        "Text"
-}
-
-class ShelfAttribute extends React.Component {
   render() {
-    const { fields, shelf, getField, removeField, dropdownProps } = this.props
-    const { connectDropTarget, isOver, canDrop } = this.props
+    const { shelf, fields, getField, removeField, dropdownProps } = this.props
+    const { isOver, canDrop, connectDropTarget } = this.props
+    const hasDropMarker = this.hasDropMarker()
+
+    const dropPosition = hasDropMarker ? div({
+      ref: "dropMarker",
+      className: "field-position-marker"
+    }) : null
+
     const shelfFields = fields.map(
       function(field, i) {
         const fieldSettings = field.type == 'aggregate' ? field : getField(field.tableId, field.fieldId)
-        return <ShelfField ref={`field:${i}`} key={`${i}:${field.type == 'aggregate' ? field.id : field.fieldId}`} shelf={shelf} field={field} position={i} {...fieldSettings} {...dropdownProps} remove={() => removeField(shelf, i)} />
+        return <ShelfField ref={`field:${i}`} key={`${i}:${field.type == 'aggregate' ? field.id : field.fieldId}`} shelf={shelf} field={field} position={i} {...fieldSettings} remove={() => removeField(shelf, i)} {...dropdownProps} />
       })
     return connectDropTarget(
-      div({className: 'shelf-attribute'},
-          div({className: 'shelf-attribute-title'},
-              ATTRIBUTE_DISPLAY[shelf]),
-          div({className: className('shelf-attribute-value', {
-            "field-drop-target": canDrop,
-            "field-drop-over": isOver,
-            "field-contained": !_.isEmpty(fields),
-            "field-empty": _.isEmpty(fields)})},
-              shelfFields)))
+      div(
+        {
+          className: className("querybuilder-field-container-wrap",
+                               {
+                                 "field-drop-target": canDrop,
+                                 "field-drop-over":   isOver,
+                                 "field-contained":   !_.isEmpty(fields),
+                                 "field-empty":       _.isEmpty(fields),
+                                 "field-drop-marker": hasDropMarker
+                               }),
+          onScroll: dropdownProps.closeDropdown
+        },
+        div({className: "querybuilder-field-container"},
+            dropPosition,
+            shelfFields)))
   }
 }
-ShelfAttribute = DropTarget(["TableField", "ShelfField"], FieldDropHandler, fieldDropCollector)(ShelfAttribute)
+FieldContainer = DropTarget(["TableField", "ShelfField"], FieldDropHandler, fieldDropCollector)(FieldContainer)
 
-class TableSettings extends React.Component {
+class Shelf extends React.Component {
   render() {
-    const { getField, fieldActionCreators, dropdownProps } = this.props
-    const mark_attributes = ENCODING_MARK_ATTRIBUTES[this.props.preview || this.props.table.type]
-    return div({className: "container-flex-fill-wrap"},
-               div({className: "container-flex-fill"},
-                   mark_attributes.map((attr) => {
-                     return <ShelfAttribute key={attr} shelf={attr} fields={this.props.queryspec[attr]} getField={getField} {...fieldActionCreators} dropdownProps={dropdownProps} />
-                   })))
+    const { name, shelf, fields, getField,
+            removeField, clearFields,
+            insertFieldAtPosition, moveFieldTo,
+            replaceFieldOnShelf, moveAndReplaceField,
+            dropdownProps } = this.props
+    const containerProps = { shelf, fields, getField,
+                             removeField, clearFields, insertFieldAtPosition, moveFieldTo, replaceFieldOnShelf, moveAndReplaceField,
+                             dropdownProps }
+    return div({className: "querybuilder-shelf"},
+               <label>{name}{icon({className: 'fa fa-times remove-link', onClick: () => {
+                 dropdownProps.closeDropdown()
+                 clearFields(shelf)}})}</label>,
+               <FieldContainer {...containerProps} />)
   }
 }
 
-class TableChoice extends React.Component {
-  render() {
-    return div(
-      {
-        onMouseEnter: (evt) => this.props.setPreview(this.props.value),
-        onMouseLeave: (evt) => this.props.setPreview(null),
-        onClick: (evt) => this.props.setTableEncoding(this.props.value),
-        className: className("tablebuilder-type-choice", {active: this.props.active})
-      },
-      link({}, icon(...ICON_FOR[this.props.value])))
-  }
-}
-
-class TableSelect extends React.Component {
-  render() {
-    const { setPreview, setTableEncoding } = this.props
-    const shelfActions = { setPreview, setTableEncoding }
-    return div({className: "tablebuilder-type-select"},
-               TABLE_ENCODINGS.map(
-                 (encoding) =>
-                   <TableChoice key={encoding} active={encoding === this.props.active} value={encoding} {...shelfActions} />))
-  }
-}
-
-class ShelfPane extends React.Component {
-  constructor() {
-    super(...arguments)
-    this.state = { previewTableType: null, optionField: null }
-    this.setPreview = this.setPreview.bind(this)
-    this.setOptionField = this.setOptionField.bind(this)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.isDropdownOpen) {
-      this.setState({ optionField: null })
-    } else if (nextProps.isDragging) {
-      this.props.closeDropdown()
-      this.setState({ optionField: null })
-    }
-  }
-
-  setPreview(value) {
-    this.setState({ previewTableType: value, optionField: null })
-    this.props.closeDropdown()
-  }
-
-  setOptionField(shelf, position, bounds) {
-    if (this.state.optionField == null || (!_.eq(_.pick(this.state.optionField, 'shelf', 'position'), {shelf, position}))) {
-      const container = findDOMNode(this).getBoundingClientRect()
-      this.props.openDropdown()
-      this.setState({ optionField: { shelf, position, top: bounds.bottom - container.top - 1, left: bounds.left - container.left } })
-    } else {
-      this.props.closeDropdown()
-      this.setState({ optionField: null })
-    }
-  }
-
-  render() {
-    const { isDropdownOpen, closeDropdown, isDragging } = this.props
-    const dropdownProps = { closeDropdown, setOptionField: this.setOptionField }
-    const fieldProps = _.extend({getField: this.props.getField}, this.props.fieldActionCreators)
-    const { previewTableType, optionField } = this.state
-    return div({className: "pane shelf-pane"},
-               <FieldOptionsDropdown
-               isOpen={isDropdownOpen && !isDragging}
-               field={optionField && this.props.queryspec[optionField.shelf][optionField.position]}
-               {...optionField} {...fieldProps} close={dropdownProps.closeDropdown} />,
-               <TableSelect active={this.props.table.type} {...this.props.vizActionCreators} setPreview={this.setPreview} />,
-               <TableSettings {...this.props} preview={previewTableType} dropdownProps={dropdownProps} />)
-  }
-}
-ShelfPane = createDropdownComponent(ShelfPane)
-
-export { ShelfPane }
+export { Shelf }

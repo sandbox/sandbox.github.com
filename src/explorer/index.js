@@ -9,8 +9,7 @@ import { getField, selectTable, connectTableIfNecessary } from './ducks/datasour
 import { addField, removeField, clearFields, insertFieldAtPosition, replaceFieldOnShelf, moveFieldTo, moveAndReplaceField, updateFieldTypecast, updateFieldFunction } from './ducks/queryspec'
 import { setTableEncoding } from './ducks/visualspec'
 import { DataSourceSelect, TableSchema } from './components/DataSource'
-import { TableVisualizerQueryBuilder } from './components/TableVisualizerQueryBuilder'
-import { ShelfPane } from './components/Shelf'
+import { TableLayoutSpecBuilder, TableVisualSpecBuilder } from './components/TableSpecBuilder'
 import { TableGraphic } from './components/TableGraphic'
 import FieldDragLayer from './components/FieldDragLayer'
 
@@ -42,13 +41,13 @@ class Explorer extends React.Component {
                   }}/>)),
           div({className: "pane graphic-pane"},
               div({className: "querybuilder"},
-                  <TableVisualizerQueryBuilder
+                  <TableLayoutSpecBuilder
                   getField={getSourceField}
                   isDragging={isDragging}
-                  {...queryspec}
-                  {...fieldActionCreators} />),
+                  queryspec={queryspec}
+                  fieldActionCreators={fieldActionCreators} />),
               <TableGraphic queryspec={queryspec} />),
-          <ShelfPane
+          <TableVisualSpecBuilder
           isDragging={isDragging}
           queryspec={queryspec} {...visualspec} getField={getSourceField} vizActionCreators={vizActionCreators} fieldActionCreators={fieldActionCreators}/>
          ))

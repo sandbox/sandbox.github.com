@@ -229,6 +229,6 @@ store.dispatch(connectTableIfNecessary({datasource_id: 0})).then(
         "id": 0,
         "name": "Birdstrikes"
       },
-      "fieldId": 3
+      "fieldId": 1
     }))
   })
