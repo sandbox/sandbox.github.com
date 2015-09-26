@@ -70,27 +70,15 @@ class TableLayoutSpecBuilder extends React.Component {
 TableLayoutSpecBuilder = createFieldDropdownComponent(TableLayoutSpecBuilder)
 
 const TABLE_ENCODINGS = {
-  pivot: [{className: "fa fa-table"}],
-  bar:   [{className: "fa fa-bar-chart"}],
-  line:  [{className: "fa fa-line-chart"}],
-  point: [{className: "material-icons", style: {position: 'relative', top: 4, fontSize: 22}}, "grain"],
-  rect:  [{className: "material-icons", style: {position: 'relative', top: 4, fontSize: 22}}, "clear_all"],
-  area:  [{className: "fa fa-area-chart"}],
-  box:   [{className: "material-icons", style: {position: 'relative', top: 4, fontSize: 18}}, "tune"],
-  pie:   [{className: "fa fa-pie-chart"}],
-  donut: [{className: "material-icons", style: {position: 'relative', top: 4, fontSize: 18}}, "data_usage"]
-}
-
-const ENCODING_MARK_PROPERTIES = {
-  pivot: ['background', 'color'],
-  bar:   ['size', 'color', 'opacity', 'orientation'],
-  line:  ['color', 'opacity'],
-  point: ['size', 'color', 'shape', 'opacity', 'orientation'],
-  rect:  ['x', 'x2', 'y', 'y2', 'size', 'color', 'opacity'],
-  area:  ['color'],
-  box:   ['color'],
-  pie:   ['color'],
-  donut: ['color']
+  bar:   { name: "Bar"         , icon: [{className: "fa fa-bar-chart"}],                                                                   properties: ['size', 'color', 'opacity', 'orientation'] },
+  line:  { name: "Line"        , icon: [{className: "fa fa-line-chart"}],                                                                  properties: ['color', 'opacity'] },
+  point: { name: "Symbol"      , icon: [{className: "material-icons", style: {position: 'relative', top: 4, fontSize: 22}}, "grain"],      properties: ['size', 'color', 'shape', 'opacity', 'orientation'] },
+  pivot: { name: "Pivot Table" , icon: [{className: "fa fa-table"}],                                                                       properties: ['color', 'background'] },
+  rect:  { name: "Gantt Bar"   , icon: [{className: "material-icons", style: {position: 'relative', top: 4, fontSize: 22}}, "clear_all"],  properties: ['x', 'x2', 'y', 'y2', 'size', 'color', 'opacity'] },
+  area:  { name: "Area"        , icon: [{className: "fa fa-area-chart"}],                                                                  properties: ['color'] },
+  box:   { name: "Box Plot"    , icon: [{className: "material-icons", style: {position: 'relative', top: 4, fontSize: 18}}, "tune"],       properties: ['color'] },
+  pie:   { name: "Pie"         , icon: [{className: "fa fa-pie-chart"}],                                                                   properties: ['color'] },
+  donut: { name: "Donut"       , icon: [{className: "material-icons", style: {position: 'relative', top: 4, fontSize: 18}}, "data_usage"], properties: ['color'] },
 }
 
 const MARK_PROPERTY_NAME = {
@@ -114,16 +102,16 @@ class TableSelect extends React.Component {
     return div({className: "tablebuilder-type-select"},
                _.map(
                  TABLE_ENCODINGS,
-                 (args, encoding) =>
+                 (encoding, name) =>
                    div(
                      {
-                       key: encoding,
-                       onMouseEnter: (evt) => setPreview(encoding),
+                       key: name,
+                       onMouseEnter: (evt) => setPreview(name),
                        onMouseLeave: (evt) => setPreview(null),
-                       onClick: (evt) => setTableEncoding(encoding),
-                       className: className("tablebuilder-type-choice", {active: active == encoding})
+                       onClick: (evt) => setTableEncoding(name),
+                       className: className("tablebuilder-type-choice", {active: active == name})
                      },
-                     link({}, icon(...args)))))
+                     link({}, icon(...encoding.icon)))))
   }
 }
 
@@ -148,7 +136,7 @@ class TableVisualSpecBuilder extends React.Component {
     const dropdownProps = { closeDropdown, setOptionField }
     const fieldProps = _.extend({ getField: this.props.getField }, fieldActionCreators )
     const { previewTableType } = this.state
-    const markProperties = ENCODING_MARK_PROPERTIES[previewTableType || this.props.table.type]
+    const markProperties = TABLE_ENCODINGS[previewTableType || this.props.table.type].properties
     return div({className: "pane shelf-pane"},
                <FieldOptionsDropdown isOpen={isDropdownOpen && !isDragging}
                field={optionField && queryspec[optionField.shelf][optionField.position]}
@@ -156,6 +144,7 @@ class TableVisualSpecBuilder extends React.Component {
                <TableSelect active={this.props.table.type} {...this.props.vizActionCreators} setPreview={this.setPreview} />,
                div({className: "container-flex-fill-wrap"},
                    div({className: "container-flex-fill"},
+                       <label className="tablebuilder-encoding-title">{TABLE_ENCODINGS[previewTableType || this.props.table.type].name}</label>,
                        markProperties.map((attr) => {
                          return <Shelf key={attr} name={MARK_PROPERTY_NAME[attr]} shelf={attr} fields={queryspec[attr]} {...fieldProps} dropdownProps={dropdownProps} />
                        }))))

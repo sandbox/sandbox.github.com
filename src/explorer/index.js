@@ -26,8 +26,8 @@ class Explorer extends React.Component {
     const getSourceField = _.curry(getField)(sources)
     const vizActionCreators = bindActionCreators({ setTableEncoding }, dispatch)
     return connectDropTarget(
-      div({className: className("pane-container", {"field-drop-over": isOver})},
-          <FieldDragLayer />,
+      div({className: className("pane-container")},
+          <FieldDragLayer showTrashCan={isOver} />,
           div({className: "pane data-pane"},
               <DataSourceSelect sourceIds={sourceIds} sources={sources} tableId={tableId}
               onSelectTable={tableId => {

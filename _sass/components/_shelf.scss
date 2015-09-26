@@ -137,6 +137,11 @@
   }
 }
 
+.shelf-pane label.tablebuilder-encoding-title {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
 .tablebuilder-type-select {
   @include flexbox;
   @include flex-flow(row);

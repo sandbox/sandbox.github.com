@@ -1,7 +1,7 @@
 import className from 'classnames'
 import React, { PropTypes } from 'react'
 import { DragLayer } from 'react-dnd'
-const { div } = React.DOM
+const { div, i: icon } = React.DOM
 import { FieldIcon, getFieldFunctionDisplayName } from './FieldIcon'
 
 function getItemStyles(props) {
@@ -27,18 +27,20 @@ class ShelfFieldDragPreview extends React.Component {
   render() {
     const { name, type } = this.props
     const { typecast, func } = this.props.field
-    return div({className: "field-wrap"},
+    return div({className: className("field-wrap", {"remove": this.props.showTrashCan})},
                div({className: "icon-wrap"}, <FieldIcon type={type} typecast={typecast} />),
                div({className: "func-wrap"}, getFieldFunctionDisplayName(func)),
-               div({className: className("name-wrap", {"has-func": func != null})}, name))
+               div({className: className("name-wrap", {"has-func": func != null})}, name),
+               this.props.showTrashCan ? div({className: "option-wrap"} , icon({className: "fa fa-trash-o"})) : null)
   }
 }
 
 class TableFieldDragPreview extends React.Component {
   render() {
-    return div({className: "field-wrap"},
+    return div({className: className("field-wrap", {"remove": this.props.showTrashCan})},
                div({className: "icon-wrap"}, <FieldIcon type={this.props.type}/>),
-               div({className: "name-wrap"}, this.props.name))
+               div({className: "name-wrap"}, this.props.name),
+               this.props.showTrashCan ? div({className: "option-wrap"} , icon({className: "fa fa-trash-o"})) : null)
   }
 }
 
@@ -55,11 +57,11 @@ class FieldDragLayer {
   }
 
   render() {
-    const { item, itemType, isDragging } = this.props
+    const { item, itemType, isDragging, showTrashCan } = this.props
     if (!isDragging) return null
     return div({className: className("field-drag-layer")},
                div({className: "field-drag-wrap", style: getItemStyles(this.props)},
-                   this.renderItem(itemType, item)))
+                   this.renderItem(itemType, _.extend({showTrashCan}, item))))
   }
 }
 
@@ -74,7 +76,8 @@ FieldDragLayer.propTypes = {
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired
   }),
-  isDragging: PropTypes.bool.isRequired
+  isDragging: PropTypes.bool.isRequired,
+  showTrashCan: PropTypes.bool.isRequired
 }
 
 export default DragLayer((monitor) => ({

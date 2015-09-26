@@ -32,3 +32,12 @@
        -o-transform: $transform;
           transform: $transform;
 }
+
+.remove-link {
+  color: #999;
+
+  &:hover {
+    color: #f18794;
+    text-decoration: none;
+  }
+}

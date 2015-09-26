@@ -1,12 +1,3 @@
-.remove-link {
-  color: #999;
-
-  &:hover {
-    color: #f18794;
-    text-decoration: none;
-  }
-}
-
 .querybuilder {
   @include flexbox;
   @include flex(0 0 60px);

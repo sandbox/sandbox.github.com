@@ -60,7 +60,10 @@
       right: 0px;
     }
   }
+}
 
+.option-wrap i.fa.fa-trash-o {
+  padding: 0px 4px 0 3px;
 }
 
 .field-wrap {
@@ -150,6 +153,16 @@
     cursor: move;
     cursor: -webkit-grabbing;
     cursor: -moz-grabbing;
+
+    &.remove {
+      background-color: lighten(#f18794, 5%);
+      border: 1px solid #f18794;
+      opacity: 0.5;
+      .icon-wrap {
+        border-right: 1px solid #f18794;
+      }
+    }
+
   }
 
   .field-wrap .name-wrap {
