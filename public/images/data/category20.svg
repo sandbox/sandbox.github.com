@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+    "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100" height="60" font-size="1" viewBox="0 0 100 60">
+  <g stroke="rgb(0,0,0)" stroke-opacity="1.0" fill="rgb(0,0,0)" fill-opacity="0.0" stroke-width="1.0e-2" stroke-linecap="butt" stroke-linejoin="miter" font-size="1.0em" stroke-miterlimit="10.0">
+    <g fill="#1f77b4" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="0" y="0" width="5" height="60" />
+    </g>
+    <g fill="#aec7e8" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="5" y="0" width="5" height="60" />
+    </g>
+    <g fill="#ff7f0e" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="10" y="0" width="5" height="60" />
+    </g>
+    <g fill="#ffbb78" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="15" y="0" width="5" height="60" />
+    </g>
+    <g fill="#2ca02c" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="20" y="0" width="5" height="60" />
+    </g>
+    <g fill="#98df8a" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="25" y="0" width="5" height="60" />
+    </g>
+    <g fill="#d62728" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="30" y="0" width="5" height="60" />
+    </g>
+    <g fill="#ff9896" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="35" y="0" width="5" height="60" />
+    </g>
+    <g fill="#9467bd" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="40" y="0" width="5" height="60" />
+    </g>
+    <g fill="#c5b0d5" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="45" y="0" width="5" height="60" />
+    </g>
+    <g fill="#8c564b" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="50" y="0" width="5" height="60" />
+    </g>
+    <g fill="#c49c94" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="55" y="0" width="5" height="60" />
+    </g>
+    <g fill="#e377c2" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="60" y="0" width="5" height="60" />
+    </g>
+    <g fill="#f7b6d2" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="65" y="0" width="5" height="60" />
+    </g>
+    <g fill="#7f7f7f" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="70" y="0" width="5" height="60" />
+    </g>
+    <g fill="#c7c7c7" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="75" y="0" width="5" height="60" />
+    </g>
+    <g fill="#bcbd22" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="80" y="0" width="5" height="60" />
+    </g>
+    <g fill="#dbdb8d" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="85" y="0" width="5" height="60" />
+    </g>
+    <g fill="#17becf" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="90" y="0" width="5" height="60" />
+    </g>
+    <g fill="#9edae5" fill-opacity="1.0" stroke-width="0.0">
+      <rect x="95" y="0" width="5" height="60" />
+    </g>
+  </g>
+</svg>

@@ -7,7 +7,7 @@ import { DropTarget, DragDropContext } from 'react-dnd'
 const {div} = React.DOM
 import { getField, selectTable, connectTableIfNecessary } from './ducks/datasources'
 import { addField, removeField, clearFields, insertFieldAtPosition, replaceFieldOnShelf, moveFieldTo, moveAndReplaceField, updateFieldTypecast, updateFieldFunction } from './ducks/queryspec'
-import { setTableEncoding } from './ducks/visualspec'
+import { setTableEncoding, setPropertySetting } from './ducks/visualspec'
 import { DataSourceSelect, TableSchema } from './components/DataSource'
 import { TableLayoutSpecBuilder, TableVisualSpecBuilder } from './components/TableSpecBuilder'
 import { TableGraphic } from './components/TableGraphic'
@@ -24,7 +24,7 @@ class Explorer extends React.Component {
       updateFieldTypecast, updateFieldFunction
     }, dispatch)
     const getSourceField = _.curry(getField)(sources)
-    const vizActionCreators = bindActionCreators({ setTableEncoding }, dispatch)
+    const vizActionCreators = bindActionCreators({ setTableEncoding, setPropertySetting }, dispatch)
     return connectDropTarget(
       div({className: className("pane-container")},
           <FieldDragLayer showTrashCan={isOver} />,
@@ -46,7 +46,7 @@ class Explorer extends React.Component {
                   isDragging={isDragging}
                   queryspec={queryspec}
                   fieldActionCreators={fieldActionCreators} />),
-              <TableGraphic queryspec={queryspec} />),
+              <TableGraphic queryspec={queryspec} visualspec={visualspec} />),
           <TableVisualSpecBuilder
           isDragging={isDragging}
           queryspec={queryspec} {...visualspec} getField={getSourceField} vizActionCreators={vizActionCreators} fieldActionCreators={fieldActionCreators}/>

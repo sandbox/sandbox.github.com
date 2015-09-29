@@ -9,6 +9,7 @@ export class TableGraphic extends React.Component {
     return div({className: "container-flex-fill-wrap graphic-container"},
                div({className: "container-flex-fill"},
                    "GRAPHIC BUILDER",
-                   pre({}, JSON.stringify(this.props.queryspec, null, 2))))
+                   pre({}, JSON.stringify(this.props.queryspec, null, 2)),
+                   pre({}, JSON.stringify(this.props.visualspec, null, 2))))
   }
 }

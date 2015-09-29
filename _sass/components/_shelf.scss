@@ -104,27 +104,52 @@
 }
 
 .shelf-pane .querybuilder-shelf {
-  margin-bottom: 5px;
-  border: 1px solid #dfdfdf;
+  margin-bottom: 15px;
+  .querybuilder-shelf-legend {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #efefef;
+  }
   @include flex-flow(column);
   @include flex(0 1 auto);
 
   label {
-    padding: 1px 3px 0px;
-    border-bottom: 1px solid #dfdfdf;
-    background-color: #efefef;
+    @include flexbox;
+    @include flex(0 1 auto);
+    @include align-items(center);
+
+    i.fa.fa-caret-down {
+      @include align-self(center);
+      position: relative;
+      top: -3px;
+      padding: 3px;
+      margin-left: auto;
+      visibility: hidden;
+      cursor: pointer;
+    }
+
+    &:hover,
+    &:focus {
+      i.fa.fa-caret-down {
+        visibility: visible;
+      }
+    }
   }
 
   .querybuilder-field-container-wrap {
-    height: 30px;
+    height: 23px;
+    overflow: visible;
+
     &:before {
       content: "Drop Field Here";
       top: 0; bottom: 0; left: 0; right: 0;
+      margin: 0;
+
     }
   }
 
   .querybuilder-field-container {
     top: 0; bottom: 0; left: 0; right: 0;
+    padding: 0px;
   }
 
   .querybuilder-field.field-wrap {

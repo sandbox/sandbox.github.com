@@ -21,6 +21,8 @@
   text-shadow: rgb(255, 255, 255) 0px 1px 0px;
   color: #222;
   font-weight: 600;
+  @include overflow-ellipsis;
+  @include flex(1 0 auto);
 
   &:empty {
     display: none;
@@ -162,11 +164,6 @@
         border-right: 1px solid #f18794;
       }
     }
-
-  }
-
-  .field-wrap .name-wrap {
-    min-width: 170px;
   }
 }
 

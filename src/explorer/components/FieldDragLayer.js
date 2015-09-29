@@ -37,10 +37,9 @@ class ShelfFieldDragPreview extends React.Component {
 
 class TableFieldDragPreview extends React.Component {
   render() {
-    return div({className: className("field-wrap", {"remove": this.props.showTrashCan})},
+    return div({className: "field-wrap"},
                div({className: "icon-wrap"}, <FieldIcon type={this.props.type}/>),
-               div({className: "name-wrap"}, this.props.name),
-               this.props.showTrashCan ? div({className: "option-wrap"} , icon({className: "fa fa-trash-o"})) : null)
+               div({className: "name-wrap", style: {width: 210}}, this.props.name))
   }
 }
 
@@ -58,7 +57,7 @@ class FieldDragLayer {
 
   render() {
     const { item, itemType, isDragging, showTrashCan } = this.props
-    if (!isDragging) return null
+    // if (!isDragging) return null
     return div({className: className("field-drag-layer")},
                div({className: "field-drag-wrap", style: getItemStyles(this.props)},
                    this.renderItem(itemType, _.extend({showTrashCan}, item))))

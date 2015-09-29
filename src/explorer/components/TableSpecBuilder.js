@@ -31,7 +31,11 @@ function createFieldDropdownComponent(Component) {
       if (this.state.optionField == null || (!_.eq(_.pick(this.state.optionField, 'shelf', 'position'), {shelf, position}))) {
         const container = findDOMNode(this).getBoundingClientRect()
         this.props.openDropdown()
-        this.setState({ optionField: { shelf, position, top: bounds.bottom - container.top - 1, left: bounds.left - container.left } })
+        this.setState({ optionField: {
+          shelf, position,
+          top: bounds.bottom - container.top - 1,
+          left: bounds.left - container.left
+        }})
       } else {
         this.props.closeDropdown()
         this.setState({ optionField: null })
@@ -85,13 +89,13 @@ const MARK_PROPERTY_NAME = {
   size:        "Size",
   shape:       "Shape",
   color:       "Color",
-  background:  "Background Color",
+  background:  "Background",
   opacity:     "Opacity",
   orientation: "Orientation",
-  x:           "X Position Start",
-  x2:          "X Position End",
-  y:           "Y Position Start",
-  y2:          "Y Position End",
+  x:           "X Start",
+  x2:          "X End",
+  y:           "Y Start",
+  y2:          "Y End",
   text:        "Text"
 }
 
@@ -118,7 +122,7 @@ class TableSelect extends React.Component {
 class TableVisualSpecBuilder extends React.Component {
   constructor() {
     super(...arguments)
-    this.state = { previewTableType: null }
+    this.state = { previewTableType: null, visualOptionDropdown: null }
     this.setPreview = this.setPreview.bind(this)
   }
 
@@ -129,11 +133,11 @@ class TableVisualSpecBuilder extends React.Component {
 
   render() {
     const {
-      queryspec, fieldActionCreators,
+      queryspec, fieldActionCreators, vizActionCreators,
       isDropdownOpen, closeDropdown, isDragging,
       optionField, setOptionField
     } = this.props
-    const dropdownProps = { closeDropdown, setOptionField }
+    const dropdownProps = { isDropdownOpen, closeDropdown, setOptionField }
     const fieldProps = _.extend({ getField: this.props.getField }, fieldActionCreators )
     const { previewTableType } = this.state
     const markProperties = TABLE_ENCODINGS[previewTableType || this.props.table.type].properties
@@ -146,7 +150,7 @@ class TableVisualSpecBuilder extends React.Component {
                    div({className: "container-flex-fill"},
                        <label className="tablebuilder-encoding-title">{TABLE_ENCODINGS[previewTableType || this.props.table.type].name}</label>,
                        markProperties.map((attr) => {
-                         return <Shelf key={attr} name={MARK_PROPERTY_NAME[attr]} shelf={attr} fields={queryspec[attr]} {...fieldProps} dropdownProps={dropdownProps} />
+                         return <Shelf key={attr} name={MARK_PROPERTY_NAME[attr]} shelf={attr} properties={this.props.properties[attr]} fields={queryspec[attr]} {...fieldProps} dropdownProps={dropdownProps} vizActionCreators={vizActionCreators} />
                        }))))
   }
 }

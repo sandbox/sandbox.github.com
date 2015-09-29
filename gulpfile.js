@@ -35,4 +35,4 @@ gulp.task('browser-sync', [], function (gulpCallback) {
   });
 });
 
-gulp.task('default', ['set-env', 'browser-sync']);
+gulp.task('default', ['set-env', 'jekyll-build', 'browser-sync']);

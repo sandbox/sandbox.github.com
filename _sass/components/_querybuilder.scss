@@ -75,6 +75,14 @@
   z-index: 10;
   width: 200px;
 
+  &.querybuilder-property-settings {
+    top: 20px;
+    left: 0px;
+    right: 0px;
+    width: auto;
+    border-top-left-radius: 2px;
+  }
+
   .querybuilder-field-options > label {
     font-weight: 600;
 
@@ -88,6 +96,8 @@
   i.fa.fa-times.remove-link {
     position: absolute;
     right: 5px;
+    top: 5px;
+    z-index: 1;
   }
 
   .querybuilder-field-remove {
@@ -116,5 +126,40 @@
     .querybuilder-field-settings-option-value {
       @include flex(1 0 auto);
     }
+  }
+}
+
+.querybuilder-property-settings {
+  .querybuilder-color-static span {
+    @include flex(0 0 40px);
+  }
+
+  .querybuilder-color-settings, .querybuilder-color-sub-settings {
+    @include flexbox;
+    @include flex-flow(row wrap);
+    @include flex-just(flex-start);
+
+    input[type=checkbox] {
+      margin-bottom: 6px;
+      margin-right: 6px;
+    }
+  }
+
+  .querybuilder-color-sub-settings {
+    padding-left: 20px;
+
+    &.querybuilder-color-sub-settings-input span {
+      @include flex(0 0 35px);
+    }
+  }
+
+  .querybuilder-color-settings label {
+    @include flex(1 0 60px);
+  }
+
+  .querybuilder-color-settings label img {
+    margin: 5px 0;
+    height: 20px;
+    border-radius: 0;
   }
 }

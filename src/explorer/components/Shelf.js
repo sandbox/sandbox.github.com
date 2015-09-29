@@ -2,6 +2,7 @@ import className from 'classnames'
 import React from 'react'
 import { DropTarget } from 'react-dnd'
 import _ from 'lodash'
+import { VisualPropertiesDropdown } from './VisualPropertiesDropdown'
 import { FieldOptionsDropdown } from './FieldDropdown'
 import { createDropdownComponent } from '../../components/Dropdown'
 import { ShelfField, calculateDropMarkPosition, calculateDropPosition, FieldDropHandler, fieldDropCollector } from './Field'
@@ -55,22 +56,48 @@ class FieldContainer extends React.Component {
 }
 FieldContainer = DropTarget(["TableField", "ShelfField"], FieldDropHandler, fieldDropCollector)(FieldContainer)
 
+class ShelfLegend extends React.Component {
+  render() {
+    return div({className: "querybuilder-shelf-legend"}, JSON.stringify(this.props.legend, null, 2))
+  }
+}
+
 class Shelf extends React.Component {
   render() {
-    const { name, shelf, fields, getField,
+    const { name, shelf, fields, legend, getField,
             removeField, clearFields,
             insertFieldAtPosition, moveFieldTo,
             replaceFieldOnShelf, moveAndReplaceField,
-            dropdownProps } = this.props
+            dropdownProps, vizActionCreators } = this.props
     const containerProps = { shelf, fields, getField,
                              removeField, clearFields, insertFieldAtPosition, moveFieldTo, replaceFieldOnShelf, moveAndReplaceField,
                              dropdownProps }
+    const visualSettingsProps = {
+      property: shelf, fields, getField,
+      settings: this.props.properties,
+      isOpen: this.props.isDropdownOpen && !dropdownProps.isDropdownOpen,
+      close: this.props.closeDropdown,
+      ...vizActionCreators
+    }
+    const isRowColShelf = _.contains(['row', 'col'], this.props.shelf)
+    const optionComponent =
+          isRowColShelf ? icon({className: 'fa fa-times remove-link', onClick: () => {
+            dropdownProps.closeDropdown()
+            clearFields(shelf)}}) : icon({className: 'fa fa-caret-down'})
     return div({className: "querybuilder-shelf"},
-               <label>{name}{icon({className: 'fa fa-times remove-link', onClick: () => {
+               <label onClick={isRowColShelf ? null : () => {
+                 if (dropdownProps.isDropdownOpen) {
+                   this.props.openDropdown()
+                 } else {
+                   this.props.toggleDropdown()
+                 }
                  dropdownProps.closeDropdown()
-                 clearFields(shelf)}})}</label>,
-               <FieldContainer {...containerProps} />)
+               }} style={{cursor: isRowColShelf ? null : 'pointer'}}>{name}{optionComponent}</label>,
+               <VisualPropertiesDropdown {...visualSettingsProps} />,
+               <FieldContainer {...containerProps} />,
+               !isRowColShelf && legend ? <ShelfLegend legend={legend} /> : null)
   }
 }
+Shelf = createDropdownComponent(Shelf)
 
 export { Shelf }
