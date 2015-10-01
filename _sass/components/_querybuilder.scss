@@ -131,7 +131,7 @@
 
 .querybuilder-property-settings {
   .querybuilder-color-static span {
-    @include flex(0 0 40px);
+    padding-right: 10px;
   }
 
   .querybuilder-color-settings, .querybuilder-color-sub-settings {

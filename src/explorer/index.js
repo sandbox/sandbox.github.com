@@ -6,7 +6,8 @@ import HTML5Backend from 'react-dnd/modules/backends/HTML5'
 import { DropTarget, DragDropContext } from 'react-dnd'
 const {div} = React.DOM
 import { getField, selectTable, connectTableIfNecessary } from './ducks/datasources'
-import { addField, removeField, clearFields, insertFieldAtPosition, replaceFieldOnShelf, moveFieldTo, moveAndReplaceField, updateFieldTypecast, updateFieldFunction } from './ducks/queryspec'
+import { clearQuery, addField, removeField, clearFields, insertFieldAtPosition, replaceFieldOnShelf, moveFieldTo, moveAndReplaceField, updateFieldTypecast, updateFieldFunction } from './ducks/queryspec'
+import { makeQueryKey } from './ducks/graphic'
 import { setTableEncoding, setPropertySetting } from './ducks/visualspec'
 import { DataSourceSelect, TableSchema } from './components/DataSource'
 import { TableLayoutSpecBuilder, TableVisualSpecBuilder } from './components/TableSpecBuilder'
@@ -31,6 +32,7 @@ class Explorer extends React.Component {
           div({className: "pane data-pane"},
               <DataSourceSelect sourceIds={sourceIds} sources={sources} tableId={tableId}
               onSelectTable={tableId => {
+                dispatch(clearQuery())
                 dispatch(selectTable(tableId))
                 dispatch(connectTableIfNecessary(tableId))
               }}/>,
@@ -46,10 +48,11 @@ class Explorer extends React.Component {
                   isDragging={isDragging}
                   queryspec={queryspec}
                   fieldActionCreators={fieldActionCreators} />),
-              <TableGraphic queryspec={queryspec} visualspec={visualspec} />),
+              <TableGraphic {...graphic.query[makeQueryKey(queryspec)]} visualspec={visualspec} />),
           <TableVisualSpecBuilder
           isDragging={isDragging}
-          queryspec={queryspec} {...visualspec} getField={getSourceField} vizActionCreators={vizActionCreators} fieldActionCreators={fieldActionCreators}/>
+          queryspec={queryspec} {...visualspec}
+          getField={getSourceField} vizActionCreators={vizActionCreators} fieldActionCreators={fieldActionCreators}/>
          ))
   }
 }

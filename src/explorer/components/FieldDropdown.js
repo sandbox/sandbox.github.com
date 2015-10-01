@@ -2,7 +2,8 @@ import React from 'react'
 import className from 'classnames'
 import _ from 'lodash'
 const {div, i: icon, label, pre, a: link, input} = React.DOM
-import { FieldIcon, getFieldFunctionSelectDisplayName, getExternalType } from './FieldIcon'
+import { getFieldFunctionSelectDisplayName, getExternalType } from '../helpers/field'
+import { FieldIcon } from './FieldIcon'
 
 class FieldRadioGroupOptions extends React.Component {
   render() {
@@ -11,7 +12,7 @@ class FieldRadioGroupOptions extends React.Component {
                options.map((value) => {
                  return div({key: value,
                              className: "querybuilder-field-settings-option-value",
-                             style: { width: value == "BIN" ? "100%" : null }},
+                             style: { width: value == "bin" ? "100%" : null }},
                             label({},
                                   input({
                                     key: value,
@@ -34,10 +35,10 @@ class TypeFunctions extends React.Component {
                        "Functions",
                        func ? link({onClick: () => updateFieldFunction(null)}, "Reset") : null),
                  <FieldRadioGroupOptions name="func" choice={func}
-                 options={["BIN",
-                           "COUNT", "SUM",
-                           "MEAN", "MEDIAN",
-                           "MIN", "MAX"]}
+                 options={["bin",
+                           "count", "sum",
+                           "mean", "median",
+                           "min", "max"]}
                  onChoiceChange={updateFieldFunction} />)
     }
     else if (type == 'time') {
@@ -46,7 +47,7 @@ class TypeFunctions extends React.Component {
                        func && !_.contains(func, "bin") ? link({onClick: () => updateFieldFunction(null)}, "Reset") : null),
                  <FieldRadioGroupOptions name="func" choice={func}
                  options={[
-                   "YEAR", "MONTH", "DAY", "DATE", "HOUR", "MINUTE", "SECOND"
+                   "year", "month", "day", "date", "hour", "minute", "second"
                  ]}
                  onChoiceChange={updateFieldFunction} />,
                  label({}, "BIN",

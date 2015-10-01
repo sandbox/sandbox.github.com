@@ -2,6 +2,29 @@ import _ from 'lodash'
 import u from 'updeep'
 import fetch from 'isomorphic-fetch'
 import dl from 'datalib'
+import * as local from '../data/local'
+
+export function getDatasource(sources, tableId) {
+  if (tableId == null) return null
+  return sources[tableId.id] || sources[tableId.datasource_id]
+}
+
+export function getTable(sources, tableId) {
+  const datasource = getDatasource(sources, tableId)
+  if (datasource == null) return null
+  if (datasource.tables != null) {
+    return _.find(datasource.tables, (datasource_table) => datasource_table.name === tableId.name)
+  } else {
+    return datasource
+  }
+}
+
+export function getField(sources, tableId, fieldId) {
+  if (fieldId == null) return null
+  const table = getTable(sources, tableId)
+  if (table == null) return null
+  return table.schema[fieldId]
+}
 
 /* ACTION TYPES */
 
@@ -65,29 +88,23 @@ export function connectTableIfNecessary(tableId) {
   }
 }
 
+export function fetchQueryData(datasources, queryspec) {
+  return new Promise((resolve, reject) => {
+    let datasource = getDatasource(datasources.BY_ID, datasources.selectedTable)
+    let getTableField = _.curry(getField)(datasources.BY_ID, datasources.selectedTable)
+    if (datasource.data) {
+      resolve(local.requestQuery(getTableField, queryspec, datasource.data))
+    } else {
+      reject(Error(`Querying adapter not defined for protocol: ${datasource.protocol}`))
+    }
+  })
+}
+
 /* REDUCER */
 
 const initialState = {
   IDS: [],
   BY_ID: {}
-}
-
-export function getTable(sources, tableId) {
-  if (tableId == null) return null
-  const datasource = sources[tableId.id] || sources[tableId.datasource_id]
-  if (datasource == null) return null
-  if (datasource.tables != null) {
-    return _.find(datasource.tables, (datasource_table) => datasource_table.name === tableId.name)
-  } else {
-    return datasource
-  }
-}
-
-export function getField(sources, tableId, fieldId) {
-  if (fieldId == null) return null
-  const table = getTable(sources, tableId)
-  if (table == null) return null
-  return table.schema[fieldId]
 }
 
 export default function reducer(state = initialState, action) {

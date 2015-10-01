@@ -3,7 +3,8 @@ import className from 'classnames'
 import React from 'react'
 import { DragSource, DropTarget } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd/modules/backends/HTML5'
-import { FieldIcon, getFieldFunctionDisplayName, getFieldFunctionSelectDisplayName } from './FieldIcon'
+import { getFieldFunctionDisplayName, getFieldFunctionSelectDisplayName } from '../helpers/field'
+import { FieldIcon } from './FieldIcon'
 
 const {div, i: icon, span} = React.DOM
 const { findDOMNode } = React

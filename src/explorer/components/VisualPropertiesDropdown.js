@@ -1,6 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
-import { getExternalType } from './FieldIcon'
+import { getExternalType } from '../helpers/field'
 const { div, i: icon, a: link, label, pre, input, select, option, img, span } = React.DOM
 
 const COLOR_PALETTES = [
@@ -107,9 +107,9 @@ class ColorProperties extends React.Component {
     }
     else {
       return label({className: 'querybuilder-color-static'},
-                   "Value",
-                   input({type: "color", value: settings.value,
-                          onChange: (evt) => { setPropertySetting(property, 'value', evt.target.value) }}))
+                   "Default",
+                   input({type: "color", value: settings['default'],
+                          onChange: (evt) => { setPropertySetting(property, 'default', evt.target.value) }}))
     }
   }
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import className from 'classnames'
 import _ from 'lodash'
 import { createDropdownComponent } from '../../components/Dropdown'
+import { AGGREGATES } from '../helpers/field'
 import { getTable } from '../ducks/datasources'
 import { TableField } from './Field'
 
@@ -53,9 +54,6 @@ class DataSourceSelect extends React.Component {
 }
 DataSourceSelect = createDropdownComponent(DataSourceSelect)
 
-const AGGREGATES = [
-  { id: "agg_count", name: "COUNT" , type: "aggregate" , op: "count" }
-]
 class TableSchema extends React.Component {
   render() {
     const { tableId, onSelectField } = this.props

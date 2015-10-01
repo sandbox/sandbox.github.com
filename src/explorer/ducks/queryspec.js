@@ -9,6 +9,7 @@ export const MOVE_AND_REPLACE_FIELD   = 'explorer/queryspec/MOVE_AND_REPLACE_FIE
 export const ADD_FIELD                = 'explorer/queryspec/ADD_FIELD'
 export const REMOVE_FIELD             = 'explorer/queryspec/REMOVE_FIELD'
 export const CLEAR_FIELDS             = 'explorer/queryspec/CLEAR_FIELDS'
+export const CLEAR_QUERY              = 'explorer/queryspec/CLEAR_QUERY'
 export const UPDATE_FIELD_FUNCTION    = 'explorer/queryspec/UPDATE_FIELD_FUNCTION'
 export const UPDATE_FIELD_TYPECAST    = 'explorer/queryspec/UPDATE_FIELD_TYPECAST'
 
@@ -82,6 +83,12 @@ export function clearFields(shelf) {
   }
 }
 
+export function clearQuery() {
+  return {
+    type: CLEAR_QUERY
+  }
+}
+
 export function updateFieldTypecast(shelf, position, typecast) {
   return {
     type: UPDATE_FIELD_TYPECAST,
@@ -103,10 +110,6 @@ export function updateFieldFunction(shelf, position, func) {
 /* REDUCER */
 const initialState = {
   filter: [],
-  pane: {
-    filter: []
-  },
-
   /* shelves */
   row: [],
   col: [],
@@ -141,6 +144,8 @@ export default function reducer(state = initialState, action) {
     }, state)
   case CLEAR_FIELDS:
     return u({[action.shelf]: () => []}, state)
+  case CLEAR_QUERY:
+    return initialState
   case UPDATE_FIELD_TYPECAST:
     return u(
       {[action.shelf]: {[action.position]: u.omit('func')}},

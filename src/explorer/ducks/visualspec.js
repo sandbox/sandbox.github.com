@@ -25,7 +25,7 @@ export function setPropertySetting(property, setting, value) {
 
 /* REDUCER */
 const tableState = {
-  type: 'pivot'
+  type: 'bar'
 }
 
 function table(state = tableState, action) {
@@ -42,7 +42,7 @@ const propertiesState = {
   shape:       {},
   color:       {
     palette: "category10",
-    value: "#356CA7",
+    'default': "#356CA7",
     scale: "linear",
     scaleZero: true,
     scaleManualDomain: false,
@@ -52,7 +52,7 @@ const propertiesState = {
   },
   background:  {
     palette: "category10",
-    value: "#356CA7",
+    'default': "#356CA7",
     scale: "linear",
     scaleZero: true,
     scaleManualDomain: false,

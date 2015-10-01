@@ -2,7 +2,8 @@ import className from 'classnames'
 import React, { PropTypes } from 'react'
 import { DragLayer } from 'react-dnd'
 const { div, i: icon } = React.DOM
-import { FieldIcon, getFieldFunctionDisplayName } from './FieldIcon'
+import { getFieldFunctionDisplayName } from '../helpers/field'
+import { FieldIcon } from './FieldIcon'
 
 function getItemStyles(props) {
   const { initialOffset, currentOffset } = props
