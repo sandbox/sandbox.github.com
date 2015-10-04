@@ -2,7 +2,6 @@ import _ from 'lodash'
 import u from 'updeep'
 import fetch from 'isomorphic-fetch'
 import dl from 'datalib'
-import * as local from '../data/local'
 
 export function getDatasource(sources, tableId) {
   if (tableId == null) return null
@@ -86,18 +85,6 @@ export function connectTableIfNecessary(tableId) {
       return dispatch(connectTable(tableId))
     }
   }
-}
-
-export function fetchQueryData(datasources, queryspec) {
-  return new Promise((resolve, reject) => {
-    let datasource = getDatasource(datasources.BY_ID, datasources.selectedTable)
-    let getTableField = _.curry(getField)(datasources.BY_ID, datasources.selectedTable)
-    if (datasource.data) {
-      resolve(local.requestQuery(getTableField, queryspec, datasource.data))
-    } else {
-      reject(Error(`Querying adapter not defined for protocol: ${datasource.protocol}`))
-    }
-  })
 }
 
 /* REDUCER */

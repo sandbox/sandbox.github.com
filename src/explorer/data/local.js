@@ -1,5 +1,9 @@
+import _ from 'lodash'
 import dl from 'datalib'
 import { getFieldType, getBinStepUnit, getBinStep } from '../helpers/field'
+import { prepareAxes } from './axis'
+import { partitionPaneData } from './pane'
+import { calculateDomains } from './domain'
 
 function getFieldQueryType(field) {
   if ('text' == getFieldType(field)
@@ -27,10 +31,17 @@ function getGroupByName(data, field) {
         unit: getBinStepUnit(field.func)
       })
       b.step = getBinStep(field.func)
-      return dl.$func('bin', x => b.value(b.unit.unit(x)))(dl.$(field.name))
+      let func = dl.$func('bin', x => b.value(b.unit.unit(x)))(dl.$(field.name))
+      func.step = b.step
+      return func
     }
     else {
-      return dl.$bin(data, field.name, {maxbins: 1000})
+      let accessor = dl.$(field.name)
+      let [min, max] = dl.extent(data, accessor)
+      let b = dl.bins({maxbins: 1000, min, max})
+      let func = dl.$func('bin', x => b.value(x))(accessor)
+      func.step = b.step
+      return func
     }
   }
   else if (_.contains(['year', 'month', 'day', 'date', 'hour', 'minute', 'second'], field.func)) {
@@ -41,33 +52,19 @@ function getGroupByName(data, field) {
   }
 }
 
-function translateTableQuery(getField, queryspec, data) {
-  if (_.all(queryspec, (v, k) => _.isEmpty(v))) return null
-  const {groupby, operator, aggregate, value} = _(queryspec)
-        .mapValues((fields) => {
-          return _.map(fields,
-                       (field) => {
-                         return _.extend({}, field.fieldId ? getField(field.fieldId) : {}, field)
-                       })
-        })
-        .reject((fields, shelf) => _.isEmpty(fields)).flatten()
-        .groupBy(getFieldQueryType).value()
-
-  let fieldSummaries = _(aggregate).reduce((acc, field) => {
-    acc[field.name] = acc[field.name] ? acc[field.name] : []
-    acc[field.name].push(field.func)
-    return acc
-  }, {})
+function translateTableQuery(queryspec, data) {
+  if (_.isEmpty(queryspec)) return null
+  const {groupby, operator, aggregate, value} = _(queryspec).values().flatten().groupBy(getFieldQueryType).value()
 
   let summarize = _.merge(
-    operator ? { '*': ['count'] } : {},
+    _(aggregate).groupBy('name').mapValues(fields => _.map(fields, 'func')).value(),
+    operator ? { '*': operator.map(field => field.op) } : {},
     value ? { '*': ['values'] } : {},
     (a, b) => { if (_.isArray(a)) { return a.concat(b) } })
-  _.merge(summarize, fieldSummaries)
 
   return {
     groupby: _.map(groupby, _.curry(getGroupByName)(data)),
-    summarize: summarize,
+    summarize,
     where: [],
     having: [],
     order: []
@@ -79,7 +76,11 @@ export function performQuery(query, data) {
   return dl.groupby(query.groupby).summarize(query.summarize).execute(data)
 }
 
-export function requestQuery(getField, queryspec, data) {
-  let query = translateTableQuery(getField, queryspec, data)
-  return { query, data: performQuery(query, data) }
+export function requestQuery(queryspec, datasource) {
+  let query = translateTableQuery(queryspec, datasource)
+  let data = performQuery(query, datasource)
+  let domains = calculateDomains(data, _(queryspec).map(fields => fields).flatten().value())
+  let { axes, nest } = query ? prepareAxes(queryspec, query, data) : {}
+  let panes = query ? partitionPaneData(axes, nest, data) : {}
+  return { query, queryspec, data, axes, domains, panes }
 }

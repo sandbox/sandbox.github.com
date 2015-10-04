@@ -7,7 +7,7 @@ import { DropTarget, DragDropContext } from 'react-dnd'
 const {div} = React.DOM
 import { getField, selectTable, connectTableIfNecessary } from './ducks/datasources'
 import { clearQuery, addField, removeField, clearFields, insertFieldAtPosition, replaceFieldOnShelf, moveFieldTo, moveAndReplaceField, updateFieldTypecast, updateFieldFunction } from './ducks/queryspec'
-import { makeQueryKey } from './ducks/graphic'
+import { makeQueryKey } from './ducks/result'
 import { setTableEncoding, setPropertySetting } from './ducks/visualspec'
 import { DataSourceSelect, TableSchema } from './components/DataSource'
 import { TableLayoutSpecBuilder, TableVisualSpecBuilder } from './components/TableSpecBuilder'
@@ -16,7 +16,7 @@ import FieldDragLayer from './components/FieldDragLayer'
 
 class Explorer extends React.Component {
   render() {
-    const { dispatch, graphic, queryspec, visualspec, sourceIds, sources, tableId } = this.props
+    const { dispatch, result, queryspec, visualspec, sourceIds, sources, tableId } = this.props
     const { connectDropTarget, isOver, isDragging } = this.props
     const fieldActionCreators = bindActionCreators({
       removeField, clearFields,
@@ -26,18 +26,19 @@ class Explorer extends React.Component {
     }, dispatch)
     const getSourceField = _.curry(getField)(sources)
     const vizActionCreators = bindActionCreators({ setTableEncoding, setPropertySetting }, dispatch)
+    const graphicData = result[makeQueryKey(queryspec)]
     return connectDropTarget(
       div({className: className("pane-container")},
           <FieldDragLayer showTrashCan={isOver} />,
           div({className: "pane data-pane"},
-              <DataSourceSelect sourceIds={sourceIds} sources={sources} tableId={tableId}
+              <DataSourceSelect {...{sourceIds, sources, tableId}}
               onSelectTable={tableId => {
                 dispatch(clearQuery())
                 dispatch(selectTable(tableId))
                 dispatch(connectTableIfNecessary(tableId))
               }}/>,
               div({className: "datasource-table-container"},
-                  <TableSchema sources={sources} tableId={tableId}
+                  <TableSchema {...{sources, tableId}}
                   onSelectField={(field) => {
                     dispatch(addField(queryspec.row.length < queryspec.col.length ? 'row' : 'col', field))
                   }}/>)),
@@ -45,14 +46,10 @@ class Explorer extends React.Component {
               div({className: "querybuilder"},
                   <TableLayoutSpecBuilder
                   getField={getSourceField}
-                  isDragging={isDragging}
-                  queryspec={queryspec}
-                  fieldActionCreators={fieldActionCreators} />),
-              <TableGraphic {...graphic.query[makeQueryKey(queryspec)]} visualspec={visualspec} />),
-          <TableVisualSpecBuilder
-          isDragging={isDragging}
-          queryspec={queryspec} {...visualspec}
-          getField={getSourceField} vizActionCreators={vizActionCreators} fieldActionCreators={fieldActionCreators}/>
+                  {...{isDragging, queryspec, fieldActionCreators}} />),
+              <TableGraphic {...graphicData} {...{visualspec}} />),
+          <TableVisualSpecBuilder getField={getSourceField} {...visualspec}
+          {...{isDragging, queryspec, vizActionCreators, fieldActionCreators}} />
          ))
   }
 }
@@ -64,7 +61,7 @@ function select(state) {
     tableId: state.datasources.selectedTable,
     queryspec: state.queryspec,
     visualspec: state.visualspec,
-    graphic: state.graphic
+    result: state.result
   }
 }
 

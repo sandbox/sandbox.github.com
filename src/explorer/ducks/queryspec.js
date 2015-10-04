@@ -1,5 +1,19 @@
 import _ from 'lodash'
 import u from 'updeep'
+import { getAlgebraType } from '../helpers/field'
+
+export function getFullQueryspec(getField, queryspec) {
+  return _(queryspec)
+    .mapValues((fields) => {
+      return _.map(fields,
+                   (field) => {
+                     return _({}).merge(
+                       field,
+                       field.fieldId != null ? getField(field.fieldId) : null
+                     ).tap(o => _.merge(o, {algebraType: getAlgebraType(o)})).value()
+                   })
+    }).omit(_.isEmpty).value()
+}
 
 /* ACTION TYPES */
 export const INSERT_FIELD_AT_POSITION = 'explorer/queryspec/INSERT_FIELD_AT_POSITION'

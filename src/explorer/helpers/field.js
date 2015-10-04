@@ -5,8 +5,17 @@ export const AGGREGATES = [
 ]
 
 export function getFieldType(field) {
-  let type = field.typecast || field.type
+  let type = field.typecast != null ? field.typecast : field.type
   return getExternalType(type)
+}
+
+export function getAlgebraType(field) {
+  switch(getFieldType(field)) {
+  case 'text':
+    return 'O'
+  default:
+    return 'Q'
+  }
 }
 
 export function getExternalType(type) {
