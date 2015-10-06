@@ -193,24 +193,22 @@ React.render(<Provider store={store}>{() => <Explorer/>}</Provider>, document.ge
 store.dispatch(connectTableIfNecessary({datasource_id: 0})).then(
   () => {
     store.dispatch(selectTable({datasource_id: 0}))
+
     store.dispatch(queryspec.addField('col', {
-      "tableId": {
-        id: 0, name: "Birdstrikes"
-      },
-      "fieldId": 3
+      id: "agg_count", name: "COUNT" , type: "aggregate" , op: "count"
     }))
 
     store.dispatch(queryspec.addField('col', {
       "tableId": {
         id: 0, name: "Birdstrikes"
       },
-      "fieldId": 4
+      "fieldId": 6
     }))
 
-    store.dispatch(queryspec.addField('col', {
+    store.dispatch(queryspec.addField('row', {
       "tableId": {
         id: 0, name: "Birdstrikes"
       },
-      "fieldId": 0
+      "fieldId": 7
     }))
   })

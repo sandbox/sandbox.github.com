@@ -1,8 +1,13 @@
 import _ from 'lodash'
 import u from 'updeep'
 import { getAlgebraType } from '../helpers/field'
+import { TABLE_ENCODINGS } from '../helpers/table'
 
-export function getFullQueryspec(getField, queryspec) {
+function getValidShelves(tableType) {
+  return ['row', 'col'].concat(TABLE_ENCODINGS[tableType].properties || [])
+}
+
+export function getFullQueryspec(getField, queryspec, tableType) {
   return _(queryspec)
     .mapValues((fields) => {
       return _.map(fields,
@@ -12,7 +17,7 @@ export function getFullQueryspec(getField, queryspec) {
                        field.fieldId != null ? getField(field.fieldId) : null
                      ).tap(o => _.merge(o, {algebraType: getAlgebraType(o)})).value()
                    })
-    }).omit(_.isEmpty).value()
+    }).pick(getValidShelves(tableType)).omit(_.isEmpty).value()
 }
 
 /* ACTION TYPES */

@@ -51,14 +51,13 @@ export function runQuery(datasources, key, queryspec) {
 
 export function runCurrentQueryIfNecessary() {
   return (dispatch, getState) => {
-    let state = getState()
-    let datasources = state.datasources
-    let queryspec = state.queryspec
+    let { datasources, queryspec, visualspec, result } = getState()
     let getTableField = _.curry(getField)(datasources.BY_ID, datasources.selectedTable)
-    let key = makeQueryKey(queryspec)
-    let queryResponse = state.result[key]
+    let usableQueryspec = getFullQueryspec(getTableField, queryspec, visualspec.table.type)
+    let key = makeQueryKey(usableQueryspec)
+    let queryResponse = result[key]
     if (queryResponse == null || (!queryResponse.isLoading && !queryResponse.error && queryResponse.data == null)) {
-      dispatch(runQuery(datasources, key, getFullQueryspec(getTableField, queryspec)))
+      dispatch(runQuery(datasources, key, usableQueryspec))
     }
   }
 }

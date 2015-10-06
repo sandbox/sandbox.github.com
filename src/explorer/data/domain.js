@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-function _accessorName(field) {
+export function getAccessorName(field) {
   return field.func ? `${_.contains(field.func, 'bin') ? 'bin' : field.func}_${field.name}` : field.op ? field.op : field.name
 }
 
@@ -51,7 +51,7 @@ export function calculateDomains(data, fields) {
 
   for (let i = 0, len = fields.length; i < len; i++) {
     let field = fields[i]
-    let accessor = _accessorName(field)
+    let accessor = getAccessorName(field)
     if (domains[accessor]) continue
     domains[accessor] = ('O' == field.algebraType) ? new OrdinalAggregator() : new QuantitativeAggregator()
   }

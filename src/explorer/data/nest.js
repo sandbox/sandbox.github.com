@@ -13,7 +13,7 @@ function setProperty(obj, key, value) {
   obj[key[i]] = value
 }
 
-export function pushProperty(obj, key, value) {
+function pushProperty(obj, key, value) {
   if (key.length == 0) return
   let i = 0
   let len = key.length - 1
@@ -64,4 +64,12 @@ export function partitionNestKey(nest, rowLevels, colLevels) {
   let seen = { row: {}, col: {} }
   traverseNestTree(nest, rowLevels, colLevels, 0, [], [], seen, result)
   return result
+}
+
+export function calculateNest(data, key, f = pushProperty) {
+  let nest = {}
+  for (let i = 0, len = data.length; i < len; i++) {
+    f(nest, key(data[i]), i)
+  }
+  return nest
 }

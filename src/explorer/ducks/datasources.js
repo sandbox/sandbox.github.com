@@ -106,7 +106,7 @@ export default function reducer(state = initialState, action) {
     schema = _(action.data.__types__)
       .map((v, k) => { return {name: k, type: v} })
       .each((field, i) => field.__id__ = i).value()
-    return u({BY_ID: {[datasource.id]: {isLoading: false, data: action.data, schema: schema}}}, state)
+    return u({BY_ID: {[datasource.id]: {isLoading: false, data: () => action.data, schema: () => schema}}}, state)
   case SELECT_TABLE:
     return u({selectedTable: () => action.tableId}, state)
   default:

@@ -6,7 +6,7 @@ import HTML5Backend from 'react-dnd/modules/backends/HTML5'
 import { DropTarget, DragDropContext } from 'react-dnd'
 const {div} = React.DOM
 import { getField, selectTable, connectTableIfNecessary } from './ducks/datasources'
-import { clearQuery, addField, removeField, clearFields, insertFieldAtPosition, replaceFieldOnShelf, moveFieldTo, moveAndReplaceField, updateFieldTypecast, updateFieldFunction } from './ducks/queryspec'
+import { getFullQueryspec, clearQuery, addField, removeField, clearFields, insertFieldAtPosition, replaceFieldOnShelf, moveFieldTo, moveAndReplaceField, updateFieldTypecast, updateFieldFunction } from './ducks/queryspec'
 import { makeQueryKey } from './ducks/result'
 import { setTableEncoding, setPropertySetting } from './ducks/visualspec'
 import { DataSourceSelect, TableSchema } from './components/DataSource'
@@ -25,8 +25,9 @@ class Explorer extends React.Component {
       updateFieldTypecast, updateFieldFunction
     }, dispatch)
     const getSourceField = _.curry(getField)(sources)
+    const getTableField = _.curry(getField)(sources, tableId)
     const vizActionCreators = bindActionCreators({ setTableEncoding, setPropertySetting }, dispatch)
-    const graphicData = result[makeQueryKey(queryspec)]
+    const graphicData = result[makeQueryKey(getFullQueryspec(getTableField, queryspec, visualspec.table.type))]
     return connectDropTarget(
       div({className: className("pane-container")},
           <FieldDragLayer showTrashCan={isOver} />,

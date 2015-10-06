@@ -1,14 +1,6 @@
 import dl from 'datalib'
 import _ from 'lodash'
-import { pushProperty, partitionNestKey } from './util'
-
-function calculateNest(data, key, f) {
-  let nest = {}
-  for (let i = 0, len = data.length; i < len; i++) {
-    f(nest, key(data[i]), i)
-  }
-  return nest
-}
+import { calculateNest, partitionNestKey } from './nest'
 
 class Axis {
   constructor(ordinals = [], field = null) {
@@ -26,7 +18,7 @@ class Axis {
 export function prepareAxes(queryspec, query, data) {
   let shelves   = _(queryspec).mapValues(fields => _.groupBy(fields, 'algebraType')).value()
   let accessors = _(shelves).pick('row', 'col').map((shelf) => _.map(shelf.O, 'name')).flatten().map(dl.$).value()
-  let nest      = _.isEmpty(accessors) ? {} : calculateNest(data, (datum) => _.map(accessors, f => f(datum)), pushProperty)
+  let nest      = _.isEmpty(accessors) ? {} : calculateNest(data, (datum) => _.map(accessors, f => f(datum)))
   let rowLevels = shelves.row && shelves.row.O ? shelves.row.O : []
   let colLevels = shelves.col && shelves.col.O ? shelves.col.O : []
   let ordinalAxesKeys  = _.mapValues(
