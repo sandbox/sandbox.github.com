@@ -1,6 +1,7 @@
 require('es6-promise').polyfill()
 
 import React from 'react'
+import ReactDOM from 'react-dom'
 import d3 from 'd3'
 import dl from 'datalib'
 
@@ -188,7 +189,7 @@ _.each(MockDataSources.datasources.BY_ID,
 
 let store = configureStore(MockDataSources)
 
-React.render(<Provider store={store}>{() => <Explorer/>}</Provider>, document.getElementById("demo"))
+ReactDOM.render(<Provider store={store}>{() => <Explorer/>}</Provider>, document.getElementById("demo"))
 
 store.dispatch(connectTableIfNecessary({datasource_id: 0})).then(
   () => {

@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import d3 from 'd3'
 import classNames from 'classnames'
 import animateMark from './components/mark'
@@ -38,7 +39,7 @@ function renderShotChart(rows, header) {
     onMouseOver={logData.bind(null, d)}/>
   })
 
-  React.render(
+  ReactDOM.render(
       <svg width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}>
       <g transform={`translate(${margin.left}, ${margin.top})`}>
       {points}

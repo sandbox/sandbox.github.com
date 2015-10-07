@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import d3 from 'd3'
 import Axis from './components/axis'
 import {Mixin as tweenMixin, easingTypes} from 'react-tween-state'
@@ -63,7 +64,7 @@ let TransitionGroup = animateGroup(Circle, [
   { key: 1, prop: 'cy', scale: yscale, duration: 2000, easing: easingTypes.linear, start: 0}
 ])
 
-React.render(
+ReactDOM.render(
     <svg width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}>
     <g transform={`translate(${margin.left}, ${margin.top})`}>
     <TransitionGroup data={values} markProps={{className: "dot", r: 3}} />

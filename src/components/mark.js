@@ -1,3 +1,4 @@
+import React from 'react'
 import {Mixin as tweenMixin} from 'react-tween-state'
 
 function animateMark(Component, transitionAttributes) {

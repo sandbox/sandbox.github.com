@@ -37,6 +37,7 @@ module.exports = {
     "d3": "d3",
     "datalib": "dl",
     "react": "React",
+    "react-dom": "ReactDOM",
     "lodash": "_"
   },
   plugins: [

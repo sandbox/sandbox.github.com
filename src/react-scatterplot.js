@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import d3 from 'd3'
 import animateMark from './components/mark'
 import Axis from './components/axis'
@@ -30,7 +31,7 @@ var points = values.map(function (d, i) {
   return <TransitionCircle key={i} className="dot" cx={xscale(x)} cy={yscale(y)} r={3} />
 })
 
-React.render(
+ReactDOM.render(
     <svg width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}>
     <g transform={`translate(${margin.left}, ${margin.top})`}>
     {points}

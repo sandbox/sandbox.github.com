@@ -33,7 +33,7 @@ animation.
 The points should all start from the origin and then transition to the
 final positions.
 
-This is a second version of [this](/demos/scatterplot), to test a if
+This is a second version of [this](/demos/react-scatterplot-animation), to test a if
 grouping tween transitions into a single component is more performant
 than using tween state on each individual point. It is not and appears
 to take too much time updating all state at once to have any animation

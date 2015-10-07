@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import d3 from 'd3'
 import animateMark from './components/mark'
 import Rect from './components/rect'
@@ -36,7 +37,7 @@ var bars = data.map(
     <text dy=".75em" y={2} x={xscale(d.dx) / 2} textAnchor="middle">{formatCount(d.y)}</text>
     </TransitionGroup>)
 
-React.render(
+ReactDOM.render(
     <svg width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}>
     <g transform={`translate(${margin.left}, ${margin.top})`}>
     {bars}

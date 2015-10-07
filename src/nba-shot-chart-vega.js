@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import d3 from 'd3'
 import vg from 'vega'
 import { ShotChartSpec } from './components/basketball'
@@ -67,8 +68,8 @@ function renderShotChart(evt) {
   }
 }
 
-React.render(<select onChange={renderShotChart}>
-             {shotChartUrls.map(function(player) {
-               return <option key={player.url} value={player.url}>{player.name}</option>
-             })}
-             </select>, document.getElementById("shot-chart-player-select"))
+ReactDOM.render(<select onChange={renderShotChart}>
+                {shotChartUrls.map(function(player) {
+                  return <option key={player.url} value={player.url}>{player.name}</option>
+                })}
+                </select>, document.getElementById("shot-chart-player-select"))
