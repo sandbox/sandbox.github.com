@@ -12,6 +12,17 @@ class Axis {
   cross(field) {
     return _.extend(new Axis(), this, {field})
   }
+  hasQuantitativeField() {
+    return null != this.field
+  }
+  map(f) {
+    let result = []
+    for(let i=0, len=this.ordinals.length; i < len; i++) {
+      result.push(f(this.ordinals[i], i))
+    }
+    if (null != this.field) result.push(f(this.field, 'Q'))
+    return result
+  }
 }
 
 // nest ordinal fields then cross with concat-quantitative fields to build the axis

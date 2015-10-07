@@ -13,6 +13,7 @@ import { DataSourceSelect, TableSchema } from './components/DataSource'
 import { TableLayoutSpecBuilder, TableVisualSpecBuilder } from './components/TableSpecBuilder'
 import { TableGraphic } from './components/TableGraphic'
 import FieldDragLayer from './components/FieldDragLayer'
+const { getTableSettings } = TableGraphic
 
 class Explorer extends React.Component {
   render() {
@@ -48,7 +49,7 @@ class Explorer extends React.Component {
                   <TableLayoutSpecBuilder
                   getField={getSourceField}
                   {...{isDragging, queryspec, fieldActionCreators}} />),
-              <TableGraphic {...graphicData} {...{visualspec}} />),
+              <TableGraphic {...graphicData} {...{visualspec}} tableSettings={getTableSettings(graphicData && graphicData.axes)}/>),
           <TableVisualSpecBuilder getField={getSourceField} {...visualspec}
           {...{isDragging, queryspec, vizActionCreators, fieldActionCreators}} />
          ))

@@ -13,12 +13,15 @@ const [Table, Column, ColumnGroup] = [React.createFactory(TableWrapper), React.c
 const { findDOMNode } = React
 const { div, pre } = React.DOM
 const BORDER_HEIGHT = 1
+const EMPTY_RENDER = () => ''
+const EMPTY_DATA = () => {}
 
 const TABLE_GRAPHIC_BOUND_METHODS = ['getRow', '_onResize', '_update', 'renderHeaderCell', 'renderFooterCell', 'renderVisualizationCell']
+
 export class TableGraphic extends React.Component {
   constructor() {
     super(...arguments)
-    this.state     = { renderTable: false, tableWidth: 500, tableHeight: 500 }
+    this.state = { renderTable: false, tableWidth: 500, tableHeight: 500 }
     _.extend(this, _(this).pick(TABLE_GRAPHIC_BOUND_METHODS).mapValues(f => f.bind(this)).value())
   }
 
@@ -48,19 +51,11 @@ export class TableGraphic extends React.Component {
     }
   }
 
-  getHeaderHeight() {
-    return Math.max(40, _.first(this.props.axes.col).key.length * 40)
-  }
-
-  getFooterHeight() {
-    return _.first(this.props.axes.col).field ? 40 : 0
-  }
-
   getTableHeight(containerWidth, containerHeight) {
-    const { axes, queryspec } = this.props
-    if (null == axes) return containerHeight
-    let height = 30 * axes.row.length + this.getFooterHeight() + this.getHeaderHeight() + 2 * BORDER_HEIGHT
-    let width = (queryspec.row ? queryspec.row.length : 0) * 150 + axes.col.length * 300
+    let { tableSettings } = this.props
+    if (_.isEmpty(tableSettings)) return containerHeight
+    let height = tableSettings.headerHeight + tableSettings.footerHeight + tableSettings.bodyHeight + 2 * BORDER_HEIGHT
+    let width = tableSettings.fixedWidth + tableSettings.bodyWidth
     if (containerWidth < width) height += Scrollbar.SIZE
     if (height > containerHeight) height = containerHeight
     return height
@@ -74,11 +69,37 @@ export class TableGraphic extends React.Component {
     return dataKey
   }
 
-  getFooterAxisCell() {
-    return {}
+  getFixedColumns(axis, settings) {
+    let hasQuantitativeField = axis.hasQuantitativeField()
+    return axis.map((field, r) => {
+      let isOrdinal = 'O' == field.algebraType
+      return Column({
+        fixed: true,
+        key: getAccessorName(field), dataKey: field.name,
+        label: isOrdinal ? {key: [field.name]} : '',
+        width: isOrdinal ? settings.fixedOrdinalAxisWidth : settings.fixedQuantAxisWidth,
+        cellClassName: hasQuantitativeField ? 'public_fixedDataTableCell_axis' : '',
+        cellDataGetter: this.getRowAxisCell,
+        headerRenderer: this.renderHeaderCell,
+        cellRenderer: this.renderRowAxisCell.bind(this, r),
+        footerRenderer: EMPTY_RENDER
+      })
+    })
+  }
+
+  getScrollableColumns(cols, settings) {
+    return _.map(cols, (axis, c) => Column({
+      fixed: false, key: axis.key.join(' '),  dataKey: c, label: axis,
+      width: settings.colWidth,
+      headerRenderer: this.renderHeaderCell,
+      cellRenderer: this.renderVisualizationCell,
+      footerRenderer: this.renderFooterCell,
+      allowCellsRecycling: true
+    }))
   }
 
   renderRowAxisCell(axisIndex, cellData, cellDataKey, rowData, rowIndex, columnData, width) {
+    if ('Q' == axisIndex) return div({}, getAccessorName(this.props.axes.row[rowIndex].field))
     return div({}, this.props.axes.row[rowIndex].key[axisIndex])
   }
 
@@ -98,45 +119,49 @@ export class TableGraphic extends React.Component {
 
   render() {
     const { renderTable, tableWidth, tableHeight } = this.state
-    const { isLoading, query, data, error, queryspec, visualspec,
-            axes, domains, panes } = this.props
+    const { isLoading, query, data, error, queryspec, tableSettings } = this.props
+    const { rowHeight, rowsCount, headerHeight, footerHeight } = tableSettings
     let contained
     if (!renderTable || query == null || queryspec == null || data == null || error) {
       contained = div({}, `${error ? "Error: " : ""}No Chart`)
     }
     else {
-      const axisColumns = _.map(queryspec.row, (field, r) => Column({
-        key: field.fieldId, label: field.name, dataKey: field.name,
-        fixed: true, width: 150,
-        cellClassName: true ? '' : 'public_fixedDataTableCell_axis',
-        cellDataGetter: this.getRowAxisCell,
-        cellRenderer: this.renderRowAxisCell.bind(this, r)
-      }))
-      const paneColumns = _.map(axes.col, (axis, c) => Column({
-        key: axis.key.join(' '), fixed: false, label: axis, dataKey: c, width: 300,
-        headerRenderer: this.renderHeaderCell,
-        cellRenderer: this.renderVisualizationCell,
-        footerRenderer: this.renderFooterCell,
-        allowCellsRecycling: true
-      }))
       contained = Table(
         {
+          ref: 'table',
           width: tableWidth,
           maxHeight: tableHeight,
           height: tableHeight,
-          rowHeight: 30,
+          rowHeight: rowHeight,
           rowGetter: this.getRow,
-          rowsCount: axes.row.length,
-          headerHeight: this.getHeaderHeight(),
-          footerHeight: this.getFooterHeight(),
-          footerDataGetter: this.getFooterAxisCell
+          rowsCount: rowsCount,
+          headerHeight: headerHeight,
+          footerHeight: footerHeight,
+          footerDataGetter: EMPTY_DATA
         },
-        axisColumns,
-        paneColumns)
+        this.getFixedColumns(this.props.axes.row[0], tableSettings),
+        this.getScrollableColumns(this.props.axes.col, tableSettings))
     }
-
     return div({className: "container-flex-fill-wrap graphic-container"},
                div({ref: 'container', className: "container-flex-fill"},
                    renderTable ? contained : null))
   }
+}
+
+TableGraphic.getTableSettings = function(axes) {
+  if (null == axes) return {}
+  let result = {
+    rowsCount:    axes.row.length,
+    rowHeight:    axes.row[0].field ? 400 : 30,
+    colWidth:     axes.col[0].field ? 400 : 100,
+    headerHeight: Math.max(axes.row[0].key.length > 0 ? 30 : 0, axes.col[0].key.length * 30),
+    footerHeight: axes.col[0].field ? 60 : 0,
+    fixedQuantAxisWidth: 120,
+    fixedOrdinalAxisWidth: 100
+  }
+  return _.extend(result, {
+    bodyHeight: result.rowsCount * result.rowHeight,
+    bodyWidth:  axes.col.length * result.colWidth,
+    fixedWidth: axes.row[0].key.length * result.fixedOrdinalAxisWidth + (axes.row[0].field ? result.fixedQuantAxisWidth : 0)
+  })
 }

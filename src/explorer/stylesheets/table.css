@@ -14,10 +14,6 @@
   border-color: #dfdfdf;
 }
 
-.public_fixedDataTable_main {
-  border: none;
-}
-
 .public_fixedDataTable_header .public_fixedDataTableCell_main {
   font-weight: initial;
 }
@@ -27,14 +23,11 @@
   border-bottom-width: 1px;
 }
 
-.public_fixedDataTableCell_axis .fixedDataTableCellLayout_wrap3 {
-  vertical-align: top;
-}
-
 .public_fixedDataTable_header .fixedDataTableCellLayout_wrap3 {
   vertical-align: bottom;
 }
 
+.public_fixedDataTableCell_axis .fixedDataTableCellLayout_wrap3,
 .public_fixedDataTable_footer .fixedDataTableCellLayout_wrap3 {
   vertical-align: top;
 }
@@ -43,6 +36,12 @@
   padding: 0px 4px;
 }
 
+.public_fixedDataTable_main {
+  border: none;
+}
+
+.public_fixedDataTable_header .public_fixedDataTableCell_main,
+.public_fixedDataTable_header .public_fixedDataTableRow_fixedColumnsDivider,
 .public_fixedDataTable_footer .public_fixedDataTableRow_fixedColumnsDivider,
 .public_fixedDataTable_footer .fixedDataTableCellLayout_main.public_fixedDataTableCell_main {
   border-left: none;
