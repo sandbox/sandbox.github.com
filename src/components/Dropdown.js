@@ -1,5 +1,6 @@
 import React from 'react'
-const { findDOMNode } = React
+import ReactDOM from 'react-dom'
+const { findDOMNode } = ReactDOM
 
 function contains(parent, child) {
   var node = child.parentNode

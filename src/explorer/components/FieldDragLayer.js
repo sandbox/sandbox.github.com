@@ -44,7 +44,7 @@ class TableFieldDragPreview extends React.Component {
   }
 }
 
-class FieldDragLayer {
+class FieldDragLayer extends React.Component {
   renderItem(type, item) {
     switch (type) {
     case 'ShelfField':

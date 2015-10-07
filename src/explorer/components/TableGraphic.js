@@ -3,6 +3,7 @@ import '../stylesheets/table.css'
 
 import className from 'classnames'
 import React from 'react'
+import ReactDOM from 'react-dom'
 import _ from 'lodash'
 import FixedDataTable from 'fixed-data-table'
 import Scrollbar from 'fixed-data-table/internal/Scrollbar.react'
@@ -10,7 +11,7 @@ import { getAccessorName } from '../data/domain'
 
 const { Table: TableWrapper, Column: ColumnWrapper, ColumnGroup: ColumnGroupWrapper } = FixedDataTable
 const [Table, Column, ColumnGroup] = [React.createFactory(TableWrapper), React.createFactory(ColumnWrapper), React.createFactory(ColumnGroupWrapper)]
-const { findDOMNode } = React
+const { findDOMNode } = ReactDOM
 const { div, pre } = React.DOM
 const BORDER_HEIGHT = 1
 const EMPTY_RENDER = () => ''
@@ -40,7 +41,7 @@ export class TableGraphic extends React.Component {
   }
 
   _update() {
-    let elem = findDOMNode(this.refs.container)
+    let elem = this.refs.container
     if (elem) {
       let { offsetWidth: width, offsetHeight: height } = elem
       this.setState({

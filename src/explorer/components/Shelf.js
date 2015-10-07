@@ -1,5 +1,6 @@
 import className from 'classnames'
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { DropTarget } from 'react-dnd'
 import _ from 'lodash'
 import { VisualPropertiesDropdown } from './VisualPropertiesDropdown'
@@ -8,7 +9,7 @@ import { createDropdownComponent } from '../../components/Dropdown'
 import { ShelfField, calculateDropMarkPosition, calculateDropPosition, FieldDropHandler, fieldDropCollector } from './Field'
 
 const { div, i: icon, a: link, pre } = React.DOM
-const { findDOMNode } = React
+const { findDOMNode } = ReactDOM
 
 class FieldContainer extends React.Component {
   componentDidUpdate(prevProps, prevState) {

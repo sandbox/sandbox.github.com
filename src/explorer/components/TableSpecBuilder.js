@@ -1,5 +1,6 @@
 import className from 'classnames'
 import React from 'react'
+import ReactDOM from 'react-dom'
 import _ from 'lodash'
 import { DropTarget } from 'react-dnd'
 import { FieldOptionsDropdown } from './FieldDropdown'
@@ -8,7 +9,7 @@ import { Shelf } from './Shelf'
 import { TABLE_ENCODINGS } from '../helpers/table'
 
 const { div, i: icon, label, pre, a: link, input } = React.DOM
-const { findDOMNode } = React
+const { findDOMNode } = ReactDOM
 
 function createFieldDropdownComponent(Component) {
   class FieldDropdownContainer extends React.Component {

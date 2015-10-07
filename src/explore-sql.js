@@ -189,7 +189,7 @@ _.each(MockDataSources.datasources.BY_ID,
 
 let store = configureStore(MockDataSources)
 
-ReactDOM.render(<Provider store={store}>{() => <Explorer/>}</Provider>, document.getElementById("demo"))
+ReactDOM.render(<Provider store={store}><Explorer/></Provider>, document.getElementById("demo"))
 
 store.dispatch(connectTableIfNecessary({datasource_id: 0})).then(
   () => {
