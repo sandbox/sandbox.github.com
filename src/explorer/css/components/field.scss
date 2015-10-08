@@ -1,3 +1,6 @@
+@import '../../../css/flexbox.scss';
+@import '../../../css/utilities.scss';
+
 @mixin draggable-field {
   cursor: pointer;
   cursor: -webkit-grab;

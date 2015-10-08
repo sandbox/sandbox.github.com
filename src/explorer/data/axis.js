@@ -23,6 +23,9 @@ class Axis {
     if (null != this.field) result.push(f(this.field, 'Q'))
     return result
   }
+  label() {
+    return `${this.key.join(' ')}${this.field ? ` ${this.field.name}` : ''}`
+  }
 }
 
 // nest ordinal fields then cross with concat-quantitative fields to build the axis

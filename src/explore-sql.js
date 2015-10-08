@@ -1,4 +1,5 @@
 require('es6-promise').polyfill()
+import './explorer/css/main.scss'
 
 import React from 'react'
 import ReactDOM from 'react-dom'

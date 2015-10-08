@@ -11,9 +11,8 @@ import { makeQueryKey } from './ducks/result'
 import { setTableEncoding, setPropertySetting } from './ducks/visualspec'
 import { DataSourceSelect, TableSchema } from './components/DataSource'
 import { TableLayoutSpecBuilder, TableVisualSpecBuilder } from './components/TableSpecBuilder'
-import { TableGraphic } from './components/TableGraphic'
+import { TableContainer } from './components/TableContainer'
 import FieldDragLayer from './components/FieldDragLayer'
-const { getTableSettings } = TableGraphic
 
 class Explorer extends React.Component {
   render() {
@@ -49,7 +48,8 @@ class Explorer extends React.Component {
                   <TableLayoutSpecBuilder
                   getField={getSourceField}
                   {...{isDragging, queryspec, fieldActionCreators}} />),
-              <TableGraphic {...graphicData} {...{visualspec}} tableSettings={getTableSettings(graphicData && graphicData.axes)}/>),
+              div({className: "container-flex-fill-wrap graphic-container"},
+                  <TableContainer {...graphicData} {...{visualspec}} />)),
           <TableVisualSpecBuilder getField={getSourceField} {...visualspec}
           {...{isDragging, queryspec, vizActionCreators, fieldActionCreators}} />
          ))

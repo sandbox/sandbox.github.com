@@ -26,10 +26,11 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loaders: ['babel-loader'],
+        loaders: ['babel-loader?stage=1'],
         include: path.join(__dirname, 'src')
       },
-      { test: /\.css$/, loader: "style-loader!css-loader" }
+      { test: /\.css$/, loader: "style-loader!css-loader" },
+      { test: /\.scss$/, loader: "style!css!sass" }
     ]
   },
   externals: {

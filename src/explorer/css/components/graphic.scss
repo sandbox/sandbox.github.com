@@ -1,0 +1,38 @@
+@import '../../../css/utilities.scss';
+.graphic-container {
+  background-color: white;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #dfdfdf;
+  border-radius: 1px;
+}
+
+.axis text {
+  font-size: 10px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #dfdfdf;
+  shape-rendering: crispEdges;
+}
+
+.axis-label {
+  position: absolute;
+  @include overflow-ellipsis;
+
+  &.left {
+    top: 0;
+    left: 0;
+    right: 40px;
+    padding: 0 4px;
+  }
+
+  &.bottom {
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+}

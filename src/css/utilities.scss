@@ -1,0 +1,43 @@
+@mixin overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} { @content; }
+     @-moz-keyframes #{$animation-name} { @content; }
+       @-o-keyframes #{$animation-name} { @content; }
+          @keyframes #{$animation-name} { @content; }
+}
+
+@mixin transition($transition) {
+  -webkit-transition: $transition;
+     -moz-transition: $transition;
+       -o-transition: $transition;
+          transition: $transition;
+}
+
+@mixin animation($animation) {
+  -webkit-animation: $animation;
+     -moz-animation: $animation;
+       -o-animation: $animation;
+          animation: $animation;
+}
+
+@mixin transform($transform) {
+  -webkit-transform: $transform;
+     -moz-transform: $transform;
+      -ms-transform: $transform;
+       -o-transform: $transform;
+          transform: $transform;
+}
+
+.remove-link {
+  color: #999;
+
+  &:hover {
+    color: #f18794;
+    text-decoration: none;
+  }
+}

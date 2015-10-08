@@ -1,3 +1,5 @@
+@import '../../../css/utilities.scss';
+
 .public_fixedDataTable_header, .public_fixedDataTable_header .public_fixedDataTableCell_main {
   background-color: white;
   background-image: none;
@@ -18,7 +20,10 @@
   font-weight: initial;
 }
 
-.public_fixedDataTableCell_axis {
+.public_fixedDataTableRow_main.public_fixedDataTable_hasBottomBorder [data-reactid$=fixed_cells] .public_fixedDataTableCell_main,
+.public_fixedDataTableRow_main .public_fixedDataTableCell_axis.public_fixedDataTableCell_main,
+.table-no-footer .public_fixedDataTableRow_main .public_fixedDataTableCell_main,
+{
   border-bottom-style: solid;
   border-bottom-width: 1px;
 }
@@ -36,7 +41,10 @@
   padding: 0px 4px;
 }
 
-.public_fixedDataTable_main {
+.public_fixedDataTable_main,
+.table-no-header .public_fixedDataTable_header,
+.public_fixedDataTable_hasBottomBorder,
+.public_fixedDataTableRow_fixedColumnsDivider {
   border: none;
 }
 
@@ -47,4 +55,9 @@
   border-left: none;
   border-right: none;
   border-top: none;
+}
+
+.public_fixedDataTableCell_main:not(.public_fixedDataTableCell_axis) .table-row-label.public_fixedDataTableCell_cellContent {
+  @include overflow-ellipsis;
+  text-align: right;
 }

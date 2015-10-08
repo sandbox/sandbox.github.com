@@ -1,3 +1,5 @@
+@import '../../../css/flexbox.scss';
+
 .querybuilder {
   @include flexbox;
   @include flex(0 0 60px);

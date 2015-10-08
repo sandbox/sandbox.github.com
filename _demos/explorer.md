@@ -2,8 +2,6 @@
 layout: demo
 title:  Explore | Table Builder
 bodyclass: demo explorer
-custom_css:
-  - explorer
 custom_js:
   - datalib
 ---
