@@ -89,7 +89,7 @@ const FieldDragHandler = {
 
   endDrag: function(props, monitor, component) {
     if (!monitor.didDrop()) return
-    const dragSourceName = component.constructor.name
+    const dragSourceName = component.constructor.displayName
     const [isTableField, isShelfField] = [dragSourceName == 'TableField', dragSourceName == 'ShelfField']
     const { removeField, replaceFieldOnShelf, insertFieldAtPosition,
             moveFieldTo, moveAndReplaceField,
@@ -137,6 +137,7 @@ class TableField extends React.Component {
           div({className: "name-wrap"}, this.props.name)))
   }
 }
+TableField.displayName = 'TableField'
 TableField = DragSource("TableField", FieldDragHandler, fieldDragCollector)(TableField)
 
 class ShelfField extends React.Component {
@@ -164,6 +165,7 @@ class ShelfField extends React.Component {
               type == 'aggregate' ? icon({className: "fa fa-times remove-link"}) : icon({className: "fa fa-caret-down"}))))
   }
 }
+ShelfField.displayName = 'ShelfField'
 ShelfField = DragSource("ShelfField", FieldDragHandler, fieldDragCollector)(ShelfField)
 
 export { TableField, ShelfField }
