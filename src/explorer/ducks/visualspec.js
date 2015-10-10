@@ -38,7 +38,9 @@ function table(state = tableState, action) {
 }
 
 const propertiesState = {
-  size:        {},
+  size:        {
+    'default': 30,
+  },
   shape:       {},
   color:       {
     palette: "category10",
@@ -60,7 +62,9 @@ const propertiesState = {
     scaleRangeMin: "#ffffff",
     scaleRangeMax: "#0c541f"
   },
-  opacity:     {},
+  opacity:     {
+    'default': 1
+  },
   orientation: {},
   x:           {},
   x2:          {},

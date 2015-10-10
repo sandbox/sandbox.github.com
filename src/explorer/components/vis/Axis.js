@@ -35,12 +35,8 @@ function axisTickVerticalLabelShift(d) {
 
 export class Axis extends React.Component {
   _d3Axis() {
-    let { orient, zero, domain, height, width } = this.props
-    let min = zero && domain.min > 0 ? 0 : domain.min
-    let max = zero && domain.max < 0 ? 0 : domain.max
-    let range = 'left' == orient || 'right' == orient ? [ height, 0 ] : [ 0, width ]
-    let scale = d3.scale.linear().domain([min, max]).range(range)
-    return d3.svg.axis().scale(scale).orient(orient).ticks(10, ",.1s")
+    let { orient, scale } = this.props
+    return d3.svg.axis().scale(this.props.scale).orient(orient).ticks(5)
   }
 
   _d3Render() {
@@ -80,13 +76,12 @@ export class Axis extends React.Component {
   }
 
   render() {
-    let { domain, name, orient, zero, size, width, height } = this.props
+    let { domain, name, orient,  width, height } = this.props
     return div({},
                svg({className: 'axis', width, height}, <g ref='axisContainer' transform={this._orientTransform()}/>),
                div({className: className('axis-label', {[orient]: true})}, name))
   }
 }
 Axis.defaultProps = {
-  orient: 'bottom',
-  zero: true
+  orient: 'bottom'
 }

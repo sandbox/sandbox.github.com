@@ -1,21 +1,11 @@
 import _ from 'lodash'
-
-export function getAccessorName(field) {
-  return field.func ? `${_.contains(field.func, 'bin') ? 'bin' : field.func}_${field.name}` : field.op ? field.op : field.name
-}
+import { getAccessorName, isAggregateType } from '../helpers/field'
 
 class QuantitativeAggregator {
   constructor() {
     this._result = {min: Number.POSITIVE_INFINITY, max: Number.NEGATIVE_INFINITY}
   }
   add(value) {
-    if (_.isArray(value)) {
-      for(let v = 0; v < value.length; v++) {
-        this.add(value[v])
-      }
-      return
-    }
-
     if(value < this._result.min) {
       this._result.min = value
     }
@@ -25,6 +15,39 @@ class QuantitativeAggregator {
   }
   result() {
     return this._result
+  }
+  flush() {}
+}
+
+class StackAggregator extends QuantitativeAggregator {
+  constructor() {
+    super(...arguments)
+    this.accumulator = 0
+  }
+  add(value) {
+    this.accumulator += value
+  }
+  flush() {
+    super.add(this.accumulator)
+    this.accumulator = 0
+  }
+}
+
+class BinStackAggregator extends QuantitativeAggregator {
+  constructor() {
+    super(...arguments)
+    this.accumulator = {}
+  }
+  add(value, key) {
+    if (null == this.accumulator[key]) this.accumulator[key] = 0
+    this.accumulator[key] += value
+  }
+  flush() {
+    let values = _.values(this.accumulator)
+    for(let i = 0, len = values.length; i < len; i++) {
+      super.add(values[i])
+    }
+    this.accumulator = {}
   }
 }
 
@@ -42,32 +65,52 @@ class OrdinalAggregator {
     }
     return result.sort()
   }
+  flush() {}
 }
 
-export function calculateDomains(data, fields) {
-  let domains = {}
+function aggregateDatum(aggregator, datum, key, binKey) {
+  let binDatum = datum[binKey]
+  if (null != datum[key]) {
+    aggregator.add(datum[key], binDatum)
+  }
+  else if (null != datum.values) {
+    for(let i = 0, len = datum.values.length; i < len; i++) {
+      aggregator.add(datum.values[i][key], binDatum)
+    }
+  }
+  else {
+    throw Error(`Domain construction: Not supposed to get here: Missing key ${key} and no values`)
+  }
+}
 
+export function calculateDomains(tableType, data, panes, fields) {
+  let domains = {}
   if (data == null) return domains
+  let binField = _.find(fields, f => null != f.binner)
 
   for (let i = 0, len = fields.length; i < len; i++) {
     let field = fields[i]
     let accessor = getAccessorName(field)
     if (domains[accessor]) continue
-    domains[accessor] = ('O' == field.algebraType) ? new OrdinalAggregator() : new QuantitativeAggregator()
+    domains[accessor] = ('O' == field.algebraType) ? new OrdinalAggregator() :
+      isAggregateType(field) ? (
+        binField ? new BinStackAggregator() : new StackAggregator()) :
+      new QuantitativeAggregator()
   }
 
-  for (let i = 0, keys = Object.keys(domains), len = data.length, klen = keys.length; i < len; i++) {
-    let datum = data[i]
-    for (let k = 0; k < klen; k++) {
-      let key = keys[k]
-      if (null != datum[key]) {
-        domains[key].add(datum[key])
-      }
-      else if (null != datum.values) {
-        domains[key].add(_.map(datum.values, key))
-      }
-      else {
-        throw Error(`Not supposed to get here: Missing key ${key} and no values`)
+  let binKey = binField ? getAccessorName(binField) : null
+  for (let r = 0, rkeys = Object.keys(panes), rlen = rkeys.length, keys = Object.keys(domains), klen=keys.length; r < rlen; r++) {
+    let rkey = rkeys[r]
+    for (let c = 0, ckeys = Object.keys(panes[rkey]), clen = ckeys.length; c < clen; c++) {
+      let ckey = ckeys[c]
+      let paneDataIndices = panes[rkey][ckey]
+      for (let k = 0; k < klen; k++) {
+        let key = keys[k]
+        let domain = domains[key]
+        for (let i = 0, len = paneDataIndices.length; i < len; i++) {
+          aggregateDatum(domain, data[paneDataIndices[i]], key, binKey)
+        }
+        domain.flush()
       }
     }
   }

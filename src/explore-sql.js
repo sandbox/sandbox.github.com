@@ -197,44 +197,27 @@ store.dispatch(connectTableIfNecessary({datasource_id: 0})).then(
     store.dispatch(selectTable({datasource_id: 0}))
 
     store.dispatch(queryspec.addField('col', {
-      "tableId": {
-        id: 0, name: "Birdstrikes"
-      },
-      "fieldId": 12
+      id: "agg_count", name: "COUNT" , type: "aggregate" , op: "count"
     }))
 
     store.dispatch(queryspec.addField('col', {
       "tableId": {
         id: 0, name: "Birdstrikes"
       },
-      "fieldId": 10
-    }))
-
-    store.dispatch(queryspec.addField('col', {
-      "tableId": {
-        id: 0, name: "Birdstrikes"
-      },
-      "fieldId": 11
+      "fieldId": 9
     }))
 
     store.dispatch(queryspec.addField('row', {
       "tableId": {
         id: 0, name: "Birdstrikes"
       },
-      "fieldId": 12
+      "fieldId": 4
     }))
 
-    store.dispatch(queryspec.addField('row', {
+    store.dispatch(queryspec.addField('color', {
       "tableId": {
         id: 0, name: "Birdstrikes"
       },
-      "fieldId": 10
-    }))
-
-    store.dispatch(queryspec.addField('row', {
-      "tableId": {
-        id: 0, name: "Birdstrikes"
-      },
-      "fieldId": 11
+      "fieldId": 7
     }))
   })

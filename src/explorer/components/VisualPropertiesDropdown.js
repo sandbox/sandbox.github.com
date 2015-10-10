@@ -2,10 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import { getExternalType } from '../helpers/field'
 const { div, i: icon, a: link, label, pre, input, select, option, img, span } = React.DOM
-
-const COLOR_PALETTES = [
-  'category10', 'category20', 'category20b', 'category20c', 'pastel1', 'pastel2', 'set1', 'set2', 'set3'
-]
+import { COLOR_PALETTES } from '../helpers/color'
 
 class ColorRangeSettings extends React.Component {
   render() {
@@ -66,7 +63,7 @@ class ColorProperties extends React.Component {
         return div({},
                    label({}, "Palette"),
                    div({className: 'querybuilder-color-settings'},
-                       COLOR_PALETTES.map((value) => {
+                       _.map(COLOR_PALETTES, (colors, value) => {
                          return label({key: value},
                                       input({
                                         type: 'radio',

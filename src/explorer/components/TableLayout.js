@@ -4,8 +4,9 @@ import '../css/components/table.scss'
 import React from 'react'
 import _ from 'lodash'
 import FixedDataTable from 'fixed-data-table'
-import { getAccessorName } from '../data/domain'
+import { getAccessorName } from '../helpers/field'
 const Axis = React.createFactory(require('./vis/Axis').Axis)
+const Pane = React.createFactory(require('./vis/Pane').Pane)
 
 const { Table: TableWrapper, Column: ColumnWrapper, ColumnGroup: ColumnGroupWrapper } = FixedDataTable
 const [Table, Column, ColumnGroup] = [React.createFactory(TableWrapper), React.createFactory(ColumnWrapper), React.createFactory(ColumnGroupWrapper)]
@@ -68,7 +69,7 @@ export class TableLayout extends React.Component {
   renderRowAxisCell(axisIndex, cellData, cellDataKey, rowData, rowIndex, columnData, width) {
     if ('Q' == axisIndex) {
       let name = getAccessorName(this.props.axes.row[rowIndex].field)
-      return Axis({orient: 'left', domain: this.props.domains[name], name, height: this.props.rowHeight, width: width})
+      return Axis({orient: 'left', scale: this.props.scales.row[name], name, height: this.props.rowHeight, width: width})
     }
     return div({className: "table-row-label"}, this.props.axes.row[rowIndex].key[axisIndex])
   }
@@ -78,23 +79,33 @@ export class TableLayout extends React.Component {
   }
 
   renderColHeaderCell(label, colIndex, columnData, rowData, width) {
-    return div({}, _.map(columnData.key, name => div({}, name)))
+    return div({}, _.map(columnData.key, name => div({key: name}, name)))
   }
 
   renderFooterCell(label, colIndex, columnData, rowData, width) {
     let name   = getAccessorName(columnData.field)
-    return Axis({domain: this.props.domains[name], name, height: this.props.footerHeight, width: width})
+    return Axis({scale: this.props.scales.col[name], name, height: this.props.footerHeight, width: width})
   }
 
   renderVisualizationCell(cellData, cellDataKey, rowData, rowIndex, columnData, width) {
-    return div({}, cellData)
+    if(null == cellData) return div({})
+    return Pane({
+      markType: this.props.visualspec.table.type,
+      paneData: _.at(this.props.result, cellData),
+      rowAxis:  this.props.axes.row[rowIndex],
+      colAxis:  columnData,
+      width: this.props.colWidth,
+      height: this.props.rowHeight,
+      fieldScales: this.props.fieldScales,
+      scales: this.props.scales
+    })
   }
 
   render() {
     const { renderTable, width, height,
             rowHeight, rowsCount, headerHeight, footerHeight,
-            error, data, queryspec, axes } = this.props
-    if (!renderTable || error || queryspec == null || data == null) {
+            error, result, queryspec, axes } = this.props
+    if (!renderTable || error || queryspec == null || result == null) {
       return div({}, `${error ? "Error: " : ""}No Chart`)
     }
     else {

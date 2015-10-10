@@ -4,6 +4,10 @@ export const AGGREGATES = [
   { id: "agg_count", name: "COUNT" , type: "aggregate" , op: "count" }
 ]
 
+export function getAccessorName(field) {
+  return field.func ? `${_.contains(field.func, 'bin') ? 'bin' : field.func}_${field.name}` : field.op ? field.op : field.name
+}
+
 export function getFieldType(field) {
   let type = field.typecast != null ? field.typecast : field.type
   return getExternalType(type)
@@ -16,6 +20,27 @@ export function getAlgebraType(field) {
   default:
     return 'Q'
   }
+}
+
+export function getFieldQueryType(field) {
+  if ('text' == getFieldType(field)
+      || _.contains(field.func, "bin")
+      || _.contains(['year', 'month', 'day', 'date', 'hour', 'minute', 'second'], field.func)) {
+    return 'groupby'
+  }
+  else if ('aggregate' == field.type) {
+    return 'operator'
+  }
+  else if (field.func && _.contains(['count', 'sum', 'min', 'max', 'mean', 'median'], field.func.toLowerCase())) {
+    return 'aggregate'
+  }
+  else {
+    return 'value'
+  }
+}
+
+export function isAggregateType(field) {
+  return _.contains(['operator', 'aggregate'], getFieldQueryType(field))
 }
 
 export function getExternalType(type) {

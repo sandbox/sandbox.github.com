@@ -5,8 +5,7 @@ export const TABLE_ENCODINGS = {
       className: "fa fa-bar-chart"}],
     properties: ['size',
                  'color',
-                 'opacity',
-                 'orientation'] },
+                 'opacity'] },
   line:  {
     name: "Line",
     icon: [{

@@ -1,46 +1,31 @@
 import _ from 'lodash'
 import dl from 'datalib'
-import { getFieldType, getBinStepUnit, getBinStep } from '../helpers/field'
+import { getFieldType, getBinStepUnit, getBinStep, getFieldQueryType } from '../helpers/field'
 import { prepareAxes } from './axis'
 import { partitionPaneData } from './pane'
-import { calculateDomains } from './domain'
-
-function getFieldQueryType(field) {
-  if ('text' == getFieldType(field)
-      || _.contains(field.func, "bin")
-      || _.contains(['year', 'month', 'day', 'date', 'hour', 'minute', 'second'], field.func)) {
-    return 'groupby'
-  }
-  else if ('aggregate' == field.type) {
-    return 'operator'
-  }
-  else if (field.func && _.contains(['count', 'sum', 'min', 'max', 'mean', 'median'], field.func.toLowerCase())) {
-    return 'aggregate'
-  }
-  else {
-    return 'value'
-  }
-}
+import { calculateDomains, calculateVisualDomains } from '../data/domain'
 
 function getGroupByName(data, field) {
   if (_.contains(field.func, 'bin')) {
     if ('time' == getFieldType(field)) {
       let b = dl.bins.date({
         type: 'date',
-        maxbins: 1000,
+        maxbins: 100,
         unit: getBinStepUnit(field.func)
       })
       b.step = getBinStep(field.func)
       let func = dl.$func('bin', x => b.value(b.unit.unit(x)))(dl.$(field.name))
       func.step = b.step
+      field.binner = func
       return func
     }
     else {
       let accessor = dl.$(field.name)
       let [min, max] = dl.extent(data, accessor)
-      let b = dl.bins({maxbins: 1000, min, max})
+      let b = dl.bins({maxbins: 100, min, max})
       let func = dl.$func('bin', x => b.value(x))(accessor)
       func.step = b.step
+      field.binner = func
       return func
     }
   }
@@ -59,7 +44,7 @@ function translateTableQuery(queryspec, data) {
   let summarize = _.merge(
     _(aggregate).groupBy('name').mapValues(fields => _.map(fields, 'func')).value(),
     operator ? { '*': operator.map(field => field.op) } : {},
-    value ? { '*': ['values'] } : {},
+    { '*': ['values'] },
     (a, b) => { if (_.isArray(a)) { return a.concat(b) } })
 
   return {
@@ -76,11 +61,12 @@ export function performQuery(query, data) {
   return dl.groupby(query.groupby).summarize(query.summarize).execute(data)
 }
 
-export function requestQuery(queryspec, datasource) {
+export function requestQuery(tableType, queryspec, datasource) {
   let query = translateTableQuery(queryspec, datasource)
-  let data = performQuery(query, datasource)
-  let domains = calculateDomains(data, _(queryspec).map(fields => fields).flatten().value())
-  let { axes, nest } = query ? prepareAxes(queryspec, query, data) : {}
-  let panes = query ? partitionPaneData(axes, nest, data) : {}
-  return { query, queryspec, data, axes, domains, panes }
+  let result = performQuery(query, datasource)
+  let { axes, nest } = query ? prepareAxes(queryspec, query, result) : {}
+  let panes = query ? partitionPaneData(axes, nest, result) : {}
+  let domainFields = _(queryspec).map(fields => fields).flatten().value()
+  let domains = calculateDomains(tableType, result, panes, domainFields)
+  return { query, queryspec, result, axes, domains, panes }
 }

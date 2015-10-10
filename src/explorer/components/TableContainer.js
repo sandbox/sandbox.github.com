@@ -2,6 +2,7 @@ import className from 'classnames'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { TableLayout } from './TableLayout'
+import { calculateScales } from '../data/scale'
 import Scrollbar from 'fixed-data-table/internal/Scrollbar.react'
 
 const { findDOMNode } = ReactDOM
@@ -18,7 +19,7 @@ export class TableContainer extends React.Component {
       headerHeight: Math.max(axes.row[0].key.length > 0 ? 30 : 0, axes.col[0].key.length * 30),
       footerHeight: axes.col[0].field ? 60 : 0,
       fixedQuantAxisWidth: 120,
-      fixedOrdinalAxisWidth: 100
+      fixedOrdinalAxisWidth: 200
     }
     return _.extend(result, {
       bodyHeight: result.rowsCount * result.rowHeight,
@@ -28,9 +29,10 @@ export class TableContainer extends React.Component {
   }
 
   render() {
-    let { axes } = this.props
+    let { domains, axes, queryspec, visualspec } = this.props
     let tableSettings = this.getTableSettings(axes)
-    return <TableResizeWrapper {...tableSettings} {...this.props} />
+    let { scales, fieldScales } = calculateScales(domains, queryspec, visualspec, tableSettings)
+    return <TableResizeWrapper {...tableSettings} {...this.props} {...{scales, fieldScales}}/>
   }
 }
 

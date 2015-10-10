@@ -1,6 +1,7 @@
 import dl from 'datalib'
 import _ from 'lodash'
 import { calculateNest, partitionNestKey } from './nest'
+import { getAccessorName } from '../helpers/field'
 
 class Axis {
   constructor(ordinals = [], field = null) {
@@ -15,6 +16,10 @@ class Axis {
   hasQuantitativeField() {
     return null != this.field
   }
+  hasField(field) {
+    let name = getAccessorName(field)
+    return _.contains(this.key, name) || this.fieldAccessor() == name
+  }
   map(f) {
     let result = []
     for(let i=0, len=this.ordinals.length; i < len; i++) {
@@ -25,6 +30,9 @@ class Axis {
   }
   label() {
     return `${this.key.join(' ')}${this.field ? ` ${this.field.name}` : ''}`
+  }
+  fieldAccessor() {
+    return this.field ? getAccessorName(this.field) : null
   }
 }
 

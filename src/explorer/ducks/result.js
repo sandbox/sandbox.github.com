@@ -25,11 +25,11 @@ export function receiveResultData(key, response, error=false) {
   }, response)
 }
 
-export function fetchQueryData(datasources, queryspec) {
+export function fetchQueryData(datasources, queryspec, tableType) {
   return new Promise((resolve, reject) => {
     let datasource = getDatasource(datasources.BY_ID, datasources.selectedTable)
     if (datasource.data) {
-      setTimeout(() => resolve(local.requestQuery(queryspec, datasource.data)), 0)
+      setTimeout(() => resolve(local.requestQuery(tableType, queryspec, datasource.data)), 0)
     }
     else {
       reject(Error(`Querying adapter not defined for protocol: ${datasource.protocol}`))
@@ -37,10 +37,10 @@ export function fetchQueryData(datasources, queryspec) {
   })
 }
 
-export function runQuery(datasources, key, queryspec) {
+export function runQuery(datasources, key, queryspec, tableType) {
   return (dispatch, getState) => {
     dispatch(requestResultData(key))
-    return fetchQueryData(datasources, queryspec).then(
+    return fetchQueryData(datasources, queryspec, tableType).then(
       response => {
         dispatch(receiveResultData(key, response))
       }).catch(error => {
@@ -57,7 +57,7 @@ export function runCurrentQueryIfNecessary() {
     let key = makeQueryKey(usableQueryspec)
     let queryResponse = result[key]
     if (queryResponse == null || (!queryResponse.isLoading && !queryResponse.error && queryResponse.data == null)) {
-      dispatch(runQuery(datasources, key, usableQueryspec))
+      dispatch(runQuery(datasources, key, usableQueryspec, visualspec.table.type))
     }
   }
 }
@@ -71,9 +71,17 @@ export default function reducer(state = resultState, action) {
     return _.extend({}, state, { [action.key] : { isLoading: true } })
   case RECEIVE_RESULT_DATA:
     return _.extend({}, state, {
-      [action.key]: _.extend({
-        isLoading: false
-      }, _.omit(action, 'type') )})
+      [action.key]: {
+        isLoading: false,
+        axes: action.axes,
+        domains: action.domains,
+        error: action.error,
+        key: action.key,
+        query: action.query,
+        queryspec: action.queryspec,
+        panes: action.panes,
+        result: action.result
+      }})
   default:
     return state
   }
