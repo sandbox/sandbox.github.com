@@ -58,7 +58,8 @@
 }
 
 .public_fixedDataTable_header .public_fixedDataTableCell_main {
-  text-align: center;
+  text-align: left;
+  @include overflow-ellipsis;
 }
 
 .public_fixedDataTable_header [data-reactid$=fixed_cells] .public_fixedDataTableCell_main {
@@ -67,4 +68,5 @@
 
 .public_fixedDataTableCell_main:not(.public_fixedDataTableCell_axis) .table-row-label.public_fixedDataTableCell_cellContent {
   text-align: right;
+  @include overflow-ellipsis;
 }
