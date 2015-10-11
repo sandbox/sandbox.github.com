@@ -52,8 +52,8 @@ function traverseNestTree(nest, rowLevels, colLevels, level, rowSoFar, colSoFar,
       let k = keys[i]
       traverseNestTree(
         nest[k], rowLevels, colLevels, level + 1,
-        level <  rowLevels.length ? rowSoFar.concat([{ name: rowLevels[level].name, key: k, algebraType: 'O' }]) : rowSoFar,
-        level >= rowLevels.length ? colSoFar.concat([{ name: colLevels[level - rowLevels.length].name, key: k, algebraType: 'O' }]) : colSoFar,
+        level <  rowLevels.length ? rowSoFar.concat([{ key: k, field: rowLevels[level] }]) : rowSoFar,
+        level >= rowLevels.length ? colSoFar.concat([{ key: k, field: colLevels[level - rowLevels.length] }]) : colSoFar,
         seen, result)
     }
   }

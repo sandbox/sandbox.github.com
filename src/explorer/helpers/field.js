@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import dl from 'datalib'
 
 export const AGGREGATES = [
   { id: "agg_count", name: "COUNT" , type: "aggregate" , op: "count" }
@@ -41,6 +42,18 @@ export function getFieldQueryType(field) {
 
 export function isAggregateType(field) {
   return _.contains(['operator', 'aggregate'], getFieldQueryType(field))
+}
+
+export function isGroupByField(field) {
+  return 'groupby' == getFieldQueryType(field)
+}
+
+export function isStackableField(field) {
+  return field && ('aggregate' == field.type || field.func && _.contains(['sum', 'count'], field.func.toLowerCase()))
+}
+
+export function isBinField(field) {
+  return field && field.func && _.contains(field.func, "bin")
 }
 
 export function getExternalType(type) {
@@ -122,5 +135,37 @@ export function getBinStep(func) {
   case "bin[10Y]": return 10
   default:
     return 1
+  }
+}
+
+export function getFieldGroupByName(data, field) {
+  if (_.contains(field.func, 'bin')) {
+    if ('time' == getFieldType(field)) {
+      let b = dl.bins.date({
+        type: 'date',
+        maxbins: 100,
+        unit: getBinStepUnit(field.func)
+      })
+      b.step = getBinStep(field.func)
+      let func = dl.$func('bin', x => b.value(b.unit.unit(x)))(dl.$(field.name))
+      func.step = b.step
+      field.binner = func
+      return func
+    }
+    else {
+      let accessor = dl.$(field.name)
+      let [min, max] = dl.extent(data, accessor)
+      let b = dl.bins({maxbins: 100, min, max})
+      let func = dl.$func('bin', x => b.value(x))(accessor)
+      func.step = b.step
+      field.binner = func
+      return func
+    }
+  }
+  else if (_.contains(['year', 'month', 'day', 'date', 'hour', 'minute', 'second'], field.func)) {
+    return dl[`$${field.func}`](field.name)
+  }
+  else {
+    return field.name
   }
 }

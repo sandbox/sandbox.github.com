@@ -1,7 +1,7 @@
 import d3 from 'd3'
 import _ from 'lodash'
 import React from 'react'
-import { getAccessorName, isAggregateType } from '../../../helpers/field'
+import { getAccessorName, isStackableField, isAggregateType } from '../../../helpers/field'
 const { div, svg } = React.DOM
 const ZERO = d => 0
 function cumsum(array, sum_fn = _.identity) {
@@ -54,15 +54,22 @@ export default class Bar extends React.Component {
     const { markData, width, height } = this.props
     const { field, scale, shelf } = props
     const name = getAccessorName(field)
+    const isStackable = isStackableField(field)
     const isAggregate = isAggregateType(field)
     const isBin = _.contains(field.func, 'bin')
 
     switch(shelf) {
     case 'row':
-      if (isAggregate) {
+      if (isStackable) {
         let stacked = stackLayout(markData, name, binField)
         return {
           y:      (d, i) => scale(d[name]) + scale(stacked(d, i)) - height,
+          height: (d) => height - scale(d[name])
+        }
+      }
+      else if (isAggregate) {
+        return {
+          y:      (d, i) => scale(d[name]),
           height: (d) => height - scale(d[name])
         }
       }
@@ -80,10 +87,15 @@ export default class Bar extends React.Component {
         }
       }
     case 'col':
-      if (isAggregate) {
+      if (isStackable) {
         let stacked = stackLayout(markData, name, binField)
         return {
           x:     (d, i) => scale(stacked(d, i)),
+          width: (d) => scale(d[name])
+        }
+      }
+      else if (isAggregate) {
+        return {
           width: (d) => scale(d[name])
         }
       }

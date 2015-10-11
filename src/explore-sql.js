@@ -204,6 +204,14 @@ store.dispatch(connectTableIfNecessary({datasource_id: 0})).then(
       "tableId": {
         id: 0, name: "Birdstrikes"
       },
+      "fieldId": 12,
+      "func": "sum"
+    }))
+
+    store.dispatch(queryspec.addField('col', {
+      "tableId": {
+        id: 0, name: "Birdstrikes"
+      },
       "fieldId": 9
     }))
 
@@ -212,6 +220,22 @@ store.dispatch(connectTableIfNecessary({datasource_id: 0})).then(
         id: 0, name: "Birdstrikes"
       },
       "fieldId": 4
+    }))
+
+    store.dispatch(queryspec.addField('row', {
+      "tableId": {
+        id: 0, name: "Birdstrikes"
+      },
+      "fieldId": 13,
+      "func": "bin"
+    }))
+
+    store.dispatch(queryspec.addField('row', {
+      "tableId": {
+        id: 0, name: "Birdstrikes"
+      },
+      "fieldId": 11,
+      "func": "bin"
     }))
 
     store.dispatch(queryspec.addField('color', {

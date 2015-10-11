@@ -36,7 +36,7 @@ function axisTickVerticalLabelShift(d) {
 export class Axis extends React.Component {
   _d3Axis() {
     let { orient, scale } = this.props
-    return d3.svg.axis().scale(this.props.scale).orient(orient).ticks(5)
+    return d3.svg.axis().scale(scale).orient(orient).ticks(5)
   }
 
   _d3Render() {

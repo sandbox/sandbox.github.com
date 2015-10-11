@@ -68,7 +68,7 @@ export class TableLayout extends React.Component {
 
   renderRowAxisCell(axisIndex, cellData, cellDataKey, rowData, rowIndex, columnData, width) {
     if ('Q' == axisIndex) {
-      let name = getAccessorName(this.props.axes.row[rowIndex].field)
+      let name = this.props.axes.row[rowIndex].field.accessor
       return Axis({orient: 'left', scale: this.props.scales.row[name], name, height: this.props.rowHeight, width: width})
     }
     return div({className: "table-row-label"}, this.props.axes.row[rowIndex].key[axisIndex])
@@ -91,7 +91,7 @@ export class TableLayout extends React.Component {
     if(null == cellData) return div({})
     return Pane({
       markType: this.props.visualspec.table.type,
-      paneData: _.at(this.props.result, cellData),
+      paneData: cellData,
       rowAxis:  this.props.axes.row[rowIndex],
       colAxis:  columnData,
       width: this.props.colWidth,

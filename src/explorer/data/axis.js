@@ -1,6 +1,7 @@
 import dl from 'datalib'
 import _ from 'lodash'
 import { calculateNest, partitionNestKey } from './nest'
+import { QuantitativeAggregator } from './domain'
 import { getAccessorName } from '../helpers/field'
 
 class Axis {
@@ -23,7 +24,7 @@ class Axis {
   map(f) {
     let result = []
     for(let i=0, len=this.ordinals.length; i < len; i++) {
-      result.push(f(this.ordinals[i], i))
+      result.push(f(this.ordinals[i].field, i))
     }
     if (null != this.field) result.push(f(this.field, 'Q'))
     return result
@@ -34,10 +35,29 @@ class Axis {
   fieldAccessor() {
     return this.field ? getAccessorName(this.field) : null
   }
+  addDomainValue(value) {
+    if (this.field && null == this.domain) {
+      this.domain = new QuantitativeAggregator()
+    }
+    if (null != this.domain) {
+      this.domain.add(value)
+    }
+    return this
+  }
+  getDomain() {
+    if (null == this.domain) return {}
+    return this.domain.result()
+  }
+}
+
+function setAxisIndex(axis) {
+  for(let i = 0, len = axis.length; i < len; i++) {
+    axis[i].index = i
+  }
 }
 
 // nest ordinal fields then cross with concat-quantitative fields to build the axis
-export function prepareAxes(queryspec, query, data) {
+export function prepareAxes(queryspec, data) {
   let shelves   = _(queryspec).mapValues(fields => _.groupBy(fields, 'algebraType')).value()
   let accessors = _(shelves).pick('row', 'col').map((shelf) => _.map(shelf.O, 'name')).flatten().map(dl.$).value()
   let nest      = _.isEmpty(accessors) ? {} : calculateNest(data, (datum) => _.map(accessors, f => f(datum)))
@@ -46,7 +66,7 @@ export function prepareAxes(queryspec, query, data) {
   let ordinalAxesKeys  = _.mapValues(
     partitionNestKey(nest, rowLevels, colLevels),
     (axis, shelf) => {
-      axis = _.sortByAll(axis, ..._.times('row' == shelf ? rowLevels.length : colLevels.length, i => `${i}.key`))
+      axis = _.sortByAll(axis, _.times('row' == shelf ? rowLevels.length : colLevels.length, i => `${i}.key`))
       return _.isEmpty(axis) ? [ new Axis() ] : _.map(axis, ordinals => new Axis(ordinals))
     })
 
@@ -56,5 +76,7 @@ export function prepareAxes(queryspec, query, data) {
     return _(axis).map(ordinalAxis => _.map(qfields, field => ordinalAxis.cross(field))).flatten().value()
   })
 
+  setAxisIndex(axes.row)
+  setAxisIndex(axes.col)
   return { axes, nest }
 }

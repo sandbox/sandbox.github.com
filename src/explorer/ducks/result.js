@@ -2,6 +2,7 @@ import u from 'updeep'
 import { getField, getTable, getDatasource } from './datasources'
 import { getFullQueryspec } from './queryspec'
 import * as local from '../data/local'
+import { calculateScales } from '../data/scale'
 
 export const RECEIVE_RESULT_DATA = 'explorer/result/RECEIVE_RESULT_DATA'
 export const REQUEST_RESULT_DATA = 'explorer/result/REQUEST_RESULT_DATA'
@@ -37,12 +38,13 @@ export function fetchQueryData(datasources, queryspec, tableType) {
   })
 }
 
-export function runQuery(datasources, key, queryspec, tableType) {
+export function runQuery(datasources, key, queryspec, visualspec) {
   return (dispatch, getState) => {
     dispatch(requestResultData(key))
-    return fetchQueryData(datasources, queryspec, tableType).then(
+    return fetchQueryData(datasources, queryspec, visualspec.table.type).then(
       response => {
-        dispatch(receiveResultData(key, response))
+        let { scales, fieldScales } = calculateScales(response.domains, response.queryspec, visualspec)
+        dispatch(receiveResultData(key, _.extend(response, {scales, fieldScales})))
       }).catch(error => {
         dispatch(receiveResultData(key, null, true))
         console.log('Fetch query data failed', error, error.stack)
@@ -57,7 +59,7 @@ export function runCurrentQueryIfNecessary() {
     let key = makeQueryKey(usableQueryspec)
     let queryResponse = result[key]
     if (queryResponse == null || (!queryResponse.isLoading && !queryResponse.error && queryResponse.data == null)) {
-      dispatch(runQuery(datasources, key, usableQueryspec, visualspec.table.type))
+      dispatch(runQuery(datasources, key, usableQueryspec, visualspec))
     }
   }
 }
@@ -80,6 +82,8 @@ export default function reducer(state = resultState, action) {
         query: action.query,
         queryspec: action.queryspec,
         panes: action.panes,
+        scales: action.scales,
+        fieldScales: action.fieldScales,
         result: action.result
       }})
   default:

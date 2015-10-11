@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import u from 'updeep'
-import { getAlgebraType } from '../helpers/field'
+import { getAlgebraType, getAccessorName } from '../helpers/field'
 import { TABLE_ENCODINGS } from '../helpers/table'
 
 function getValidShelves(tableType) {
@@ -15,7 +15,10 @@ export function getFullQueryspec(getField, queryspec, tableType) {
                      return _({}).merge(
                        field,
                        field.fieldId != null ? getField(field.fieldId) : null
-                     ).tap(o => _.merge(o, {algebraType: getAlgebraType(o)})).value()
+                     ).tap(o => _.merge(o, {
+                       algebraType: getAlgebraType(o),
+                       accessor: getAccessorName(o)
+                     })).value()
                    })
     }).pick(getValidShelves(tableType)).omit(_.isEmpty).value()
 }

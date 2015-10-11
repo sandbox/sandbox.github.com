@@ -17,12 +17,11 @@ function getQuantitativeVisualRange(shelf, spec) {
   return [spec.scaleRangeMin, spec.scaleRangeMax]
 }
 
-function getQuantitativeScale(domain, orient, height, width, zero) {
+function getQuantitativeScale(domain, orient, zero) {
   let space = (domain.max - domain.min) / 50
   let min = zero ? Math.min(0, domain.min) : domain.min - space
   let max = (zero ? Math.max(0, domain.max) : domain.max) + space
-  let range = 'row' == orient ? [ height, 0 ] : [ 0, width ]
-  return d3.scale.linear().domain([min, max]).range(range)
+  return d3.scale.linear().domain([min, max])
 }
 
 function getVisualScale(algebraType, shelf, domain, spec) {
@@ -31,9 +30,8 @@ function getVisualScale(algebraType, shelf, domain, spec) {
   return d3.scale[scaleType]().domain(domain).range(rangeFn(shelf, spec))
 }
 
-export function calculateScales(domains, queryspec, visualspec, tableSettings) {
+export function calculateScales(domains, queryspec, visualspec) {
   let validProperties = TABLE_ENCODINGS[visualspec.table.type].properties
-  let { rowHeight: height, colWidth: width } = tableSettings
 
   let scales = _(queryspec).pick(['row', 'col']).mapValues(
     (fields, shelf) => {
@@ -41,7 +39,7 @@ export function calculateScales(domains, queryspec, visualspec, tableSettings) {
         if ('Q' == field.algebraType) {
           let name = getAccessorName(field)
           let zero = isAggregateType(field)
-          acc[name] = getQuantitativeScale(domains[name], shelf, height, width, zero)
+          acc[name] = getQuantitativeScale(domains[name], shelf, zero)
         }
         return acc
       }, {})

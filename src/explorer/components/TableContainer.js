@@ -29,10 +29,11 @@ export class TableContainer extends React.Component {
   }
 
   render() {
-    let { domains, axes, queryspec, visualspec } = this.props
+    let { axes } = this.props
     let tableSettings = this.getTableSettings(axes)
-    let { scales, fieldScales } = calculateScales(domains, queryspec, visualspec, tableSettings)
-    return <TableResizeWrapper {...tableSettings} {...this.props} {...{scales, fieldScales}}/>
+    _.each(this.props.scales && this.props.scales.row, (scale) => scale.range([tableSettings.rowHeight, 0]))
+    _.each(this.props.scales && this.props.scales.col, (scale) => scale.range([0, tableSettings.colWidth]))
+    return <TableResizeWrapper {...tableSettings} {...this.props} />
   }
 }
 

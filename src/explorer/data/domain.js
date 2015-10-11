@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { getAccessorName, isAggregateType } from '../helpers/field'
 
-class QuantitativeAggregator {
+export class QuantitativeAggregator {
   constructor() {
     this._result = {min: Number.POSITIVE_INFINITY, max: Number.NEGATIVE_INFINITY}
   }
@@ -12,51 +12,23 @@ class QuantitativeAggregator {
     if(value > this._result.max) {
       this._result.max = value
     }
+    return this
   }
   result() {
     return this._result
   }
-  flush() {}
-}
-
-class StackAggregator extends QuantitativeAggregator {
-  constructor() {
-    super(...arguments)
-    this.accumulator = 0
-  }
-  add(value) {
-    this.accumulator += value
-  }
   flush() {
-    super.add(this.accumulator)
-    this.accumulator = 0
+    return this
   }
 }
 
-class BinStackAggregator extends QuantitativeAggregator {
-  constructor() {
-    super(...arguments)
-    this.accumulator = {}
-  }
-  add(value, key) {
-    if (null == this.accumulator[key]) this.accumulator[key] = 0
-    this.accumulator[key] += value
-  }
-  flush() {
-    let values = _.values(this.accumulator)
-    for(let i = 0, len = values.length; i < len; i++) {
-      super.add(values[i])
-    }
-    this.accumulator = {}
-  }
-}
-
-class OrdinalAggregator {
+export class OrdinalAggregator {
   constructor() {
     this._result = {}
   }
   add(value) {
     this._result[value] = true
+    return this
   }
   result() {
     let result = []
@@ -65,17 +37,18 @@ class OrdinalAggregator {
     }
     return result.sort()
   }
-  flush() {}
+  flush() {
+    return this
+  }
 }
 
-function aggregateDatum(aggregator, datum, key, binKey) {
-  let binDatum = datum[binKey]
+function aggregateDatum(aggregator, datum, key) {
   if (null != datum[key]) {
-    aggregator.add(datum[key], binDatum)
+    aggregator.add(datum[key])
   }
   else if (null != datum.values) {
     for(let i = 0, len = datum.values.length; i < len; i++) {
-      aggregator.add(datum.values[i][key], binDatum)
+      aggregator.add(datum.values[i][key])
     }
   }
   else {
@@ -83,35 +56,37 @@ function aggregateDatum(aggregator, datum, key, binKey) {
   }
 }
 
-export function calculateDomains(tableType, data, panes, fields) {
+function aggregateAxes(domains, axes) {
+  for (let i = 0, len = axes.length; i < len; i++) {
+    let axis = axes[i]
+    if (null == axis.domain) continue
+    let domain = axis.getDomain()
+    domains[axis.field.accessor].add(domain.min).add(domain.max)
+  }
+}
+
+const AGGREGATOR = {
+  'Q' : QuantitativeAggregator,
+  'O' : OrdinalAggregator
+}
+
+export function calculateDomains(data, fields, axes) {
   let domains = {}
   if (data == null) return domains
-  let binField = _.find(fields, f => null != f.binner)
 
   for (let i = 0, len = fields.length; i < len; i++) {
     let field = fields[i]
-    let accessor = getAccessorName(field)
-    if (domains[accessor]) continue
-    domains[accessor] = ('O' == field.algebraType) ? new OrdinalAggregator() :
-      isAggregateType(field) ? (
-        binField ? new BinStackAggregator() : new StackAggregator()) :
-      new QuantitativeAggregator()
+    if (domains[field.accessor]) continue
+    domains[field.accessor] = new AGGREGATOR[field.algebraType]()
   }
 
-  let binKey = binField ? getAccessorName(binField) : null
-  for (let r = 0, rkeys = Object.keys(panes), rlen = rkeys.length, keys = Object.keys(domains), klen=keys.length; r < rlen; r++) {
-    let rkey = rkeys[r]
-    for (let c = 0, ckeys = Object.keys(panes[rkey]), clen = ckeys.length; c < clen; c++) {
-      let ckey = ckeys[c]
-      let paneDataIndices = panes[rkey][ckey]
-      for (let k = 0; k < klen; k++) {
-        let key = keys[k]
-        let domain = domains[key]
-        for (let i = 0, len = paneDataIndices.length; i < len; i++) {
-          aggregateDatum(domain, data[paneDataIndices[i]], key, binKey)
-        }
-        domain.flush()
-      }
+  aggregateAxes(domains, axes.row)
+  aggregateAxes(domains, axes.col)
+  for (let i = 0, keys = Object.keys(domains), len = data.length, klen = keys.length; i < len; i++) {
+    let datum = data[i]
+    for (let k = 0; k < klen; k++) {
+      let key = keys[k]
+      aggregateDatum(domains[key], datum, key)
     }
   }
 
