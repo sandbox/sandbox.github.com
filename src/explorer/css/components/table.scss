@@ -23,6 +23,7 @@
 .public_fixedDataTableRow_main.public_fixedDataTable_hasBottomBorder [data-reactid$=fixed_cells] .public_fixedDataTableCell_main,
 .public_fixedDataTableRow_main .public_fixedDataTableCell_axis.public_fixedDataTableCell_main,
 .table-no-footer .public_fixedDataTableRow_main .public_fixedDataTableCell_main,
+.table-row-bottom-border .public_fixedDataTableRow_main .public_fixedDataTableCell_main
 {
   border-bottom-style: solid;
   border-bottom-width: 1px;
@@ -55,6 +56,11 @@
   border-left: none;
   border-right: none;
   border-top: none;
+}
+
+.public_fixedDataTable_footer .public_fixedDataTableRow_fixedColumnsDivider,
+.public_fixedDataTable_footer .fixedDataTableCellLayout_main.public_fixedDataTableCell_main {
+  border-bottom: none;
 }
 
 .public_fixedDataTable_header .public_fixedDataTableCell_main {

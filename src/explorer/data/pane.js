@@ -60,15 +60,19 @@ class PaneData {
     let isStackable = 'bar' == tableType || 'area' == tableType
     let groupAxis = isBinField(this.axis.row.field) ? this.axis.row :
         isBinField(this.axis.col.field) ? this.axis.col : null
-    let stackAxis = isStackableField(this.axis.row.field) ? this.axis.row :
-        isStackableField(this.axis.col.field) ? this.axis.col : null
-    let domainData = isStackable && groupAxis && stackAxis ?
-        dl.groupby([groupAxis.field.accessor]).summarize({
-          [stackAxis.field.accessor]: 'sum'
-        }).execute(this.markData) : null
+    let stackAxes = _.filter([
+      isStackableField(this.axis.row.field) ? this.axis.row : null,
+      isStackableField(this.axis.col.field) ? this.axis.col : null])
+    let domainData = isStackable && stackAxes.length > 0 ?
+        (groupAxis ? dl.groupby([groupAxis.field.accessor]) : dl.groupby()).summarize(
+          _.map(stackAxes, axis => { return { name: axis.field.accessor, ops: ['sum'] } })
+          ).execute(this.markData) : null
     if (domainData) {
       for (let i = 0, len = domainData.length; i < len; i++) {
-        stackAxis.addDomainValue(domainData[i][`sum_${stackAxis.field.accessor}`])
+        for (let s = 0, slen = stackAxes.length; s < slen; s++) {
+          let stackAxis = stackAxes[s]
+          stackAxis.addDomainValue(domainData[i][`sum_${stackAxis.field.accessor}`])
+        }
       }
     }
     return this

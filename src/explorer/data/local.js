@@ -19,10 +19,9 @@ export function requestQuery(tableType, queryspec, datasource) {
   aggregatePanes(
     panes, tableType,
     _(queryspec).omit('row', 'col').omit(_.isEmpty).values().flatten().value(),
-    _(queryspec).pick('row', 'col').omit(_.isEmpty).values().flatten().filter(
-      field => 'Q' == field.algebraType && isGroupByField(field)
-    ).size() > 1
-  )
+    _(queryspec).pick('row', 'col').omit(_.isEmpty).mapValues(
+      fields => _(fields).where({algebraType: 'Q'}).size()
+    ).values().flatten().max() > 1)
   let domains = calculateDomains(result, _(queryspec).values().flatten().value(), axes)
   return { query, queryspec, result, axes, domains, panes }
 }

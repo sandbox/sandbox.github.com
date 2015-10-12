@@ -26,7 +26,6 @@ export class TableLayout extends React.Component {
   }
 
   getFixedColumns(axis, props) {
-    let hasQuantitativeField = axis.hasQuantitativeField()
     return axis.map((field, r) => {
       let isOrdinal = 'O' == field.algebraType
       return Column({
@@ -35,7 +34,7 @@ export class TableLayout extends React.Component {
         columnData: field,
         label: isOrdinal ? field.name : '',
         width: isOrdinal ? props.fixedOrdinalAxisWidth : props.fixedQuantAxisWidth,
-        cellClassName: hasQuantitativeField ? 'public_fixedDataTableCell_axis' : '',
+        cellClassName: this.props.hasRowNumericAxes ? 'public_fixedDataTableCell_axis' : '',
         cellDataGetter: this.getRowAxisCell,
         headerRenderer: this.renderRowHeaderCell,
         cellRenderer: this.renderRowAxisCell.bind(this, r),

@@ -14,8 +14,9 @@ export class TableContainer extends React.Component {
     if (null == axes) return {}
     let result = {
       rowsCount:    axes.row.length,
-      rowHeight:    axes.row[0].field ? 400 : 30,
-      colWidth:     axes.col[0].field ? 400 : 100,
+      hasRowNumericAxes: !!axes.row[0].field,
+      rowHeight:    axes.row[0].field ? 300 : 30,
+      colWidth:     axes.col[0].field ? 300 : axes.row[0].field ? 60 : 100,
       headerHeight: Math.max(axes.row[0].key.length > 0 ? 30 : 0, axes.col[0].key.length * 30),
       footerHeight: axes.col[0].field ? 60 : 0,
       fixedQuantAxisWidth: 120,
@@ -82,7 +83,8 @@ export class TableResizeWrapper extends React.Component {
   render() {
     return div({className: className("container-flex-fill", {
       'table-no-header': 0 == this.props.headerHeight,
-      'table-no-footer': 0 == this.props.footerHeight
+      'table-no-footer': 0 == this.props.footerHeight,
+      'table-row-bottom-border': this.props.hasRowNumericAxes
     })}, <TableLayout {...this.state} {...this.props} />)
   }
 }
