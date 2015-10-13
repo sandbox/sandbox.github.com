@@ -143,7 +143,7 @@ export function getFieldGroupByName(data, field) {
     if ('time' == getFieldType(field)) {
       let b = dl.bins.date({
         type: 'date',
-        maxbins: 100,
+        maxbins: 50,
         unit: getBinStepUnit(field.func)
       })
       b.step = getBinStep(field.func)
@@ -155,7 +155,7 @@ export function getFieldGroupByName(data, field) {
     else {
       let accessor = dl.$(field.name)
       let [min, max] = dl.extent(data, accessor)
-      let b = dl.bins({maxbins: 100, min, max})
+      let b = dl.bins({maxbins: 50, min, max, minstep: 'integer' == field.type ? 1 : 0})
       let func = dl.$func('bin', x => b.value(x))(accessor)
       func.step = b.step
       field.binner = func

@@ -1,7 +1,19 @@
 import className from 'classnames'
+import _ from 'lodash'
 import d3 from 'd3'
 import React from 'react'
 const { div, svg } = React.DOM
+
+function axisDiscretizeTicks(axis, format) {
+  let numTicks = axis.ticks()[0]
+  let axisScale = axis.scale()
+  let tickValues = _(axisScale.ticks(numTicks)).map(Math.floor).uniq().map((tick) => tick + 0.5).value()
+  if (_.last(tickValues) > _.last(axisScale.domain())) tickValues.pop()
+  axis
+    .tickValues(tickValues)
+    .tickSubdivide(tickValues[1] - tickValues[0] - 1)
+    .tickFormat((s) => format(Math.floor(s)))
+}
 
 function axisTickHorizontalLabelShift(d) {
   let bounds = this.getBoundingClientRect()
@@ -35,8 +47,12 @@ function axisTickVerticalLabelShift(d) {
 
 export class Axis extends React.Component {
   _d3Axis() {
-    let { orient, scale } = this.props
-    return d3.svg.axis().scale(scale).orient(orient).ticks(5)
+    let { orient, scale, field } = this.props
+    let axis = d3.svg.axis().scale(scale).orient(orient).ticks(5)
+    if('integer' == field.type && 'bin' == field.func && field.binner.step == 1) {
+      axisDiscretizeTicks(axis, d3.format("d"))
+    }
+    return axis
   }
 
   _d3Render() {

@@ -67,8 +67,9 @@ export class TableLayout extends React.Component {
 
   renderRowAxisCell(axisIndex, cellData, cellDataKey, rowData, rowIndex, columnData, width) {
     if ('Q' == axisIndex) {
-      let name = this.props.axes.row[rowIndex].field.accessor
-      return Axis({orient: 'left', scale: this.props.scales.row[name], name, height: this.props.rowHeight, width: width})
+      let field = this.props.axes.row[rowIndex].field
+      let name = field.accessor
+      return Axis({orient: 'left', scale: this.props.scales.row[name], name, field, height: this.props.rowHeight, width: width})
     }
     return div({className: "table-row-label"}, this.props.axes.row[rowIndex].key[axisIndex])
   }
@@ -82,8 +83,9 @@ export class TableLayout extends React.Component {
   }
 
   renderFooterCell(label, colIndex, columnData, rowData, width) {
-    let name   = getAccessorName(columnData.field)
-    return Axis({scale: this.props.scales.col[name], name, height: this.props.footerHeight, width: width})
+    let field = columnData.field
+    let name = field.accessor
+    return Axis({scale: this.props.scales.col[name], name, field, height: this.props.footerHeight, width: width})
   }
 
   renderVisualizationCell(cellData, cellDataKey, rowData, rowIndex, columnData, width) {
