@@ -21,13 +21,21 @@ function getQuantitativeScale(domain, orient, zero) {
   let space = (domain.max - domain.min) / 50
   let min = zero ? Math.min(0, domain.min) : domain.min - space
   let max = (zero ? Math.max(0, domain.max) : domain.max) + space
-  return d3.scale.linear().domain([min, max])
+  return {
+    type: 'linear',
+    domain: [min, max]
+  }
 }
 
 function getVisualScale(algebraType, shelf, domain, spec) {
   let scaleType = 'O' == algebraType ? 'ordinal' : 'linear'
   let rangeFn = 'O' == algebraType ? getOrdinalVisualRange : getQuantitativeVisualRange
-  return d3.scale[scaleType]().domain(domain).range(rangeFn(shelf, spec))
+  let domainFn = 'O' == algebraType ? _.identity : (x => [x.min, x.max])
+  return {
+    type: scaleType,
+    domain: domainFn(domain),
+    range: rangeFn(shelf, spec)
+  }
 }
 
 export function calculateScales(domains, queryspec, visualspec) {
@@ -59,12 +67,6 @@ export function calculateScales(domains, queryspec, visualspec) {
       {},
       _.mapValues(_.pick(visualspec.properties, validProperties), (v) => {
         return { '__default__' : v }
-      }), scales),
-    fieldScales: _(queryspec).map(
-      (fields, shelf) => {
-        return _.map(fields, (field) => {
-          return { field, shelf, scale: scales[shelf][getAccessorName(field)] }
-        })
-      }).flatten().value()
+      }), scales)
   }
 }

@@ -6,7 +6,7 @@ import { calculateScales } from '../data/scale'
 import Scrollbar from 'fixed-data-table/internal/Scrollbar.react'
 
 const { findDOMNode } = ReactDOM
-const { div } = React.DOM
+const { div, pre } = React.DOM
 const BORDER_HEIGHT = 1
 
 export class TableContainer extends React.Component {
@@ -32,8 +32,6 @@ export class TableContainer extends React.Component {
   render() {
     let { axes } = this.props
     let tableSettings = this.getTableSettings(axes)
-    _.each(this.props.scales && this.props.scales.row, (scale) => scale.range([tableSettings.rowHeight, 0]))
-    _.each(this.props.scales && this.props.scales.col, (scale) => scale.range([0, tableSettings.colWidth]))
     return <TableResizeWrapper {...tableSettings} {...this.props} />
   }
 }
@@ -81,10 +79,33 @@ export class TableResizeWrapper extends React.Component {
   }
 
   render() {
+    let visScales = _.mapValues(
+      this.props.scales,
+      (scales, shelf) => {
+        return _.mapValues(scales, (scale, key) => {
+          if ('__default__' == key) return (d) => scale['default']
+          let d3Scale = d3.scale[scale.type]().domain(scale.domain)
+          switch(shelf) {
+          case 'row':
+            return d3Scale.range([this.props.rowHeight, 0])
+          case 'col':
+            return d3Scale.range([0, this.props.colWidth])
+          default:
+            return d3Scale.range(scale.range)
+          }
+        })
+      })
+    let fieldScales = visScales ? _(this.props.queryspec).map(
+      (fields, shelf) => {
+        return _.map(fields, (field) => {
+          return { field, shelf, scale: visScales[shelf][field.accessor] }
+        })
+      }).flatten().value() : null
+
     return div({className: className("container-flex-fill", {
       'table-no-header': 0 == this.props.headerHeight,
       'table-no-footer': 0 == this.props.footerHeight,
       'table-row-bottom-border': this.props.hasRowNumericAxes
-    })}, <TableLayout {...this.state} {...this.props} />)
+    })}, <TableLayout {...this.state} {...this.props} {...{fieldScales, visScales}}/>)
   }
 }

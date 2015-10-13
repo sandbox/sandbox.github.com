@@ -2,8 +2,8 @@ import u from 'updeep'
 import { combineReducers } from 'redux'
 import { getField, getTable, getDatasource } from './datasources'
 import { getFullQueryspec } from './queryspec'
+import { updateScaleData } from './scalespec'
 import * as local from '../data/local'
-import { calculateScales } from '../data/scale'
 
 export const CHANGE_REQUEST_DATA = 'explorer/result/CHANGE_REQUEST_DATA'
 export const REQUEST_RESULT_DATA = 'explorer/result/REQUEST_RESULT_DATA'
@@ -52,11 +52,11 @@ export function runQuery(datasources, key, queryspec, visualspec) {
     dispatch(requestResultData(key))
     return fetchQueryData(datasources, queryspec, visualspec.table.type).then(
       response => {
-        let { scales, fieldScales } = calculateScales(response.domains, response.queryspec, visualspec)
-        dispatch(receiveResultData(key, _.extend(response, {scales, fieldScales})))
+        dispatch(updateScaleData(key, response.domains, response.queryspec, visualspec))
+        dispatch(receiveResultData(key, response))
       }).catch(error => {
+        console.error('Error: query error', error)
         dispatch(receiveResultData(key, null, true))
-        console.log('Fetch query data failed', error, error.stack)
       })}
 }
 
@@ -67,10 +67,13 @@ export function runCurrentQueryIfNecessary() {
     let usableQueryspec = getFullQueryspec(getTableField, queryspec, visualspec.table.type)
     let key = makeQueryKey(usableQueryspec)
     let queryResponse = result.cache[key]
-    dispatch(changeRequestData(key))
     if (queryResponse == null || (!queryResponse.isLoading && !queryResponse.error && queryResponse.result == null)) {
       dispatch(runQuery(datasources, key, usableQueryspec, visualspec))
     }
+    else if (queryResponse && !queryResponse.isLoading && queryResponse.result) {
+      dispatch(updateScaleData(key, queryResponse.domains, queryResponse.queryspec, visualspec))
+    }
+    dispatch(changeRequestData(key))
   }
 }
 
@@ -92,8 +95,6 @@ function cache(state = cacheState, action) {
         query: action.query,
         queryspec: action.queryspec,
         panes: action.panes,
-        scales: action.scales,
-        fieldScales: action.fieldScales,
         result: action.result
       }})
   default:

@@ -15,7 +15,7 @@ import FieldDragLayer from './components/FieldDragLayer'
 
 class Explorer extends React.Component {
   render() {
-    const { dispatch, result, queryspec, visualspec, sourceIds, sources, tableId } = this.props
+    const { dispatch, result, queryspec, visualspec, sourceIds, sources, tableId, scalespec } = this.props
     const { connectDropTarget, isOver, isDragging } = this.props
     const fieldActionCreators = bindActionCreators({
       removeField, clearFields,
@@ -30,6 +30,7 @@ class Explorer extends React.Component {
     const lastData = result.cache[result.render.last]
     const isLoading = currentData && currentData.isLoading
     const graphicData = isLoading ? lastData : currentData
+    const graphicScales = isLoading ? scalespec[result.render.last] : scalespec[result.render.current]
     return connectDropTarget(
       div({className: className("pane-container")},
           <FieldDragLayer showTrashCan={isOver} />,
@@ -54,7 +55,7 @@ class Explorer extends React.Component {
                   div({className: "loading-overlay", style: {display: isLoading ? "" : "none"}},
                       div({className: "loading-overlay-background"}),
                       icon({className: "fa fa-spinner fa-pulse"})),
-                  <TableContainer {...graphicData} {...{visualspec}} />)),
+                  <TableContainer {...graphicData} {...{visualspec}} {...graphicScales} />)),
           <TableVisualSpecBuilder getField={getSourceField} {...visualspec}
           {...{isDragging, queryspec, vizActionCreators, fieldActionCreators}} />
          ))
@@ -68,7 +69,8 @@ function select(state) {
     tableId: state.datasources.selectedTable,
     queryspec: state.queryspec,
     visualspec: state.visualspec,
-    result: state.result
+    result: state.result,
+    scalespec: state.scalespec
   }
 }
 

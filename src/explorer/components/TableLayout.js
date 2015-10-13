@@ -50,7 +50,13 @@ export class TableLayout extends React.Component {
         columnData: axis,
         width: props.colWidth,
         headerRenderer: this.renderColHeaderCell,
-        cellRenderer: this.renderVisualizationCell,
+        cellRenderer: this.renderVisualizationCell.bind(
+          this,
+          {
+            markType: this.props.visualspec.table.type,
+            scales: this.props.visScales,
+            fieldScales: this.props.fieldScales
+          }),
         footerRenderer: this.renderFooterCell,
         allowCellsRecycling: true
       })
@@ -69,7 +75,7 @@ export class TableLayout extends React.Component {
     if ('Q' == axisIndex) {
       let field = this.props.axes.row[rowIndex].field
       let name = field.accessor
-      return Axis({orient: 'left', scale: this.props.scales.row[name], name, field, height: this.props.rowHeight, width: width})
+      return Axis({orient: 'left', scale: this.props.visScales.row[name], name, field, height: this.props.rowHeight, width: width})
     }
     return div({className: "table-row-label"}, this.props.axes.row[rowIndex].key[axisIndex])
   }
@@ -85,20 +91,20 @@ export class TableLayout extends React.Component {
   renderFooterCell(label, colIndex, columnData, rowData, width) {
     let field = columnData.field
     let name = field.accessor
-    return Axis({scale: this.props.scales.col[name], name, field, height: this.props.footerHeight, width: width})
+    return Axis({scale: this.props.visScales.col[name], name, field, height: this.props.footerHeight, width: width})
   }
 
-  renderVisualizationCell(cellData, cellDataKey, rowData, rowIndex, columnData, width) {
+  renderVisualizationCell(visualProps, cellData, cellDataKey, rowData, rowIndex, columnData, width) {
     if(null == cellData) return div({})
     return Pane({
-      markType: this.props.visualspec.table.type,
       paneData: cellData,
       rowAxis:  this.props.axes.row[rowIndex],
       colAxis:  columnData,
       width: this.props.colWidth,
       height: this.props.rowHeight,
-      fieldScales: this.props.fieldScales,
-      scales: this.props.scales
+      markType: visualProps.markType,
+      fieldScales: visualProps.fieldScales,
+      scales: visualProps.scales
     })
   }
 
