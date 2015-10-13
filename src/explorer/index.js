@@ -4,10 +4,9 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import HTML5Backend from 'react-dnd/modules/backends/HTML5'
 import { DropTarget, DragDropContext } from 'react-dnd'
-const {div} = React.DOM
+const { div, i: icon } = React.DOM
 import { getField, selectTable, connectTableIfNecessary } from './ducks/datasources'
 import { getFullQueryspec, clearQuery, addField, removeField, clearFields, insertFieldAtPosition, replaceFieldOnShelf, moveFieldTo, moveAndReplaceField, updateFieldTypecast, updateFieldFunction } from './ducks/queryspec'
-import { makeQueryKey } from './ducks/result'
 import { setTableEncoding, setPropertySetting } from './ducks/visualspec'
 import { DataSourceSelect, TableSchema } from './components/DataSource'
 import { TableLayoutSpecBuilder, TableVisualSpecBuilder } from './components/TableSpecBuilder'
@@ -27,7 +26,10 @@ class Explorer extends React.Component {
     const getSourceField = _.curry(getField)(sources)
     const getTableField = _.curry(getField)(sources, tableId)
     const vizActionCreators = bindActionCreators({ setTableEncoding, setPropertySetting }, dispatch)
-    const graphicData = result[makeQueryKey(getFullQueryspec(getTableField, queryspec, visualspec.table.type))]
+    const currentData = result.cache[result.render.current]
+    const lastData = result.cache[result.render.last]
+    const isLoading = currentData && currentData.isLoading
+    const graphicData = isLoading ? lastData : currentData
     return connectDropTarget(
       div({className: className("pane-container")},
           <FieldDragLayer showTrashCan={isOver} />,
@@ -49,6 +51,9 @@ class Explorer extends React.Component {
                   getField={getSourceField}
                   {...{isDragging, queryspec, fieldActionCreators}} />),
               div({className: "container-flex-fill-wrap graphic-container"},
+                  div({className: "loading-overlay", style: {display: isLoading ? "" : "none"}},
+                      div({className: "loading-overlay-background"}),
+                      icon({className: "fa fa-spinner fa-pulse"})),
                   <TableContainer {...graphicData} {...{visualspec}} />)),
           <TableVisualSpecBuilder getField={getSourceField} {...visualspec}
           {...{isDragging, queryspec, vizActionCreators, fieldActionCreators}} />

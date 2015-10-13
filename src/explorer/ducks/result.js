@@ -1,14 +1,23 @@
 import u from 'updeep'
+import { combineReducers } from 'redux'
 import { getField, getTable, getDatasource } from './datasources'
 import { getFullQueryspec } from './queryspec'
 import * as local from '../data/local'
 import { calculateScales } from '../data/scale'
 
-export const RECEIVE_RESULT_DATA = 'explorer/result/RECEIVE_RESULT_DATA'
+export const CHANGE_REQUEST_DATA = 'explorer/result/CHANGE_REQUEST_DATA'
 export const REQUEST_RESULT_DATA = 'explorer/result/REQUEST_RESULT_DATA'
+export const RECEIVE_RESULT_DATA = 'explorer/result/RECEIVE_RESULT_DATA'
 
 export function makeQueryKey(query) {
   return JSON.stringify(query)
+}
+
+export function changeRequestData(key) {
+  return {
+    type: CHANGE_REQUEST_DATA,
+    key
+  }
 }
 
 export function requestResultData(key) {
@@ -57,17 +66,18 @@ export function runCurrentQueryIfNecessary() {
     let getTableField = _.curry(getField)(datasources.BY_ID, datasources.selectedTable)
     let usableQueryspec = getFullQueryspec(getTableField, queryspec, visualspec.table.type)
     let key = makeQueryKey(usableQueryspec)
-    let queryResponse = result[key]
-    if (queryResponse == null || (!queryResponse.isLoading && !queryResponse.error && queryResponse.data == null)) {
+    let queryResponse = result.cache[key]
+    dispatch(changeRequestData(key))
+    if (queryResponse == null || (!queryResponse.isLoading && !queryResponse.error && queryResponse.result == null)) {
       dispatch(runQuery(datasources, key, usableQueryspec, visualspec))
     }
   }
 }
 
-const resultState = {
+const cacheState = {
 }
 
-export default function reducer(state = resultState, action) {
+function cache(state = cacheState, action) {
   switch(action.type) {
   case REQUEST_RESULT_DATA:
     return _.extend({}, state, { [action.key] : { isLoading: true } })
@@ -90,3 +100,20 @@ export default function reducer(state = resultState, action) {
     return state
   }
 }
+
+const initialState = {
+  last: null,
+  current: null
+}
+
+function render(state=initialState, action) {
+  switch(action.type) {
+  case CHANGE_REQUEST_DATA:
+    return { last: state.current, current: action.key }
+  default:
+    return state
+  }
+}
+
+const reducer = combineReducers({render, cache})
+export default reducer
