@@ -28,7 +28,7 @@ function getQuantitativeScale(domain, orient, zero) {
 }
 
 function getVisualScale(algebraType, shelf, domain, spec) {
-  let scaleType = 'O' == algebraType ? 'ordinal' : 'linear'
+  let scaleType = 'O' == algebraType ? 'ordinal' : (spec.scale ? spec.scale : 'linear')
   let rangeFn = 'O' == algebraType ? getOrdinalVisualRange : getQuantitativeVisualRange
   let domainFn = 'O' == algebraType ? _.identity : (x => [x.min, x.max])
   return {

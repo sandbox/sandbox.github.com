@@ -49,7 +49,7 @@ const propertiesState = {
     scaleZero: true,
     scaleManualDomain: false,
     scaleManualRange: false,
-    scaleRangeMin: "#ffffff",
+    scaleRangeMin: "#d6ead1",
     scaleRangeMax: "#0c541f"
   },
   background:  {
@@ -59,7 +59,7 @@ const propertiesState = {
     scaleZero: true,
     scaleManualDomain: false,
     scaleManualRange: false,
-    scaleRangeMin: "#ffffff",
+    scaleRangeMin: "#d6ead1",
     scaleRangeMax: "#0c541f"
   },
   opacity:     {

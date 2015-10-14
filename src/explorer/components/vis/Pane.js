@@ -14,7 +14,9 @@ export class Pane extends React.Component {
       (fs) => {
         return fs.scale && (
           (fs.shelf != 'col' && fs.shelf != 'row')
-            || (rowAxis.hasField(fs.field) || colAxis.hasField(fs.field)))
+            || ((fs.shelf == 'row' && rowAxis.hasField(fs.field))
+                ||
+                (fs.shelf == 'col' && colAxis.hasField(fs.field))))
       })
 
     let markComponent = MARKS[this.props.markType]

@@ -196,8 +196,24 @@ store.dispatch(connectTableIfNecessary({datasource_id: 0})).then(
   () => {
     store.dispatch(selectTable({datasource_id: 0}))
 
-    store.dispatch(queryspec.addField('row', {
+    store.dispatch(queryspec.addField('color', {
       id: "agg_count", name: "COUNT" , type: "aggregate" , op: "count"
+    }))
+
+    store.dispatch(queryspec.addField('row', {
+      "tableId": {
+        id: 0, name: "Birdstrikes"
+      },
+      "fieldId": 13,
+      "func": "bin"
+    }))
+
+    store.dispatch(queryspec.addField('row', {
+      "tableId": {
+        id: 0, name: "Birdstrikes"
+      },
+      "fieldId": 12,
+      "func": "bin"
     }))
 
     store.dispatch(queryspec.addField('col', {
@@ -213,13 +229,6 @@ store.dispatch(connectTableIfNecessary({datasource_id: 0})).then(
         id: 0, name: "Birdstrikes"
       },
       "fieldId": 12,
-      "func": "sum"
-    }))
-
-    store.dispatch(queryspec.addField('color', {
-      "tableId": {
-        id: 0, name: "Birdstrikes"
-      },
-      "fieldId": 7
+      "func": "bin"
     }))
   })
