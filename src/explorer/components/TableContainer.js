@@ -78,23 +78,24 @@ export class TableResizeWrapper extends React.Component {
     return height
   }
 
+  getScaleFunction(shelf, scale, key) {
+    if ('__default__' == key) return (d) => scale['default']
+    let d3Scale = d3.scale[scale.type]().domain(scale.domain)
+    switch(shelf) {
+    case 'row':
+      return d3Scale.range([this.props.rowHeight, 0])
+    case 'col':
+      return d3Scale.range([0, this.props.colWidth])
+    default:
+      return d3Scale.range(scale.range)
+    }
+  }
+
   render() {
     let visScales = _.mapValues(
-      this.props.scales,
-      (scales, shelf) => {
-        return _.mapValues(scales, (scale, key) => {
-          if ('__default__' == key) return (d) => scale['default']
-          let d3Scale = d3.scale[scale.type]().domain(scale.domain)
-          switch(shelf) {
-          case 'row':
-            return d3Scale.range([this.props.rowHeight, 0])
-          case 'col':
-            return d3Scale.range([0, this.props.colWidth])
-          default:
-            return d3Scale.range(scale.range)
-          }
-        })
-      })
+      this.props.scales, (scales, shelf) =>
+        _.mapValues(scales, (scale, key) =>
+                    this.getScaleFunction(shelf, scale, key)))
     let fieldScales = visScales ? _(this.props.queryspec).map(
       (fields, shelf) => {
         return _.map(fields, (field) => {

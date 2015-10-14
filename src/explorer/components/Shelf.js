@@ -1,3 +1,4 @@
+import d3 from 'd3-svg-legend'
 import className from 'classnames'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -7,8 +8,9 @@ import { VisualPropertiesDropdown } from './VisualPropertiesDropdown'
 import { FieldOptionsDropdown } from './FieldDropdown'
 import { createDropdownComponent } from '../../components/Dropdown'
 import { ShelfField, calculateDropMarkPosition, calculateDropPosition, FieldDropHandler, fieldDropCollector } from './Field'
+import { getAccessorName, isAggregateType } from '../helpers/field'
 
-const { div, i: icon, a: link, pre } = React.DOM
+const { div, i: icon, a: link, pre, svg } = React.DOM
 const { findDOMNode } = ReactDOM
 
 class FieldContainer extends React.Component {
@@ -57,9 +59,57 @@ class FieldContainer extends React.Component {
 }
 FieldContainer = DropTarget(["TableField", "ShelfField"], FieldDropHandler, fieldDropCollector)(FieldContainer)
 
+const LEGEND_TYPE = {
+  color: 'color',
+  opacity: 'color'
+}
+
 class ShelfLegend extends React.Component {
+  _d3Remove() {
+    d3.select(this.refs.d3LegendContainer).selectAll('*').remove()
+  }
+
+  _d3Render() {
+    this._d3Remove()
+    let { fields, legend, shelf } = this.props
+    if (_.isEmpty(fields)) return
+    let scaleObject = legend[getAccessorName(fields[0])]
+    if (null == scaleObject) return
+    let { type, domain, range } = scaleObject
+    let scale = d3.scale[type]().domain(domain).range(range)
+    let svgLegend = d3.legend[LEGEND_TYPE[shelf]]().scale(scale)
+    switch(type) {
+    case 'linear': case 'log': case 'pow': case 'sqrt':
+      let ticks = scale.ticks(5)
+      if ('linear' == type && isAggregateType(fields[0])) ticks = _.sortBy(ticks.concat([0]))
+      if ('log' == type) ticks = _.at(ticks, _.range(0, ticks.length, Math.floor(ticks.length / 5)))
+      svgLegend.cells(ticks).labelFormat(d3.format(",f"))
+      break
+    case 'quantile':
+      svgLegend.cells(scale.quantiles()).labelFormat(d3.format(",f"))
+    }
+    let node = d3.select(this.refs.d3LegendContainer)
+    let elem = findDOMNode(this)
+    let legendElem = node.append('g').call(svgLegend)
+    node.attr("width", elem.offsetWidth).attr("height", legendElem[0][0].getBoundingClientRect().height)
+  }
+
+  componentDidMount() {
+    this._d3Render()
+  }
+
+  componentDidUpdate() {
+    this._d3Render()
+  }
+
+  componentWillUnmount() {
+    this._d3Remove()
+  }
+
   render() {
-    return div({className: "querybuilder-shelf-legend"}, JSON.stringify(this.props.legend, null, 2))
+    if (_.isEmpty(this.props.fields)) return null
+    return div({className: "querybuilder-shelf-legend"},
+               svg({ref: 'd3LegendContainer'}))
   }
 }
 
@@ -96,7 +146,9 @@ class Shelf extends React.Component {
                }} style={{cursor: isRowColShelf ? null : 'pointer'}}>{name}{optionComponent}</label>,
                <VisualPropertiesDropdown {...visualSettingsProps} />,
                <FieldContainer {...containerProps} />,
-               !isRowColShelf && legend ? <ShelfLegend legend={legend} /> : null)
+               !isRowColShelf && legend ? <ShelfLegend shelf={shelf} legend={legend} fields={_.map(
+                 fields,
+                 (field) => _.extend({}, field, getField(field.tableId, field.fieldId)))} /> : null)
   }
 }
 Shelf = createDropdownComponent(Shelf)

@@ -56,7 +56,7 @@ class Explorer extends React.Component {
                       div({className: "loading-overlay-background"}),
                       icon({className: "fa fa-spinner fa-pulse"})),
                   <TableContainer {...graphicData} {...{visualspec}} {...graphicScales} />)),
-          <TableVisualSpecBuilder getField={getSourceField} {...visualspec}
+          <TableVisualSpecBuilder getField={getSourceField} {...visualspec} {...graphicScales}
           {...{isDragging, queryspec, vizActionCreators, fieldActionCreators}} />
          ))
   }

@@ -83,11 +83,11 @@ class ColorProperties extends React.Component {
                          value: settings.scale,
                          onChange: (evt) => { setPropertySetting(property, 'scale', evt.target.value) }
                        },
-                       option({}, "linear"),
-                       option({}, "log"),
-                       option({}, "pow"),
-                       option({}, "sqrt"),
-                       option({}, "quantile"))),
+                       option({value: "linear"}, "linear"),
+                       option({value: "log"}, "log"),
+                       option({value: "pow"}, "pow"),
+                       option({value: "sqrt"}, "sqrt"),
+                       option({value: "quantile"}, "quantile"))),
                    label({className: 'querybuilder-color-settings'},
                          input({type: 'checkbox', checked: !settings.scaleManualDomain, onChange: (evt) => {
                            setPropertySetting(property, 'scaleManualDomain', !evt.target.checked)

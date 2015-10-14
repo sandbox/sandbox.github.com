@@ -5,7 +5,9 @@ import _ from 'lodash'
 import { DropTarget } from 'react-dnd'
 import { FieldOptionsDropdown } from './FieldDropdown'
 import { createDropdownComponent } from '../../components/Dropdown'
-import { Shelf } from './Shelf'
+import { Shelf as ShelfComponent } from './Shelf'
+const Shelf = React.createFactory(ShelfComponent)
+
 import { TABLE_ENCODINGS } from '../helpers/table'
 
 const { div, i: icon, label, pre, a: link, input } = React.DOM
@@ -61,16 +63,16 @@ class TableLayoutSpecBuilder extends React.Component {
   render() {
     const { queryspec, fieldActionCreators,
             isDropdownOpen, closeDropdown, isDragging,
-            optionField, setOptionField } = this.props
+            optionField, setOptionField, getField } = this.props
     const { row, col } = queryspec
     const dropdownProps = { closeDropdown, setOptionField }
-    const fieldProps = _.extend({ getField: this.props.getField }, fieldActionCreators )
+    const fieldProps = _.extend({ getField }, fieldActionCreators )
     return div({className: "querybuilder-type-spec col"},
                <FieldOptionsDropdown isOpen={isDropdownOpen && !isDragging}
                field={optionField && queryspec[optionField.shelf][optionField.position]}
                {...optionField} {...fieldProps} close={closeDropdown} />,
-               <Shelf name="Rows" shelf="row" fields={row} {...fieldProps} dropdownProps={dropdownProps} />,
-               <Shelf name="Columns" shelf="col" fields={col} {...fieldProps} dropdownProps={dropdownProps} />)
+               Shelf({name: "Rows", shelf: "row", fields: row, ...fieldProps, dropdownProps: dropdownProps}),
+               Shelf({name: "Columns", shelf: "col", fields: col, ...fieldProps, dropdownProps: dropdownProps}))
   }
 }
 TableLayoutSpecBuilder = createFieldDropdownComponent(TableLayoutSpecBuilder)
@@ -123,12 +125,12 @@ class TableVisualSpecBuilder extends React.Component {
 
   render() {
     const {
-      queryspec, fieldActionCreators, vizActionCreators,
+      queryspec, fieldActionCreators, vizActionCreators, scales,
       isDropdownOpen, closeDropdown, isDragging,
-      optionField, setOptionField
+      optionField, setOptionField, getField
     } = this.props
     const dropdownProps = { isDropdownOpen, closeDropdown, setOptionField }
-    const fieldProps = _.extend({ getField: this.props.getField }, fieldActionCreators )
+    const fieldProps = _.extend({ getField }, fieldActionCreators )
     const { previewTableType } = this.state
     const markProperties = TABLE_ENCODINGS[previewTableType || this.props.table.type].properties
     return div({className: "pane shelf-pane"},
@@ -140,7 +142,17 @@ class TableVisualSpecBuilder extends React.Component {
                    div({className: "container-flex-fill"},
                        <label className="tablebuilder-encoding-title">{TABLE_ENCODINGS[previewTableType || this.props.table.type].name}</label>,
                        markProperties.map((attr) => {
-                         return <Shelf key={attr} name={MARK_PROPERTY_NAME[attr]} shelf={attr} properties={this.props.properties[attr]} fields={queryspec[attr]} {...fieldProps} dropdownProps={dropdownProps} vizActionCreators={vizActionCreators} />
+                         return Shelf({
+                           key: attr,
+                           name: MARK_PROPERTY_NAME[attr],
+                           shelf: attr,
+                           properties: this.props.properties[attr],
+                           fields: queryspec[attr],
+                           dropdownProps: dropdownProps,
+                           vizActionCreators: vizActionCreators,
+                           legend: scales && scales[attr],
+                             ...fieldProps
+                         })
                        }))))
   }
 }
