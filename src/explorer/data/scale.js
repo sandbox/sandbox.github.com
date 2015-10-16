@@ -1,6 +1,6 @@
 import d3 from 'd3'
 import _ from 'lodash'
-import { getAccessorName, isAggregateType } from '../helpers/field'
+import { getFieldType, getAccessorName, isAggregateType } from '../helpers/field'
 import { TABLE_ENCODINGS } from '../helpers/table'
 import { COLOR_PALETTES } from '../helpers/color'
 
@@ -18,9 +18,11 @@ function getQuantitativeVisualRange(shelf, spec) {
 }
 
 function getQuantitativeScale(domain, orient, zero) {
-  let space = (domain.max - domain.min) / 50
-  let min = zero ? Math.min(0, domain.min) : domain.min - space
-  let max = (zero ? Math.max(0, domain.max) : domain.max) + space
+  let min = zero ? Math.min(0, domain.min) : domain.min
+  let max = zero ? Math.max(0, domain.max) : domain.max
+  let space = (max - min) / 50
+  if (!zero) min = +min - space
+  max = +max + space
   return {
     type: 'linear',
     domain: [min, max]
@@ -48,6 +50,7 @@ export function calculateScales(domains, queryspec, visualspec) {
           let name = getAccessorName(field)
           let zero = isAggregateType(field)
           acc[name] = getQuantitativeScale(domains[name], shelf, zero)
+          if ('time' == getFieldType(field)) acc[name].type = 'time'
         }
         return acc
       }, {})

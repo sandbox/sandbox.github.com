@@ -3,14 +3,14 @@
     "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100.00000000000001" height="61.804697156983934" font-size="1" viewBox="0 0 100 62">
   <g stroke="rgb(0,0,0)" stroke-opacity="1.0" fill="rgb(0,0,0)" fill-opacity="0.0" stroke-width="1.0e-2" stroke-linecap="butt" stroke-linejoin="miter" font-size="1.0em" stroke-miterlimit="10.0">
-    <g fill="rgb(242,242,242)" fill-opacity="1.0" stroke-width="0.0"><rect x="0" y="0" width="11" height="60"/></g>
-    <g fill="rgb(253,218,236)" fill-opacity="1.0" stroke-width="0.0"><rect x="11" y="0" width="11" height="60"/></g>
-    <g fill="rgb(229,216,189)" fill-opacity="1.0" stroke-width="0.0"><rect x="22" y="0" width="11" height="60"/></g>
-    <g fill="rgb(255,255,204)" fill-opacity="1.0" stroke-width="0.0"><rect x="33" y="0" width="11" height="60"/></g>
+    <g fill="rgb(242,242,242)" fill-opacity="1.0" stroke-width="0.0"><rect x="88" y="0" width="11" height="60"/></g>
+    <g fill="rgb(253,218,236)" fill-opacity="1.0" stroke-width="0.0"><rect x="77" y="0" width="11" height="60"/></g>
+    <g fill="rgb(229,216,189)" fill-opacity="1.0" stroke-width="0.0"><rect x="66" y="0" width="11" height="60"/></g>
+    <g fill="rgb(255,255,204)" fill-opacity="1.0" stroke-width="0.0"><rect x="55" y="0" width="11" height="60"/></g>
     <g fill="rgb(254,217,166)" fill-opacity="1.0" stroke-width="0.0"><rect x="44" y="0" width="11" height="60"/></g>
-    <g fill="rgb(222,203,228)" fill-opacity="1.0" stroke-width="0.0"><rect x="55" y="0" width="11" height="60"/></g>
-    <g fill="rgb(204,235,197)" fill-opacity="1.0" stroke-width="0.0"><rect x="66" y="0" width="11" height="60"/></g>
-    <g fill="rgb(179,205,227)" fill-opacity="1.0" stroke-width="0.0"><rect x="77" y="0" width="11" height="60"/></g>
-    <g fill="rgb(251,180,174)" fill-opacity="1.0" stroke-width="0.0"><rect x="88" y="0" width="11" height="60"/></g>
+    <g fill="rgb(222,203,228)" fill-opacity="1.0" stroke-width="0.0"><rect x="33" y="0" width="11" height="60"/></g>
+    <g fill="rgb(204,235,197)" fill-opacity="1.0" stroke-width="0.0"><rect x="22" y="0" width="11" height="60"/></g>
+    <g fill="rgb(179,205,227)" fill-opacity="1.0" stroke-width="0.0"><rect x="11" y="0" width="11" height="60"/></g>
+    <g fill="rgb(251,180,174)" fill-opacity="1.0" stroke-width="0.0"><rect x="0" y="0" width="11" height="60"/></g>
   </g>
 </svg>

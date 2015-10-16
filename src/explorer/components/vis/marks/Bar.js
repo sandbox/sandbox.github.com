@@ -1,7 +1,7 @@
 import d3 from 'd3'
 import _ from 'lodash'
 import React from 'react'
-import { getAccessorName, isStackableField, isAggregateType } from '../../../helpers/field'
+import { getFieldType, getAccessorName, isStackableField, isAggregateType } from '../../../helpers/field'
 const { div, svg } = React.DOM
 const ZERO = d => 0
 function cumsum(array, sum_fn = _.identity) {
@@ -74,10 +74,21 @@ export default class Bar extends React.Component {
         }
       }
       else if (isBin) {
-        let binHeight = Math.abs(scale(0) - scale(field.binner.step))
-        return {
-          y:      (d) => scale(d[name]) - binHeight,
-          height: (d) => binHeight - 1
+        if ('time' == getFieldType(field)) {
+          return {
+            y:     (d) => scale(d3.time[field.binSettings.unit.type].offset(d[name], field.binSettings.step)),
+            height: (d) => {
+              let nextTime = d3.time[field.binSettings.unit.type].offset(d[name], field.binSettings.step)
+              let barHeight = scale(d[name]) - scale(nextTime)
+              return barHeight > 1 ? barHeight - 1 : barHeight
+            }
+          }
+        }
+        else {
+          return {
+            y:      (d) => scale(d[name] + field.binSettings.step),
+            height: (d) => scale(d[name]) - scale(d[name] + field.binSettings.step) - 1
+          }
         }
       }
       else {
@@ -100,10 +111,21 @@ export default class Bar extends React.Component {
         }
       }
       else if (isBin) {
-        let binWidth = Math.abs(scale(field.binner.step) - scale(0))
-        return {
-          x:     (d) => scale(d[name]),
-          width: (d) => binWidth - 1
+        if ('time' == getFieldType(field)) {
+          return {
+            x:     (d) => scale(d[name]),
+            width: (d) => {
+              let nextTime = d3.time[field.binSettings.unit.type].offset(d[name], field.binSettings.step)
+              let barWidth = scale(nextTime) - scale(d[name])
+              return barWidth > 1 ? barWidth - 1 : barWidth
+            }
+          }
+        }
+        else {
+          return {
+            x:     (d) => scale(d[name]),
+            width: (d) => scale(d[name] + field.binSettings.step) - scale(d[name]) - 1
+          }
         }
       }
       else {

@@ -19,14 +19,14 @@ function axisTickHorizontalLabelShift(d) {
   let bounds = this.getBoundingClientRect()
   let axisBounds = this.parentElement.parentElement.parentElement.getBoundingClientRect()
   if (bounds.left < axisBounds.left) {
-    return 'start'
+    return axisBounds.left - bounds.left
   }
   else if (bounds.right > axisBounds.right) {
-    return 'end'
+    return axisBounds.right - bounds.right - 2
   }
   else {
-    let current = d3.select(this).style('text-anchor')
-    return current ? current : 'middle'
+    let current = d3.select(this).attr('x')
+    return current ? current : 0
   }
 }
 
@@ -49,7 +49,7 @@ export class Axis extends React.Component {
   _d3Axis() {
     let { orient, scale, field } = this.props
     let axis = d3.svg.axis().scale(scale).orient(orient).ticks(5)
-    if('integer' == field.type && 'bin' == field.func && field.binner.step == 1) {
+    if('integer' == field.type && 'bin' == field.func && field.binSettings.step == 1) {
       axisDiscretizeTicks(axis, d3.format("d"))
     }
     return axis
@@ -61,7 +61,7 @@ export class Axis extends React.Component {
         .call(this._d3Axis())
         .selectAll("text")
     if (this.isHorizontalAxis()) {
-      tickText.style("text-anchor", axisTickHorizontalLabelShift)
+      tickText.attr("x", axisTickHorizontalLabelShift)
     }
     else {
       tickText.attr("y", axisTickVerticalLabelShift)

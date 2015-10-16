@@ -15,19 +15,19 @@ const COLOR_PALETTES = {
     '#a1d99b', '#c7e9c0', '#756bb1', '#9e9ac8', '#bcbddc', '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'
   ],
   'pastel1':     [
-    '#f2f2f2', '#fddaec', '#e5d8bd', '#ffffcc', '#fed9a6', '#decbe4', '#ccebc5', '#b3cde3', '#fbb4ae'
+    "#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#fed9a6", "#ffffcc", "#e5d8bd", "#fddaec", "#f2f2f2"
   ],
   'pastel2':     [
-    '#cccccc', '#f1e2cc', '#fff2ae', '#e6f5c9', '#f4cae4', '#cbd5e8', '#fdcdac', '#b3e2cd'
+    "#b3e2cd", "#fdcdac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae", "#f1e2cc", "#cccccc"
   ],
   'set1':        [
-    '#999999', '#f781bf', '#a65628', '#ffff33', '#ff7f0', '#984ea3', '#4daf4a', '#377eb8'
+    "#377eb8", "#4daf4a", "#984ea3", "#ff7f0", "#ffff33", "#a65628", "#f781bf", "#999999"
   ],
   'set2':        [
-    '#b3b3b3', '#e5c494', '#ffd92f', '#a6d854', '#e78ac3', '#8da0cb', '#fc8d62', '#66c2a5'
+    "#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#e5c494", "#b3b3b3"
   ],
   'set3':        [
-    '#ffed6f', '#ccebc5', '#bc80bd', '#d9d9d9', '#fccde5', '#b3de69', '#fdb462', '#80b1d3', '#fb8072', '#bebada', '#ffffb3', '#8dd3c7'
+    "#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"
   ]
 }
 

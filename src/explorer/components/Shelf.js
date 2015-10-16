@@ -91,7 +91,8 @@ class ShelfLegend extends React.Component {
     let node = d3.select(this.refs.d3LegendContainer)
     let elem = findDOMNode(this)
     let legendElem = node.append('g').call(svgLegend)
-    node.attr("width", elem.offsetWidth).attr("height", legendElem[0][0].getBoundingClientRect().height)
+    let legendBounds = legendElem[0][0].getBoundingClientRect()
+    node.attr("width", legendBounds.width).attr("height", legendBounds.height)
   }
 
   componentDidMount() {

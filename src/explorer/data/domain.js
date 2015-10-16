@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { getAccessorName, isAggregateType, isBinField } from '../helpers/field'
+import { getFieldType, getAccessorName, isAggregateType, isBinField } from '../helpers/field'
 
 export class QuantitativeAggregator {
   constructor() {
@@ -45,12 +45,12 @@ export class OrdinalAggregator {
 function aggregateDatum(aggregator, datum, key, binWidth) {
   if (null != datum[key]) {
     aggregator.add(datum[key])
-    if(binWidth) aggregator.add(datum[key] + binWidth)
+    if(binWidth) aggregator.add(binWidth(datum[key]))
   }
   else if (null != datum.values) {
     for(let i = 0, len = datum.values.length; i < len; i++) {
       aggregator.add(datum.values[i][key])
-      if(binWidth) aggregator.add(datum.values[i][key] + binWidth)
+      if(binWidth) aggregator.add(binWidth(datum.values[i][key]))
     }
   }
   else {
@@ -81,7 +81,10 @@ export function calculateDomains(data, fields, axes) {
     let field = fields[i]
     if (domains[field.accessor]) continue
     domains[field.accessor] = new AGGREGATOR[field.algebraType]()
-    isBin[field.accessor] = isBinField(field) ? field.binner.step : 0
+    isBin[field.accessor] = isBinField(field) ?
+      ('time' == getFieldType(field)
+       ? ((d) => d3.time[field.binSettings.unit.type].offset(d, field.binSettings.step))
+       : ((d) => d + field.binSettings.step)) : null
   }
 
   aggregateAxes(domains, axes.row)

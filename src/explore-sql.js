@@ -204,15 +204,22 @@ store.dispatch(connectTableIfNecessary({datasource_id: 0})).then(
       "tableId": {
         id: 0, name: "Birdstrikes"
       },
-      "fieldId": 13,
-      "func": "bin"
+      "fieldId": 3,
+      "func": "bin[Y]"
     }))
 
     store.dispatch(queryspec.addField('col', {
       "tableId": {
         id: 0, name: "Birdstrikes"
       },
-      "fieldId": 12,
+      "fieldId": 13,
       "func": "bin"
+    }))
+
+    store.dispatch(queryspec.addField('color', {
+      "tableId": {
+        id: 0, name: "Birdstrikes"
+      },
+      "fieldId": 7
     }))
   })

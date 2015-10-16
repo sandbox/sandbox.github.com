@@ -80,7 +80,8 @@ export class TableResizeWrapper extends React.Component {
 
   getScaleFunction(shelf, scale, key) {
     if ('__default__' == key) return (d) => scale['default']
-    let d3Scale = d3.scale[scale.type]().domain(scale.domain)
+    let d3Scale = 'time' == scale.type ? d3.time.scale().domain(
+      _.map(scale.domain, d => new Date(d))) : d3.scale[scale.type]().domain(scale.domain)
     switch(shelf) {
     case 'row':
       return d3Scale.range([this.props.rowHeight, 0])
