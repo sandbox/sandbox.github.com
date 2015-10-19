@@ -17,7 +17,7 @@ function getQuantitativeVisualRange(shelf, spec) {
   return [spec.scaleRangeMin, spec.scaleRangeMax]
 }
 
-function getQuantitativeScale(domain, orient, zero) {
+function getQuantitativeScale(domain, zero) {
   let min = zero ? Math.min(0, domain.min) : domain.min
   let max = zero ? Math.max(0, domain.max) : domain.max
   let space = (max - min) / 50
@@ -49,8 +49,8 @@ export function calculateScales(domains, queryspec, visualspec) {
         if ('Q' == field.algebraType) {
           let name = getAccessorName(field)
           let zero = isAggregateType(field)
-          acc[name] = getQuantitativeScale(domains[name], shelf, zero)
-          if ('time' == getFieldType(field)) acc[name].type = 'time'
+          acc[name] = getQuantitativeScale(domains[name], zero)
+          if ('time' == getFieldType(field) && _.contains(field.func, 'bin')) acc[name].type = 'time'
         }
         return acc
       }, {})

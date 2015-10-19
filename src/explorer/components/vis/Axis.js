@@ -2,6 +2,7 @@ import className from 'classnames'
 import _ from 'lodash'
 import d3 from 'd3'
 import React from 'react'
+import { getFieldType, isGroupByField } from '../../helpers/field'
 const { div, svg } = React.DOM
 
 function axisDiscretizeTicks(axis, format) {
@@ -49,7 +50,10 @@ export class Axis extends React.Component {
   _d3Axis() {
     let { orient, scale, field } = this.props
     let axis = d3.svg.axis().scale(scale).orient(orient).ticks(5)
-    if('integer' == field.type && 'bin' == field.func && field.binSettings.step == 1) {
+    if ('integer' == field.type && 'bin' == field.func && field.binSettings.step == 1) {
+      axisDiscretizeTicks(axis, d3.format(",d"))
+    }
+    else if ('time' == getFieldType(field) && !_.contains(field.func, 'bin')) {
       axisDiscretizeTicks(axis, d3.format("d"))
     }
     return axis

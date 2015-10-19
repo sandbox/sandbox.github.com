@@ -1,7 +1,7 @@
 import d3 from 'd3'
 import _ from 'lodash'
 import React from 'react'
-import { getFieldType, getAccessorName, isStackableField, isAggregateType } from '../../../helpers/field'
+import { getFieldType, getAccessorName, isStackableField, isAggregateType, isBinField, isGroupByField } from '../../../helpers/field'
 const { div, svg } = React.DOM
 const ZERO = d => 0
 function cumsum(array, sum_fn = _.identity) {
@@ -56,7 +56,8 @@ export default class Bar extends React.Component {
     const name = getAccessorName(field)
     const isStackable = isStackableField(field)
     const isAggregate = isAggregateType(field)
-    const isBin = _.contains(field.func, 'bin')
+    const isBin = isBinField(field)
+    const isTime = 'time' == getFieldType(field)
 
     switch(shelf) {
     case 'row':
@@ -74,7 +75,7 @@ export default class Bar extends React.Component {
         }
       }
       else if (isBin) {
-        if ('time' == getFieldType(field)) {
+        if (isTime && _.contains(field.func, 'bin')) {
           return {
             y:     (d) => scale(d3.time[field.binSettings.unit.type].offset(d[name], field.binSettings.step)),
             height: (d) => {
@@ -82,6 +83,12 @@ export default class Bar extends React.Component {
               let barHeight = scale(d[name]) - scale(nextTime)
               return barHeight > 1 ? barHeight - 1 : barHeight
             }
+          }
+        }
+        else if (isTime) {
+          return {
+            y:      (d) => scale(d[name] + 1),
+            height: (d) => scale(d[name]) - scale(d[name] + 1) - 1
           }
         }
         else {
@@ -111,7 +118,7 @@ export default class Bar extends React.Component {
         }
       }
       else if (isBin) {
-        if ('time' == getFieldType(field)) {
+        if (isTime && _.contains(field.func, 'bin')) {
           return {
             x:     (d) => scale(d[name]),
             width: (d) => {
@@ -119,6 +126,12 @@ export default class Bar extends React.Component {
               let barWidth = scale(nextTime) - scale(d[name])
               return barWidth > 1 ? barWidth - 1 : barWidth
             }
+          }
+        }
+        else if (isTime) {
+          return {
+            x:     (d) => scale(d[name]),
+            width: (d) => scale(d[name] + 1) - scale(d[name]) - 1
           }
         }
         else {
@@ -147,7 +160,7 @@ export default class Bar extends React.Component {
 
   getAttributeTransforms() {
     const { transformFields } = this.props
-    const binField = _.find(transformFields, fs => _.contains(fs.field.func, 'bin'))
+    const binField = _.find(transformFields, fs => isBinField(fs.field))
     let transforms = _.merge(
       this.getDefaultScales(),
       _.reduce(_.map(

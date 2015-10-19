@@ -53,7 +53,7 @@ export function isStackableField(field) {
 }
 
 export function isBinField(field) {
-  return field && field.func && _.contains(field.func, "bin")
+  return field && field.func && (_.contains(field.func, "bin") || _.contains(['year', 'month', 'day', 'date', 'hour', 'minute', 'second'], field.func))
 }
 
 export function getExternalType(type) {

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { getFieldType, getAccessorName, isAggregateType, isBinField } from '../helpers/field'
+import { getFieldType, getAccessorName, isAggregateType, isBinField, isGroupByField } from '../helpers/field'
 
 export class QuantitativeAggregator {
   constructor() {
@@ -82,7 +82,9 @@ export function calculateDomains(data, fields, axes) {
     if (domains[field.accessor]) continue
     domains[field.accessor] = new AGGREGATOR[field.algebraType]()
     isBin[field.accessor] = isBinField(field) ?
-      ('time' == getFieldType(field)
+      ('time' == getFieldType(field) && !_.contains(field.func, 'bin')
+       ? ((d) => d + 1)
+       : 'time' == getFieldType(field)
        ? ((d) => d3.time[field.binSettings.unit.type].offset(d, field.binSettings.step))
        : ((d) => d + field.binSettings.step)) : null
   }
