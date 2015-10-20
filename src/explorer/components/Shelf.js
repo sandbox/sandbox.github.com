@@ -61,7 +61,9 @@ FieldContainer = DropTarget(["TableField", "ShelfField"], FieldDropHandler, fiel
 
 const LEGEND_TYPE = {
   color: 'color',
-  opacity: 'color'
+  opacity: 'color',
+  shape: 'symbol',
+  size: 'size'
 }
 
 class ShelfLegend extends React.Component {
@@ -77,7 +79,18 @@ class ShelfLegend extends React.Component {
     if (null == scaleObject) return
     let { type, domain, range } = scaleObject
     let scale = d3.scale[type]().domain(domain).range(range)
+    switch(shelf) {
+    case 'shape':
+      scale.range(_.map(scale.range(), shape => d3.svg.symbol().type(shape)()))
+      break
+    case 'size':
+      scale.range(_.map(scale.range(), v => Math.sqrt(v / Math.PI)))
+    }
     let svgLegend = d3.legend[LEGEND_TYPE[shelf]]().scale(scale)
+    switch(shelf) {
+    case 'size':
+      svgLegend.shape('circle').shapePadding(5)
+    }
     switch(type) {
     case 'linear': case 'log': case 'pow': case 'sqrt':
       let ticks = scale.ticks(5)
@@ -90,9 +103,9 @@ class ShelfLegend extends React.Component {
     }
     let node = d3.select(this.refs.d3LegendContainer)
     let elem = findDOMNode(this)
-    let legendElem = node.append('g').call(svgLegend)
+    let legendElem = node.append('g').attr("transform", _.contains(['shape', 'size'], shelf) ? "translate(10, 10)" : null).call(svgLegend)
     let legendBounds = legendElem[0][0].getBoundingClientRect()
-    node.attr("width", legendBounds.width).attr("height", legendBounds.height)
+    node.attr("width", legendBounds.width).attr("height", legendBounds.height + 5)
   }
 
   componentDidMount() {

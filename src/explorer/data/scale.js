@@ -8,6 +8,10 @@ function getOrdinalVisualRange(shelf, spec) {
   switch (shelf) {
   case 'color':
     return COLOR_PALETTES[spec.palette]
+  case 'shape':
+    return spec.shapes
+  case 'size':
+    return spec.sizes
   default:
     return []
   }

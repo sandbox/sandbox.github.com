@@ -39,9 +39,13 @@ function table(state = tableState, action) {
 
 const propertiesState = {
   size:        {
-    'default': 30,
+    sizes: [30, 50, 80, 120, 170, 230, 300],
+    'default': 30
   },
-  shape:       {},
+  shape:       {
+    shapes: ["circle", "cross", "diamond", "square", "triangle-down", "triangle-up"],
+    'default': 'circle'
+  },
   color:       {
     palette: "category10",
     'default': "#356CA7",
