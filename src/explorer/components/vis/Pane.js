@@ -2,7 +2,8 @@ import React from 'react'
 import { getFieldQueryType, getAccessorName } from '../../helpers/field'
 
 const MARKS = {
-  'bar': React.createFactory(require('./marks/Bar'))
+  'bar': React.createFactory(require('./marks/Bar')),
+  'line': React.createFactory(require('./marks/Line'))
 }
 
 export class Pane extends React.Component {

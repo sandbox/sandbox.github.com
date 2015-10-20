@@ -39,7 +39,7 @@ function stackLayout(markData, name, binField) {
 
 export default class Bar extends React.Component {
   getDefaultScales() {
-    const { scales, rowAxis, colAxis, width, height } = this.props
+    const { scales, width, height } = this.props
     return {
       opacity: scales.opacity.__default__,
       fill:    scales.color.__default__,

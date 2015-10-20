@@ -37,7 +37,7 @@ export class TableLayout extends React.Component {
         cellClassName: this.props.hasRowNumericAxes ? 'public_fixedDataTableCell_axis' : '',
         cellDataGetter: this.getRowAxisCell,
         headerRenderer: this.renderRowHeaderCell,
-        cellRenderer: this.renderRowAxisCell.bind(this, r),
+        cellRenderer: this.renderRowAxisCell.bind(this, {markType: this.props.visualspec.table.type}, r),
         footerRenderer: EMPTY_RENDER
       })
     })
@@ -57,7 +57,7 @@ export class TableLayout extends React.Component {
             scales: this.props.visScales,
             fieldScales: this.props.fieldScales
           }),
-        footerRenderer: this.renderFooterCell,
+        footerRenderer: this.renderFooterCell.bind(this, {markType: this.props.visualspec.table.type}),
         allowCellsRecycling: true
       })
     })
@@ -71,11 +71,11 @@ export class TableLayout extends React.Component {
     return dataKey
   }
 
-  renderRowAxisCell(axisIndex, cellData, cellDataKey, rowData, rowIndex, columnData, width) {
+  renderRowAxisCell(visualProps, axisIndex, cellData, cellDataKey, rowData, rowIndex, columnData, width) {
     if ('Q' == axisIndex) {
       let field = this.props.axes.row[rowIndex].field
       let name = field.accessor
-      return Axis({orient: 'left', scale: this.props.visScales.row[name], name, field, height: this.props.rowHeight, width: width})
+      return Axis({orient: 'left', scale: this.props.visScales.row[name], name, field, height: this.props.rowHeight, width, markType: visualProps.markType})
     }
     return div({className: "table-row-label"}, this.props.axes.row[rowIndex].key[axisIndex])
   }
@@ -88,10 +88,10 @@ export class TableLayout extends React.Component {
     return div({}, _.map(columnData.key, name => div({key: name}, name)))
   }
 
-  renderFooterCell(label, colIndex, columnData, rowData, width) {
+  renderFooterCell(visualProps, label, colIndex, columnData, rowData, width) {
     let field = columnData.field
     let name = field.accessor
-    return Axis({scale: this.props.visScales.col[name], name, field, height: this.props.footerHeight, width: width})
+    return Axis({scale: this.props.visScales.col[name], name, field, height: this.props.footerHeight, width, markType: visualProps.markType})
   }
 
   renderVisualizationCell(visualProps, cellData, cellDataKey, rowData, rowIndex, columnData, width) {
