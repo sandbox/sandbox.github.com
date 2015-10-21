@@ -28,7 +28,7 @@ author:
 github:
   url:         http://github.com/sandbox
 
-exclude: [ README, Gemfile, Gemfile.lock, Procfile, gulpfile.js, Gruntfile.js, package.json, webpack.config.js, webpack.hot.config.js, node_modules, src, .*, .**/*]
+exclude: [ README, Gemfile, Gemfile.lock, Procfile, gulpfile.js, Gruntfile.js, package.json, webpack.config.js, webpack.hot.config.js, node_modules, src, .git, .*, .**/*]
 
 collections:
   demos:

@@ -17,32 +17,40 @@ function axisDiscretizeTicks(axis, format) {
 }
 
 function axisTickHorizontalLabelShift(d) {
-  let bounds = this.getBoundingClientRect()
-  let axisBounds = this.parentElement.parentElement.parentElement.getBoundingClientRect()
-  if (bounds.left < axisBounds.left) {
-    return axisBounds.left - bounds.left
-  }
-  else if (bounds.right > axisBounds.right) {
-    return axisBounds.right - bounds.right - 2
+  let bounds = this.getBBox()
+  let left = this.parentElement.transform.baseVal[0].matrix.e + bounds.x
+  if (left < 0) {
+    return 1 - left
   }
   else {
-    let current = d3.select(this).attr('x')
-    return current ? current : 0
+    let parentWidth = this.parentElement.parentElement.parentElement.width.baseVal.value
+    let right = left + bounds.width
+    if (right > parentWidth) {
+      return parentWidth - right - 2
+    }
+    else {
+      let current = d3.select(this).attr('x')
+      return current ? current : 0
+    }
   }
 }
 
 function axisTickVerticalLabelShift(d) {
-  let bounds = this.getBoundingClientRect()
-  let axisBounds = this.parentElement.parentElement.parentElement.getBoundingClientRect()
-  if (bounds.top < axisBounds.top) {
-    return 1 + axisBounds.top - bounds.top
-  }
-  else if (bounds.bottom > axisBounds.bottom) {
-    return axisBounds.bottom - bounds.bottom - 1
+  let bounds = this.getBBox()
+  let top = this.parentElement.transform.baseVal[0].matrix.f + bounds.y
+  if (top < 0) {
+    return 1 - top
   }
   else {
-    let current = d3.select(this).attr('y')
-    return current ? current : 0
+    let parentHeight = this.parentElement.parentElement.parentElement.height.baseVal.value
+    let bottom = top + bounds.height
+    if (bottom > parentHeight) {
+      return parentHeight - bottom  - 1
+    }
+    else {
+      let current = d3.select(this).attr('y')
+      return current ? current : 0
+    }
   }
 }
 
@@ -66,7 +74,6 @@ export class Axis extends React.Component {
 
   _d3Render() {
     let tickText = d3.select(this.refs.axisContainer)
-        .transition().duration(300)
         .call(this._d3Axis())
         .selectAll("text")
     if (this.isHorizontalAxis()) {
@@ -94,10 +101,6 @@ export class Axis extends React.Component {
 
   componentDidUpdate() {
     this._d3Render()
-  }
-
-  componentWillUnmount() {
-    d3.select(this.refs.axisContainer).selectAll("*").remove()
   }
 
   render() {

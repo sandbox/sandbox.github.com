@@ -171,16 +171,17 @@ export default class Bar extends React.Component {
   }
 
   _d3Render() {
-    d3.select(this.refs.d3container).selectAll("*").remove()
     let transforms = this.getAttributeTransforms()
-    let bars = d3.select(this.refs.d3container).selectAll("g.bar")
+    let bars = d3.select(this.refs.d3container).selectAll("rect")
         .data(this.props.markData)
-        .enter().append("g").attr("class", "bar")
-    bars.attr('transform', transforms.transform)
-    bars.append('rect')
+    bars.enter().append('rect')
+    bars.attr('fill', transforms.fill)
+      .transition().duration(300)
+      .attr('x', transforms.x)
+      .attr('y', transforms.y)
       .attr('width', transforms.width)
       .attr('height', transforms.height)
-      .attr('fill', transforms.fill)
+    bars.exit().remove()
   }
 
   componentDidMount() {
@@ -189,10 +190,6 @@ export default class Bar extends React.Component {
 
   componentDidUpdate() {
     this._d3Render()
-  }
-
-  componentWillUnmount() {
-    d3.select(this.refs.d3container).selectAll("*").remove()
   }
 
   render() {

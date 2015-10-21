@@ -71,13 +71,16 @@ export default class Line extends React.Component {
     const markSort = values =>
           _.isEmpty(sortAccessors) ? values : _.sortByAll(values, sortAccessors)
 
-    d3.select(this.refs.d3container).selectAll("g.line")
+    let lines = d3.select(this.refs.d3container).selectAll("g.line")
       .data(lineGroups) // each line group
-      .enter().append("g").attr("class", "line").append("path")
+
+    lines.enter().append("g").attr("class", "line").append("path")
+    lines.selectAll("g.line path")
       .attr('d', lineGroup => line(markSort(lineGroup.values)))
       .attr('stroke', transforms.stroke)
       .attr('stroke-width', transforms['stroke-width'])
       .attr('fill', 'none')
+    lines.exit().remove()
   }
 
   componentDidMount() {
@@ -86,10 +89,6 @@ export default class Line extends React.Component {
 
   componentDidUpdate() {
     this._d3Render()
-  }
-
-  componentWillUnmount() {
-    d3.select(this.refs.d3container).selectAll("*").remove()
   }
 
   render() {
