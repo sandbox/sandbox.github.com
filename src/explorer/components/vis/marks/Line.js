@@ -9,7 +9,6 @@ export default class Line extends React.Component {
   getDefaultScales() {
     const { scales } = this.props
     return {
-      opacity:   scales.opacity.__default__,
       stroke:    scales.color.__default__,
       "stroke-width": 2,
       x:       0,
@@ -38,7 +37,6 @@ export default class Line extends React.Component {
       return {
         // 'stroke-width':
       }
-    case 'opacity':
     default:
       return {
       }

@@ -3,15 +3,12 @@ export const TABLE_ENCODINGS = {
     name: "Bar",
     icon: [{
       className: "fa fa-bar-chart"}],
-    properties: ['size',
-                 'color',
-                 'opacity'] },
+    properties: ['color'] },
   line:  {
     name: "Line",
     icon: [{
       className: "fa fa-line-chart"}],
-    properties: ['color',
-                 'opacity'] },
+    properties: ['color'] },
   point: {
     name: "Symbol",
     icon: [{
@@ -23,9 +20,7 @@ export const TABLE_ENCODINGS = {
            "grain"],
     properties: ['size',
                  'color',
-                 'shape',
-                 'opacity',
-                 'orientation'] },
+                 'shape'] },
   pivot: {
     name: "Pivot Table",
     icon: [{
@@ -46,8 +41,7 @@ export const TABLE_ENCODINGS = {
                  'y',
                  'y2',
                  'size',
-                 'color',
-                 'opacity'] },
+                 'color'] },
   area:  {
     name: "Area",
     icon: [{

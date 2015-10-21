@@ -41,7 +41,6 @@ export default class Bar extends React.Component {
   getDefaultScales() {
     const { scales, width, height } = this.props
     return {
-      opacity: scales.opacity.__default__,
       fill:    scales.color.__default__,
       x:       ZERO,
       y:       ZERO,
@@ -151,7 +150,6 @@ export default class Bar extends React.Component {
         fill:  (d) => scale(d[name])
       }
     case 'size':
-    case 'opacity':
     default:
       return {
       }

@@ -13,7 +13,6 @@ export default class Point extends React.Component {
     let symbol = d3.svg.symbol()
     return {
       size:    scales.size.__default__,
-      opacity: scales.opacity.__default__,
       symbol:  symbol,
       shape:   scales.shape.__default__,
       color:   scales.color.__default__,
@@ -48,7 +47,6 @@ export default class Point extends React.Component {
       return {
         shape:  d => scale(d[name])
       }
-    case 'opacity':
     default:
       return {
       }
