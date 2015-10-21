@@ -16,8 +16,13 @@ import * as queryspec from './explorer/ducks/queryspec'
 
 let MockDataSources = {
   datasources: {
-    IDS: [0, 1, 2, 3, 4, 5, 6],
+    IDS: [0, 1, 7, 2, 3, 4, 5, 6],
     BY_ID: {
+      7: { id: 7, name: "Iris",
+           type: "dataframe",
+           url: "http://vega.github.io/polestar/data/iris.json",
+           settings: { format: "json" }
+         },
       0: { id: 0, name: "Birdstrikes",
            type: "dataframe",
            url: "http://vega.github.io/polestar/data/birdstrikes.json",

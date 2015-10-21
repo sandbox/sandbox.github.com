@@ -12,6 +12,8 @@ function getOrdinalVisualRange(shelf, spec) {
     return spec.shapes
   case 'size':
     return spec.sizes
+  case 'opacity':
+    return spec.range
   default:
     return []
   }
@@ -24,7 +26,7 @@ function getQuantitativeVisualRange(shelf, spec) {
 function getQuantitativeScale(domain, zero) {
   let min = zero ? Math.min(0, domain.min) : domain.min
   let max = zero ? Math.max(0, domain.max) : domain.max
-  let space = (max - min) / 50
+  let space = (max - min) / 25
   if (!zero) min = +min - space
   max = +max + space
   return {

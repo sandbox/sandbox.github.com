@@ -85,6 +85,9 @@ class ShelfLegend extends React.Component {
       break
     case 'size':
       scale.range(_.map(scale.range(), v => Math.sqrt(v / Math.PI)))
+      break
+    case 'opacity':
+      scale.range(_.map(range, o => d3.rgb(255 * (1 - o), 255 * (1 - o), 255 * (1 - o))))
     }
     let svgLegend = d3.legend[LEGEND_TYPE[shelf]]().scale(scale)
     switch(shelf) {

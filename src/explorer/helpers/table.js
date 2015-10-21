@@ -3,7 +3,7 @@ export const TABLE_ENCODINGS = {
     name: "Bar",
     icon: [{
       className: "fa fa-bar-chart"}],
-    properties: ['color'] },
+    properties: ['color', 'opacity'] },
   line:  {
     name: "Line",
     icon: [{
@@ -20,6 +20,7 @@ export const TABLE_ENCODINGS = {
            "grain"],
     properties: ['size',
                  'color',
+                 'opacity',
                  'shape'] },
   pivot: {
     name: "Pivot Table",

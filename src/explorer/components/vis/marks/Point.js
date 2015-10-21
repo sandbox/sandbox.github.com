@@ -6,12 +6,14 @@ import { getAccessorName, isBinField } from '../../../helpers/field'
 const { svg } = React.DOM
 const XDEFAULT = d => 30
 const YDEFAULT = d => 15
+const FILL_OPACITY_DEFAULT = d => 0.4
 
 export default class Point extends React.Component {
   getDefaultScales() {
     const { scales } = this.props
     let symbol = d3.svg.symbol()
     return {
+      opacity: FILL_OPACITY_DEFAULT,
       size:    scales.size.__default__,
       symbol:  symbol,
       shape:   scales.shape.__default__,
@@ -47,6 +49,10 @@ export default class Point extends React.Component {
       return {
         shape:  d => scale(d[name])
       }
+    case 'opacity':
+      return {
+        opacity: d => scale(d[name])
+      }
     default:
       return {
       }
@@ -74,7 +80,8 @@ export default class Point extends React.Component {
       .attr('stroke-width', 1)
       .attr('d', transforms.d)
       .attr('fill', transforms.color)
-      .attr('fill-opacity', 0.2)
+      .attr('fill-opacity', transforms.opacity)
+      .attr('stroke-opacity', transforms.opacity)
       .attr('stroke', transforms.color)
       .attr('transform', transforms.transform)
     symbols.exit().remove()

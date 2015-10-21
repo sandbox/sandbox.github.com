@@ -67,7 +67,10 @@ const propertiesState = {
     scaleRangeMax: "#0c541f"
   },
   opacity:     {
-    'default': 1
+    'default': 1,
+    range: [0.2, 0.4, 0.6, 0.8, 1],
+    scaleRangeMin: 0.1,
+    scaleRangeMax: 1
   },
   orientation: {},
   x:           {},
