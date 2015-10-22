@@ -2,7 +2,7 @@ import className from 'classnames'
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import HTML5Backend from 'react-dnd/modules/backends/HTML5'
+import HTML5Backend from 'react-dnd-html5-backend'
 import { DropTarget, DragDropContext } from 'react-dnd'
 const { div, i: icon } = React.DOM
 import { getField, selectTable, connectTableIfNecessary } from './ducks/datasources'

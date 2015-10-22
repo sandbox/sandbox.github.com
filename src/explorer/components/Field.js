@@ -3,7 +3,7 @@ import className from 'classnames'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { DragSource, DropTarget } from 'react-dnd'
-import { getEmptyImage } from 'react-dnd/modules/backends/HTML5'
+import { getEmptyImage } from 'react-dnd-html5-backend'
 import { getFieldFunctionDisplayName, getFieldFunctionSelectDisplayName } from '../helpers/field'
 import { FieldIcon } from './FieldIcon'
 

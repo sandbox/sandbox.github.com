@@ -9,11 +9,9 @@ function getOrdinalVisualRange(shelf, spec) {
   case 'color':
     return COLOR_PALETTES[spec.palette]
   case 'shape':
-    return spec.shapes
   case 'size':
-    return spec.sizes
   case 'opacity':
-    return spec.range
+    return spec.ordinalRange
   default:
     return []
   }

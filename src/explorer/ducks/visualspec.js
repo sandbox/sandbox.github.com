@@ -39,11 +39,11 @@ function table(state = tableState, action) {
 
 const propertiesState = {
   size:        {
-    sizes: [30, 50, 80, 120, 170, 230, 300],
+    ordinalRange: [30, 50, 80, 120, 170, 230, 300],
     'default': 30
   },
   shape:       {
-    shapes: ["circle", "cross", "diamond", "square", "triangle-down", "triangle-up"],
+    ordinalRange: ["circle", "cross", "diamond", "square", "triangle-down", "triangle-up"],
     'default': 'circle'
   },
   color:       {
@@ -68,7 +68,7 @@ const propertiesState = {
   },
   opacity:     {
     'default': 1,
-    range: [0.2, 0.4, 0.6, 0.8, 1],
+    ordinalRange: [0.2, 0.4, 0.6, 0.8, 1],
     scaleRangeMin: 0.1,
     scaleRangeMax: 1
   },
