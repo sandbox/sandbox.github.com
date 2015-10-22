@@ -159,9 +159,13 @@
     @include flex(1 0 60px);
   }
 
-  .querybuilder-color-settings label img {
+  .querybuilder-color-settings label div {
     margin: 5px 0;
-    height: 20px;
-    border-radius: 0;
+    height: 24px;
+
+    svg {
+      width: 40px;
+      height: 24px;
+    }
   }
 }

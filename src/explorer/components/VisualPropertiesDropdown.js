@@ -71,7 +71,7 @@ class ColorProperties extends React.Component {
                                         checked: value === settings.palette,
                                         onChange: () => { if (value !== settings.palette) setPropertySetting(property, 'palette', value) }
                                       }),
-                                      img({src: `/public/images/data/${value}.svg`}))
+                                      div({ dangerouslySetInnerHTML: { __html: require(`../images/color/${value}.svg`) } }))
                        })))
       default:
         return div({},
