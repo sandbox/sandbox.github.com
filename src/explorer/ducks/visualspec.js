@@ -40,7 +40,9 @@ function table(state = tableState, action) {
 const propertiesState = {
   size:        {
     ordinalRange: [30, 50, 80, 120, 170, 230, 300],
-    'default': 30
+    'default': 30,
+    scaleRangeMin: 25,
+    scaleRangeMax: 625
   },
   shape:       {
     ordinalRange: ["circle", "cross", "diamond", "square", "triangle-down", "triangle-up"],

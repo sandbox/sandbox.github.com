@@ -97,7 +97,7 @@ class ShelfLegend extends React.Component {
     switch(type) {
     case 'linear': case 'log': case 'pow': case 'sqrt':
       let ticks = scale.ticks(5)
-      if ('linear' == type && isAggregateType(fields[0])) ticks = _.sortBy(ticks.concat([0]))
+      if ('linear' == type && isAggregateType(fields[0])) ticks = _.unique(_.sortBy(ticks.concat([0])))
       if ('log' == type) ticks = _.at(ticks, _.range(0, ticks.length, Math.floor(ticks.length / 5)))
       svgLegend.cells(ticks).labelFormat(d3.format(",f"))
       break
@@ -106,9 +106,9 @@ class ShelfLegend extends React.Component {
     }
     let node = d3.select(this.refs.d3LegendContainer)
     let elem = findDOMNode(this)
-    let legendElem = node.append('g').attr("transform", _.contains(['shape', 'size'], shelf) ? "translate(10, 10)" : null).call(svgLegend)
+    let legendElem = node.append('g').attr("transform", _.contains(['shape', 'size'], shelf) ? "translate(15, 5)" : null).call(svgLegend)
     let legendBounds = legendElem[0][0].getBoundingClientRect()
-    node.attr("width", legendBounds.width).attr("height", legendBounds.height + 5)
+    node.attr("width", legendBounds.width + 5).attr("height", legendBounds.height + 5)
   }
 
   componentDidMount() {
