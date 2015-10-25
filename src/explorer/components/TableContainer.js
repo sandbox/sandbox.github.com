@@ -2,7 +2,6 @@ import className from 'classnames'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { TableLayout } from './TableLayout'
-import { calculateScales } from '../data/scale'
 import Scrollbar from 'fixed-data-table/internal/Scrollbar.react'
 
 const { findDOMNode } = ReactDOM

@@ -1,22 +1,24 @@
 import u from 'updeep'
+import _ from 'lodash'
 import { combineReducers } from 'redux'
 import { getField, getTable, getDatasource } from './datasources'
 import { getFullQueryspec } from './queryspec'
-import { updateScaleData } from './scalespec'
+import { updateChartData } from './chartspec'
 import * as local from '../data/local'
 
 export const CHANGE_REQUEST_DATA = 'explorer/result/CHANGE_REQUEST_DATA'
 export const REQUEST_RESULT_DATA = 'explorer/result/REQUEST_RESULT_DATA'
 export const RECEIVE_RESULT_DATA = 'explorer/result/RECEIVE_RESULT_DATA'
 
-export function makeQueryKey(query) {
+function makeQueryKey(query) {
   return JSON.stringify(query)
 }
 
-export function changeRequestData(key) {
+export function changeRequestData(key, tableType) {
   return {
     type: CHANGE_REQUEST_DATA,
-    key
+    key,
+    tableType
   }
 }
 
@@ -35,11 +37,11 @@ export function receiveResultData(key, response, error=false) {
   }, response)
 }
 
-export function fetchQueryData(datasources, queryspec, tableType) {
+export function fetchQueryData(datasources, queryspec) {
   return new Promise((resolve, reject) => {
     let datasource = getDatasource(datasources.BY_ID, datasources.selectedTable)
     if (datasource.data) {
-      setTimeout(() => resolve(local.requestQuery(tableType, queryspec, datasource.data)), 0)
+      setTimeout(() => resolve(local.requestQuery(queryspec, datasource.data)), 0)
     }
     else {
       reject(Error(`Querying adapter not defined for protocol: ${datasource.protocol}`))
@@ -50,9 +52,9 @@ export function fetchQueryData(datasources, queryspec, tableType) {
 export function runQuery(datasources, key, queryspec, visualspec) {
   return (dispatch, getState) => {
     dispatch(requestResultData(key))
-    return fetchQueryData(datasources, queryspec, visualspec.table.type).then(
+    return fetchQueryData(datasources, queryspec).then(
       response => {
-        dispatch(updateScaleData(key, response.domains, response.queryspec, visualspec))
+        dispatch(updateChartData(key, visualspec, response))
         dispatch(receiveResultData(key, response))
       }).catch(error => {
         console.error('Error: query error', error)
@@ -71,9 +73,9 @@ export function runCurrentQueryIfNecessary() {
       dispatch(runQuery(datasources, key, usableQueryspec, visualspec))
     }
     else if (queryResponse && !queryResponse.isLoading && queryResponse.result) {
-      dispatch(updateScaleData(key, queryResponse.domains, queryResponse.queryspec, visualspec))
+      dispatch(updateChartData(key, visualspec, queryResponse))
     }
-    dispatch(changeRequestData(key))
+    dispatch(changeRequestData(key, visualspec.table.type))
   }
 }
 
@@ -88,13 +90,10 @@ function cache(state = cacheState, action) {
     return _.extend({}, state, {
       [action.key]: {
         isLoading: false,
-        axes: action.axes,
-        domains: action.domains,
         error: action.error,
         key: action.key,
-        query: action.query,
         queryspec: action.queryspec,
-        panes: action.panes,
+        query: action.query,
         result: action.result
       }})
   default:
@@ -110,7 +109,7 @@ const initialState = {
 function render(state=initialState, action) {
   switch(action.type) {
   case CHANGE_REQUEST_DATA:
-    return { last: state.current, current: action.key }
+    return { last: state.current, current: [action.key, action.tableType] }
   default:
     return state
   }

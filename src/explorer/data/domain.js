@@ -72,6 +72,14 @@ const AGGREGATOR = {
   'O' : OrdinalAggregator
 }
 
+function nextStep(step) {
+  return (d) => d + step
+}
+
+function nextTime(timeUnit, step) {
+  return (d) => d3.time[timeUnit].offset(d, step)
+}
+
 export function calculateDomains(data, fields, axes) {
   let domains = {}
   if (data == null) return domains
@@ -83,10 +91,10 @@ export function calculateDomains(data, fields, axes) {
     domains[field.accessor] = new AGGREGATOR[field.algebraType]()
     isBin[field.accessor] = isBinField(field) ?
       ('time' == getFieldType(field) && !_.contains(field.func, 'bin')
-       ? ((d) => d + 1)
+       ? nextStep(1)
        : 'time' == getFieldType(field)
-       ? ((d) => d3.time[field.binSettings.unit.type].offset(d, field.binSettings.step))
-       : ((d) => d + field.binSettings.step)) : null
+       ? nextTime(field.binSettings.unit.type, field.binSettings.step)
+       : nextStep(field.binSettings.step)) : null
   }
 
   aggregateAxes(domains, axes.row)

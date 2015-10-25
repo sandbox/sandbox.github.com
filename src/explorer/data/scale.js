@@ -69,11 +69,9 @@ export function calculateScales(domains, queryspec, visualspec) {
       }, {})
     }).value())
 
-  return {
-    scales: _.extend(
-      {},
-      _.mapValues(_.pick(visualspec.properties, validProperties), (v) => {
-        return { '__default__' : v }
-      }), scales)
-  }
+  return _.extend(
+    {},
+    _.mapValues(_.pick(visualspec.properties, validProperties), (v) => {
+      return { '__default__' : v }
+    }), scales)
 }

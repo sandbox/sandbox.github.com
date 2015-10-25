@@ -1,4 +1,5 @@
 import className from 'classnames'
+import _ from 'lodash'
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -15,7 +16,7 @@ import FieldDragLayer from './components/FieldDragLayer'
 
 class Explorer extends React.Component {
   render() {
-    const { dispatch, result, queryspec, visualspec, sourceIds, sources, tableId, scalespec } = this.props
+    const { dispatch, result, queryspec, visualspec, sourceIds, sources, tableId, chartspec } = this.props
     const { connectDropTarget, isOver, isDragging } = this.props
     const fieldActionCreators = bindActionCreators({
       removeField, clearFields,
@@ -26,11 +27,11 @@ class Explorer extends React.Component {
     const getSourceField = _.curry(getField)(sources)
     const getTableField = _.curry(getField)(sources, tableId)
     const vizActionCreators = bindActionCreators({ setTableEncoding, setPropertySetting }, dispatch)
-    const currentData = result.cache[result.render.current]
-    const lastData = result.cache[result.render.last]
-    const isLoading = currentData && currentData.isLoading
-    const graphicData = isLoading ? lastData : currentData
-    const graphicScales = isLoading ? scalespec[result.render.last] : scalespec[result.render.current]
+    const currentData  = result.cache[_.first(result.render.current)]
+    const lastData     = result.cache[_.first(result.render.last)]
+    const isLoading    = currentData && currentData.isLoading
+    const graphicData  = isLoading ? lastData : currentData
+    const graphicChart = isLoading ? _.get(chartspec, result.render.last) : _.get(chartspec, result.render.current)
     return connectDropTarget(
       div({className: className("pane-container")},
           <FieldDragLayer showTrashCan={isOver} />,
@@ -55,8 +56,8 @@ class Explorer extends React.Component {
                   div({className: "loading-overlay", style: {display: isLoading ? "" : "none"}},
                       div({className: "loading-overlay-background"}),
                       icon({className: "fa fa-spinner fa-pulse"})),
-                  <TableContainer {...graphicData} {...{visualspec}} {...graphicScales} />)),
-          <TableVisualSpecBuilder getField={getSourceField} {...visualspec} {...graphicScales}
+                  <TableContainer {...graphicData} {...{visualspec}} {...graphicChart} />)),
+          <TableVisualSpecBuilder getField={getSourceField} {...visualspec} {...graphicChart}
           {...{isDragging, queryspec, vizActionCreators, fieldActionCreators}} />
          ))
   }
@@ -70,7 +71,7 @@ function select(state) {
     queryspec: state.queryspec,
     visualspec: state.visualspec,
     result: state.result,
-    scalespec: state.scalespec
+    chartspec: state.chartspec
   }
 }
 

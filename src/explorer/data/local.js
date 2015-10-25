@@ -1,27 +1,35 @@
 import _ from 'lodash'
 import dl from 'datalib'
-import { prepareAxes } from './axis'
-import { partitionPaneData, aggregatePanes } from './pane'
-import { calculateDomains } from './domain'
-import { translateTableQuery } from './translate'
-import { isGroupByField } from '../helpers/field'
+import { getFieldQueryType, getFieldGroupByName, isGroupByField } from '../helpers/field'
 
+export function translateTableQuery(queryspec, data) {
+  if (_.isEmpty(queryspec)) return null
+  const {groupby, operator, aggregate, value} = _(queryspec).values().flatten().groupBy(getFieldQueryType).value()
+
+  let summarize = translateSummary(operator, aggregate, value)
+  return {
+    groupby: _.map(groupby, _.curry(getFieldGroupByName)(data)),
+    summarize,
+    where: [],
+    having: [],
+    order: []
+  }
+}
+
+export function translateSummary(operator, aggregate, value) {
+  return _.merge(
+    _(aggregate).groupBy('name').mapValues(fields => _.map(fields, 'func')).value(),
+    operator ? { '*': _.map(operator, 'op') } : {},
+    { '*': ['values'] },
+    (a, b) => { if (_.isArray(a)) { return a.concat(b) } })
+}
 export function performQuery(query, data) {
   if (query == null) return null
   return dl.groupby(query.groupby).summarize(query.summarize).execute(data)
 }
 
-export function requestQuery(tableType, queryspec, datasource) {
+export function requestQuery(queryspec, datasource) {
   let query = translateTableQuery(queryspec, datasource)
   let result = performQuery(query, datasource)
-  let { axes, nest } = query ? prepareAxes(queryspec, result) : {}
-  let panes = query ? partitionPaneData(axes, nest, result) : {}
-  aggregatePanes(
-    panes, tableType,
-    _(queryspec).omit('row', 'col').omit(_.isEmpty).values().flatten().value(),
-    _(queryspec).pick('row', 'col').omit(_.isEmpty).mapValues(
-      fields => _(fields).where({algebraType: 'Q'}).size()
-    ).values().flatten().max() > 1)
-  let domains = calculateDomains(result, _(queryspec).values().flatten().value(), axes)
-  return { query, queryspec, result, axes, domains, panes }
+  return { query, queryspec, result }
 }

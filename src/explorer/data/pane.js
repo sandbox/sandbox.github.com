@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { getFieldQueryType, isStackableField, isBinField } from '../helpers/field'
-import { translateSummary } from './translate'
+import { translateSummary } from './local'
 import Aggregator from 'datalib/src/aggregate/aggregator'
 import dl from 'datalib'
 
@@ -55,7 +55,7 @@ class PaneData {
     }
     return this
   }
-  addDomainToAxis(tableType) {
+  addDomainToAxis(tableType, didCondense) {
     // calculate domain for pane data, taking note of bin and stacks
     let isStackable = 'bar' == tableType || 'area' == tableType
     let groupAxis = isBinField(this.axis.row.field) ? this.axis.row :
@@ -72,6 +72,14 @@ class PaneData {
         for (let s = 0, slen = stackAxes.length; s < slen; s++) {
           let stackAxis = stackAxes[s]
           stackAxis.addDomainValue(domainData[i][`sum_${stackAxis.field.accessor}`])
+        }
+      }
+    }
+    if (didCondense) {
+      for (let i = 0, len = this.markData.length; i < len; i++) {
+        for (let s = 0, slen = stackAxes.length; s < slen; s++) {
+          let stackAxis = stackAxes[s]
+          stackAxis.addDomainValue(this.markData[i][stackAxis.field.accessor])
         }
       }
     }
@@ -111,7 +119,7 @@ export function aggregatePanes(panes, tableType, spec, mustCondense) {
     for (let c = 0, ckeys = Object.keys(panes[rkey]), clen = ckeys.length; c < clen; c++) {
       let ckey = ckeys[c]
       panes[rkey][ckey].aggregate(tableType, spec, mustCondense)
-        .addDomainToAxis(tableType)
+        .addDomainToAxis(tableType, mustCondense)
         .sort(_.map(spec, 'accessor'))
     }
   }
