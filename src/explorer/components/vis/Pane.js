@@ -4,6 +4,7 @@ import { getFieldQueryType, getAccessorName } from '../../helpers/field'
 const MARKS = {
   'bar': React.createFactory(require('./marks/Bar')),
   'line': React.createFactory(require('./marks/Line')),
+  'area': React.createFactory(require('./marks/Area')),
   'point': React.createFactory(require('./marks/Point'))
 }
 

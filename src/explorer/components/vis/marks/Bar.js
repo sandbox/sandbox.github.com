@@ -2,40 +2,9 @@ import d3 from 'd3'
 import _ from 'lodash'
 import React from 'react'
 import { getFieldType, getAccessorName, isStackableField, isAggregateType, isBinField, isGroupByField } from '../../../helpers/field'
+import { stackLayout } from './layout'
 const { div, svg } = React.DOM
 const ZERO = d => 0
-function cumsum(array, sum_fn = _.identity) {
-  let sum = 0
-  let current_sum
-  let result = _.map(array, a => {
-    current_sum = sum
-    sum += sum_fn(a)
-    return current_sum
-  })
-  result.push(sum)
-  return result
-}
-
-function stackLayout(markData, name, binField) {
-  let accessor = _.property(name)
-  if (!binField) {
-    let stacked = cumsum(markData, accessor)
-    return (d, i) => stacked[i]
-  }
-  else {
-    let sums = {}
-    let binName = getAccessorName(binField.field)
-    let stacked = _.map(
-      markData,
-      a => {
-        if(null == sums[a[binName]]) sums[a[binName]] = 0
-        let current_sum = sums[a[binName]]
-        sums[a[binName]] += a[name]
-        return current_sum
-      })
-    return (d, i) => stacked[i]
-  }
-}
 
 export default class Bar extends React.Component {
   getDefaultScales() {

@@ -4,11 +4,6 @@ export const TABLE_ENCODINGS = {
     icon: [{
       className: "fa fa-bar-chart"}],
     properties: ['color', 'opacity'] },
-  line:  {
-    name: "Line",
-    icon: [{
-      className: "fa fa-line-chart"}],
-    properties: ['color'] },
   point: {
     name: "Symbol",
     icon: [{
@@ -22,12 +17,16 @@ export const TABLE_ENCODINGS = {
                  'color',
                  'opacity',
                  'shape'] },
-  pivot: {
-    name: "Pivot Table",
+  line:  {
+    name: "Line",
     icon: [{
-      className: "fa fa-table"}],
-    properties: ['color',
-                 'background'] },
+      className: "fa fa-line-chart"}],
+    properties: ['color'] },
+  area:  {
+    name: "Area",
+    icon: [{
+      className: "fa fa-area-chart"}],
+    properties: ['color'] },
   rect:  {
     name: "Gantt Bar",
     icon: [{
@@ -43,11 +42,6 @@ export const TABLE_ENCODINGS = {
                  'y2',
                  'size',
                  'color'] },
-  area:  {
-    name: "Area",
-    icon: [{
-      className: "fa fa-area-chart"}],
-    properties: ['color'] },
   box:   {
     name: "Box Plot",
     icon: [{

@@ -148,19 +148,20 @@ class Shelf extends React.Component {
       ...vizActionCreators
     }
     const isRowColShelf = _.contains(['row', 'col'], this.props.shelf)
+    const hasDropdownSettings = _.contains(['color', 'background'], this.props.shelf)
     const optionComponent =
           isRowColShelf ? icon({className: 'fa fa-times remove-link', onClick: () => {
             dropdownProps.closeDropdown()
-            clearFields(shelf)}}) : icon({className: 'fa fa-caret-down'})
+            clearFields(shelf)}}) : hasDropdownSettings ? icon({className: 'fa fa-caret-down'}) : null
     return div({className: "querybuilder-shelf"},
-               <label onClick={isRowColShelf ? null : () => {
+               <label onClick={hasDropdownSettings ? () => {
                  if (dropdownProps.isDropdownOpen) {
                    this.props.openDropdown()
                  } else {
                    this.props.toggleDropdown()
                  }
                  dropdownProps.closeDropdown()
-               }} style={{cursor: isRowColShelf ? null : 'pointer'}}>{name}{optionComponent}</label>,
+               } : null} style={{cursor: hasDropdownSettings ? 'pointer' : null}}>{name}{optionComponent}</label>,
                <VisualPropertiesDropdown {...visualSettingsProps} />,
                <FieldContainer {...containerProps} />,
                !isRowColShelf && legend ? <ShelfLegend shelf={shelf} legend={legend} fields={_.map(
