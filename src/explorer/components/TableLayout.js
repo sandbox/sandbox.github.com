@@ -8,37 +8,64 @@ import { getAccessorName } from '../helpers/field'
 const Axis = React.createFactory(require('./vis/Axis').Axis)
 const Pane = React.createFactory(require('./vis/Pane').Pane)
 
-const { Table: TableWrapper, Column: ColumnWrapper, ColumnGroup: ColumnGroupWrapper } = FixedDataTable
-const [Table, Column, ColumnGroup] = [React.createFactory(TableWrapper), React.createFactory(ColumnWrapper), React.createFactory(ColumnGroupWrapper)]
+const { Table: TableWrapper, Column: ColumnWrapper, Cell: CellWrapper } = FixedDataTable
+const [Table, Column, Cell] = [React.createFactory(TableWrapper), React.createFactory(ColumnWrapper), React.createFactory(CellWrapper)]
 const { div } = React.DOM
 const EMPTY_RENDER = () => ''
 const EMPTY_DATA   = () => {}
 
-export class TableLayout extends React.Component {
-  constructor(props) {
-    super(props)
-    _.extend(this, _(this).pick([
-      'getRow', 'getRowAxisCell',
-      'renderRowAxisCell', 'renderRowHeaderCell',
-      'renderColHeaderCell', 'renderFooterCell',
-      'renderVisualizationCell'
-    ]).mapValues(f => f.bind(this)).value())
+const RowAxisCell = ({axisIndex, rowAxis, scaleLookup, markType, ...props}) => {
+  return ({rowIndex, height, width, ...cellProps}) => {
+    if ('Q' == axisIndex) {
+      let field = rowAxis[rowIndex].field
+      let name = field.accessor
+      return Axis({orient: 'left', scale: scaleLookup[name], name, field, height, width, markType})
+    }
+    return Cell({}, div({className: "table-row-label"}, rowAxis[rowIndex].key[axisIndex]))
   }
+}
 
+const PaneCell = ({paneData, colAxis, colIndex, rowAxisLookup, scales, fieldScales, markType, ...props}) => {
+  return ({rowIndex, height, width, ...cellProps}) => {
+    const cellData = paneData[rowIndex][colIndex]
+    if(null == cellData) return div({})
+    return Pane({
+      paneData: cellData,
+      rowAxis:  rowAxisLookup[rowIndex],
+      colAxis,
+      width,
+      height,
+      markType: markType,
+      fieldScales: fieldScales,
+      scales: scales
+    })
+  }
+}
+
+const FooterCell = ({height, colAxis, colScaleLookup, markType, ...props}) => {
+  return ({rowIndex, width, ...cellProps}) => {
+    let field = colAxis.field
+    let name = field.accessor
+    return Axis({scale: colScaleLookup[name], name, field, height, width, markType})
+  }
+}
+
+export class TableLayout extends React.Component {
   getFixedColumns(axis, props) {
     return axis.map((field, r) => {
       let isOrdinal = 'O' == field.algebraType
       return Column({
         fixed: true,
-        key: getAccessorName(field), dataKey: field.name,
-        columnData: field,
-        label: isOrdinal ? field.name : '',
+        key: getAccessorName(field),
         width: isOrdinal ? props.fixedOrdinalAxisWidth : props.fixedQuantAxisWidth,
-        cellClassName: this.props.hasRowNumericAxes ? 'public_fixedDataTableCell_axis' : '',
-        cellDataGetter: this.getRowAxisCell,
-        headerRenderer: this.renderRowHeaderCell,
-        cellRenderer: this.renderRowAxisCell.bind(this, {markType: this.props.visualspec.table.type}, r),
-        footerRenderer: EMPTY_RENDER
+        header: Cell({}, div({}, isOrdinal ? field.name : '')),
+        cell: RowAxisCell({
+          markType: props.visualspec.table.type,
+          axisIndex: r,
+          rowAxis: props.axes.row,
+          scaleLookup: props.visScales.row
+        }),
+        footer: EMPTY_RENDER
       })
     })
   }
@@ -46,65 +73,27 @@ export class TableLayout extends React.Component {
   getScrollableColumns(cols, props) {
     return _.map(cols, (axis, c) => {
       return Column({
-        fixed: false, key: c, dataKey: c, label: axis.label(),
-        columnData: axis,
+        fixed: false, key: c,
         width: props.colWidth,
-        headerRenderer: this.renderColHeaderCell,
-        cellRenderer: this.renderVisualizationCell.bind(
-          this,
-          {
-            markType: this.props.visualspec.table.type,
-            scales: this.props.visScales,
-            fieldScales: this.props.fieldScales
-          }),
-        footerRenderer: this.renderFooterCell.bind(this, {markType: this.props.visualspec.table.type}),
+        height: props.rowHeight,
+        header: Cell({}, div({}, _.map(axis.key, name => div({key: name}, name)))),
+        cell: PaneCell({
+          paneData: props.panes,
+          colIndex: c,
+          colAxis: axis,
+          rowAxisLookup: props.axes.row,
+          markType: props.visualspec.table.type,
+          scales: props.visScales,
+          fieldScales: props.fieldScales
+        }),
+        footer: FooterCell({
+          colAxis: axis,
+          colScaleLookup: props.visScales.col,
+          height: props.footerHeight,
+          markType: props.visualspec.table.type
+        }),
         allowCellsRecycling: true
       })
-    })
-  }
-
-  getRow(rowIndex) {
-    return this.props.panes[rowIndex]
-  }
-
-  getRowAxisCell(dataKey, rowData) {
-    return dataKey
-  }
-
-  renderRowAxisCell(visualProps, axisIndex, cellData, cellDataKey, rowData, rowIndex, columnData, width) {
-    if ('Q' == axisIndex) {
-      let field = this.props.axes.row[rowIndex].field
-      let name = field.accessor
-      return Axis({orient: 'left', scale: this.props.visScales.row[name], name, field, height: this.props.rowHeight, width, markType: visualProps.markType})
-    }
-    return div({className: "table-row-label"}, this.props.axes.row[rowIndex].key[axisIndex])
-  }
-
-  renderRowHeaderCell(label, colIndex, columnData, rowData, width) {
-    return div({}, label)
-  }
-
-  renderColHeaderCell(label, colIndex, columnData, rowData, width) {
-    return div({}, _.map(columnData.key, name => div({key: name}, name)))
-  }
-
-  renderFooterCell(visualProps, label, colIndex, columnData, rowData, width) {
-    let field = columnData.field
-    let name = field.accessor
-    return Axis({scale: this.props.visScales.col[name], name, field, height: this.props.footerHeight, width, markType: visualProps.markType})
-  }
-
-  renderVisualizationCell(visualProps, cellData, cellDataKey, rowData, rowIndex, columnData, width) {
-    if(null == cellData) return div({})
-    return Pane({
-      paneData: cellData,
-      rowAxis:  this.props.axes.row[rowIndex],
-      colAxis:  columnData,
-      width: this.props.colWidth,
-      height: this.props.rowHeight,
-      markType: visualProps.markType,
-      fieldScales: visualProps.fieldScales,
-      scales: visualProps.scales
     })
   }
 
@@ -122,14 +111,13 @@ export class TableLayout extends React.Component {
           maxHeight: height,
           height: height,
           rowHeight: rowHeight,
-          rowGetter: this.getRow,
           rowsCount: rowsCount,
           headerHeight: headerHeight,
-          footerHeight: footerHeight,
-          footerDataGetter: EMPTY_DATA
+          footerHeight: footerHeight
         },
         this.getFixedColumns(axes.row[0], this.props),
-        this.getScrollableColumns(axes.col, this.props))
+        this.getScrollableColumns(axes.col, this.props)
+      )
     }
   }
 }
