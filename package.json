@@ -40,7 +40,7 @@
     "webpack-dev-server": "^1.12.1"
   },
   "scripts": {
-    "start": "foreman start --formation=\"webpack_watch=1,webpack_server=1,gulp=1\"",
+    "start": "foreman start -f Procfile.dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
