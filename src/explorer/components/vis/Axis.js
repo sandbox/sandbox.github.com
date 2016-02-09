@@ -18,7 +18,8 @@ function axisDiscretizeTicks(axis, format) {
 
 function axisTickHorizontalLabelShift(d) {
   let bounds = this.getBBox()
-  let left = this.parentElement.transform.baseVal[0].matrix.e + bounds.x
+  const baseVal = this.parentElement.transform.baseVal
+  let left = (baseVal[0] || baseVal.getItem(0)).matrix.e + bounds.x
   if (left < 0) {
     return 1 - left
   }
@@ -37,7 +38,8 @@ function axisTickHorizontalLabelShift(d) {
 
 function axisTickVerticalLabelShift(d) {
   let bounds = this.getBBox()
-  let top = this.parentElement.transform.baseVal[0].matrix.f + bounds.y
+  const baseVal = this.parentElement.transform.baseVal
+  let top = (baseVal[0] || baseVal.getItem(0)).matrix.f + bounds.y
   if (top < 0) {
     return 1 - top
   }
